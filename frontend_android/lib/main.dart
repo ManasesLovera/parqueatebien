@@ -1,29 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:frontend_android/camera.dart';
+//import 'package:http/http.dart' as http;
 
 void main() async {
+  runApp(const MyApp());
+  /*
   const app = MainApp();
   app.pokeUri();
   runApp(app);
+  */
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+/*
   Future<void> pokeUri() async {
     final httpPackageUrl = Uri.http('localhost:8089', '/');
     final httpPackageInfo = await http.read(httpPackageUrl);
     print(httpPackageInfo);
   }
+  */
 
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+      // Retiramos el debug icon
+      debugShowCheckedModeBanner: false,
+      home: MyPage(),
     );
   }
 }

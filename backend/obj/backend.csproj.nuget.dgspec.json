@@ -1,26 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "/Users/olivergitte/demo-orion-tek/backend/backend.csproj": {}
+    "H:\\Users\\x\\Documents\\Flutter_Testing\\demo-orion-tek\\backend\\backend.csproj": {}
   },
   "projects": {
-    "/Users/olivergitte/demo-orion-tek/backend/backend.csproj": {
+    "H:\\Users\\x\\Documents\\Flutter_Testing\\demo-orion-tek\\backend\\backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/olivergitte/demo-orion-tek/backend/backend.csproj",
+        "projectUniqueName": "H:\\Users\\x\\Documents\\Flutter_Testing\\demo-orion-tek\\backend\\backend.csproj",
         "projectName": "backend",
-        "projectPath": "/Users/olivergitte/demo-orion-tek/backend/backend.csproj",
-        "packagesPath": "/Users/olivergitte/.nuget/packages/",
-        "outputPath": "/Users/olivergitte/demo-orion-tek/backend/obj/",
+        "projectPath": "H:\\Users\\x\\Documents\\Flutter_Testing\\demo-orion-tek\\backend\\backend.csproj",
+        "packagesPath": "H:\\Users\\x\\.nuget\\packages\\",
+        "outputPath": "H:\\Users\\x\\Documents\\Flutter_Testing\\demo-orion-tek\\backend\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/Users/olivergitte/.nuget/NuGet/NuGet.Config"
+          "H:\\Users\\x\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "/usr/local/share/dotnet/library-packs": {},
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -62,7 +68,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.201/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
