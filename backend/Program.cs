@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Http.Features;
 using Services;
 using db;
 
@@ -13,6 +15,8 @@ builder.Services.AddCors(options =>
       });
 });
 
+
+
 var app = builder.Build();
 app.UseCors();
 
@@ -22,5 +26,7 @@ app.MapGet("/", () => "Hello World!");
 app.MapGet("/ciudadanos", () => ciudadanos.GetCiudadanos());
 app.MapGet("/ciudadanos/{matricula}", (string matricula) => ciudadanos.GetCiudadano(matricula));
 app.MapPost("/ciudadanos", (Ciudadano ciudadano) => ciudadanos.AddCiudadano(ciudadano));
+app.MapPut("/ciudadanos", (HttpContext httpConext) => ciudadanos.UpdateCiudadano(httpConext));
+//app.MapPut("/ciudadanos", (Ciudadano ciudadano) => ciudadanos.UpdateCiudadano(ciudadano));
 
 app.Run();

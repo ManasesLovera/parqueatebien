@@ -94,8 +94,8 @@ public class DbConnection
         catch(Exception ex)
         {
             return new Ciudadano{
-                Photo = null,
-                GPS = null,
+                Photo = ex.Message,
+                GPS = ex.Message,
                 Matricula = null
             };
         }
@@ -128,8 +128,43 @@ public class DbConnection
         catch (Exception ex)
         {
             return new Ciudadano{
-                Photo = null,
-                GPS = null,
+                Photo = ex.Message.ToString(),
+                GPS = ex.Message.ToString(),
+                Matricula = null
+            };
+        }
+    }
+
+    public Ciudadano Update(Ciudadano ciudadano)
+    {
+        try
+        {
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+
+                var command = connection.CreateCommand();
+                command.CommandText = @"
+                UPDATE Ciudadanos
+                SET Photo = @photo, GPS = @gps
+                WHERE Matricula = @matricula
+                ";
+                command.Parameters.AddWithValue("@photo", ciudadano.Photo);
+                command.Parameters.AddWithValue("@gps", ciudadano.GPS);
+                command.Parameters.AddWithValue("@matricula", ciudadano.Matricula);
+
+                command.ExecuteNonQuery();
+
+                connection.Close();
+            }
+            return this.GetByMatricula(ciudadano.Matricula);
+        }
+        catch (Exception ex)
+        {
+            return new Ciudadano
+            {
+                Photo = ex.Message,
+                GPS = ex.Message,
                 Matricula = null
             };
         }
