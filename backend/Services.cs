@@ -1,32 +1,52 @@
+using db;
+
 namespace Services;
 
-class Ciudadanos {
+public class Ciudadanos {
+  public DbConnection connectiondb = new DbConnection();
   public List<Ciudadano> ciudadanos = new List<Ciudadano>();
 
+  public Ciudadanos() 
+  {
+    this.LoadData();
+  }
+
+  public void LoadData()
+  {
+    this.ciudadanos = connectiondb.GetAll();
+  }
+
   public List<Ciudadano> GetCiudadanos() {
+    this.LoadData();
     return this.ciudadanos;
   }
 
-  public Ciudadano GetCiudadano(string matricula) {
+  // GET
+  public Ciudadano? GetCiudadano(string matricula) {
 
-    var ciudadano = ciudadanos.SingleOrDefault(c => c.Matricula == matricula);
+    Ciudadano ciudadano = connectiondb.GetByMatricula(matricula);
 
     return ciudadano;
   }
 
+  // POST
   public Ciudadano AddCiudadano(Ciudadano ciudadano) {
-    this.ciudadanos.Add(ciudadano);
-    return ciudadano;
+    
+    return connectiondb.Add(ciudadano);
   }
+
+  // PUT
+  // public Ciudadano UpdateCiudadano(Ciudadano ciudadano) {
+
+  // }
 }
 
-class Ciudadano {
+public class Ciudadano {
 
-  // Id
   public string? Photo { get; set; }
   public string? GPS { get; set; }
   public string? Matricula { get; set; }
-  //bool recogido = false;
-  // Por que el amet se llevo el vehiculo
-  // Como o que necesito para recoger mi vehiculo
+
 }
+
+

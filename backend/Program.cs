@@ -1,4 +1,7 @@
 using Services;
+using db;
+
+var db = new db.DbConnection();
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
