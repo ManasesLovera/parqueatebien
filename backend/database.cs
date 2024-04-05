@@ -23,8 +23,7 @@ public class DbConnection
                 Photo TEXT,
                 GPS TEXT,
                 Matricula TEXT
-            )
-            ";
+            )";
             command.ExecuteNonQuery();
             connection.Close();
         }
@@ -57,12 +56,12 @@ public class DbConnection
                     );
                 }
             }
-            return ciudadanos;
             connection.Close();
+            return ciudadanos;
         }
     }
 
-    public Ciudadano GetByMatricula(string matricula)
+    public Ciudadano? GetByMatricula(string matricula)
     {
         try
         {
@@ -87,8 +86,8 @@ public class DbConnection
                 };
             }
 
-            return ciudadano;
             connection.Close();
+            return ciudadano;
             }
         }
         catch(Exception ex)
@@ -99,7 +98,37 @@ public class DbConnection
                 Matricula = null
             };
         }
-        
+    }
+
+    // Verify if Ciudadano exists
+    public bool Exists(string matricula)
+    {
+        try
+        {
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "SELECT Matricula FROM Ciudadanos WHERE Matricula = @matricula";
+                command.Parameters.AddWithValue("@matricula", matricula);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    if(reader.Read())
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        catch(Exception)
+        {
+            return false;
+        }
     }
 
     public Ciudadano Add(Ciudadano ciudadano)
@@ -135,7 +164,7 @@ public class DbConnection
         }
     }
 
-    public Ciudadano Update(Ciudadano ciudadano)
+    public Ciudadano? Update(Ciudadano ciudadano)
     {
         try
         {
@@ -167,6 +196,32 @@ public class DbConnection
                 GPS = ex.Message,
                 Matricula = null
             };
+        }
+    }
+
+    public string Delete(string matricula)
+    {
+        try
+        {
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+
+                var command = connection.CreateCommand();
+                command.CommandText = @"
+                DELETE FROM Ciudadanos WHERE Matricula = @matricula
+                ";
+                command.Parameters.AddWithValue("@matricula", matricula);
+                command.ExecuteNonQuery();
+
+                connection.Close();
+
+                return "Deleted successfully";
+            }
+        }
+        catch(Exception ex)
+        {
+            return ex.Message;
         }
     }
 
