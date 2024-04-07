@@ -13,7 +13,7 @@ class MyPage extends StatefulWidget {
 
 class _MyPageState extends State<MyPage> {
   File? imageFile;
-  String? mimeType;
+  //String? mimeType;
 
   final ImagePicker _imagePicker = ImagePicker();
 
@@ -34,17 +34,18 @@ class _MyPageState extends State<MyPage> {
             height: 500,
             child: GestureDetector(
               onTap: () {
-                if (imageFile != null && mimeType != null) {
+            //    if (imageFile != null && mimeType != null) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => SendData(
                         imageFile: imageFile!,
-                        mimeType: mimeType!,
+                         mimeType: 'image/jpeg'
+                    //    mimeType: mimeType!,
                       ),
                     ),
                   );
-                }
+       //         }
               },
               child: DottedBorder(
                 borderType: BorderType.RRect,
@@ -112,7 +113,7 @@ class _MyPageState extends State<MyPage> {
     if (pickedFile != null) {
       setState(() {
         imageFile = File(pickedFile.path);
-        mimeType = pickedFile.mimeType;
+   //     mimeType = pickedFile.mimeType;
       });
     }
   }
