@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:ui';
+// import 'dart:ui';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -8,8 +8,9 @@ import 'package:geolocator/geolocator.dart';
 
 class SendData extends StatefulWidget {
   final File imageFile;
+  // Cambios sugeridos Gracias
   final String mimeType;
-
+  // Requerimos mimeType
   const SendData({required this.imageFile, required this.mimeType});
 
   @override
@@ -69,13 +70,23 @@ class _SendDataState extends State<SendData> {
       final latitude = _currentPosition!.latitude;
       final longitude = _currentPosition!.longitude;
       final image = widget.imageFile;
-      final type = widget.mimeType;
+      // final type = widget.mimeType;
+
+      // dertermino si MIME type based on file extension
+      String type = 'image/jpeg'; // Default MIME type
+      if (image.path.endsWith('.png')) {
+        type = 'image/png';
+      } else if (image.path.endsWith('.gif')) {
+        type = 'image/gif';
+      }
+
 
       List<int> imageBytes = image.readAsBytesSync();
       String base64Image = base64Encode(imageBytes);
 
       final response = await http.post(
-        Uri.parse('http://localhost:8089/ciudadanos'),
+        Uri.parse('http://192.168.0.236:8089/ciudadanos'),
+        //  Uri.parse('http://localhost:8089/ciudadanos'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
