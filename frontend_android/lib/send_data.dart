@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -7,8 +8,9 @@ import 'package:geolocator/geolocator.dart';
 
 class SendData extends StatefulWidget {
   final File imageFile;
+  final String mimeType;
 
-  const SendData({required this.imageFile});
+  const SendData({required this.imageFile, required this.mimeType});
 
   @override
   _SendDataState createState() => _SendDataState();
@@ -67,6 +69,7 @@ class _SendDataState extends State<SendData> {
       final latitude = _currentPosition!.latitude;
       final longitude = _currentPosition!.longitude;
       final image = widget.imageFile;
+      final type = widget.mimeType;
 
       List<int> imageBytes = image.readAsBytesSync();
       String base64Image = base64Encode(imageBytes);
@@ -81,7 +84,8 @@ class _SendDataState extends State<SendData> {
           'description': description,
           'latitude': latitude,
           'longitude': longitude,
-          'file': base64Image
+          'file': base64Image,
+          'fileType': type
         }),
       );
 

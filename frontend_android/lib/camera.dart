@@ -13,6 +13,8 @@ class MyPage extends StatefulWidget {
 
 class _MyPageState extends State<MyPage> {
   File? imageFile;
+  String? mimeType;
+
   final ImagePicker _imagePicker = ImagePicker();
 
   @override
@@ -32,11 +34,14 @@ class _MyPageState extends State<MyPage> {
             height: 500,
             child: GestureDetector(
               onTap: () {
-                if (imageFile != null) {
+                if (imageFile != null && mimeType != null) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SendData(imageFile: imageFile!),
+                      builder: (context) => SendData(
+                        imageFile: imageFile!,
+                        mimeType: mimeType!,
+                      ),
                     ),
                   );
                 }
@@ -51,7 +56,7 @@ class _MyPageState extends State<MyPage> {
                   child: FittedBox(
                     child: imageFile != null
                         ? Image.file(imageFile!, fit: BoxFit.cover)
-                        : Icon(
+                        : const Icon(
                             Icons.image_outlined,
                             color: Colors.blueGrey,
                           ),
@@ -107,6 +112,7 @@ class _MyPageState extends State<MyPage> {
     if (pickedFile != null) {
       setState(() {
         imageFile = File(pickedFile.path);
+        mimeType = pickedFile.mimeType;
       });
     }
   }
