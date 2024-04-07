@@ -68,8 +68,11 @@ class _SendDataState extends State<SendData> {
       final longitude = _currentPosition!.longitude;
       final image = widget.imageFile;
 
+      List<int> imageBytes = image.readAsBytesSync();
+      String base64Image = base64Encode(imageBytes);
+
       final response = await http.post(
-        Uri.parse('YOUR_ENDPOINT_URL_HERE'),
+        Uri.parse('http://localhost:8089/ciudadanos'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -78,7 +81,7 @@ class _SendDataState extends State<SendData> {
           'description': description,
           'latitude': latitude,
           'longitude': longitude,
-          'file': image
+          'file': base64Image
         }),
       );
 
