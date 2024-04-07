@@ -18,18 +18,18 @@ public class DbConnection
             connection.Open();
             var command = connection.CreateCommand();
             command.CommandText = @"
-            CREATE TABLE IF NOT EXISTS Ciudadanos (
+            CREATE TABLE IF NOT EXISTS Citizens (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                Photo TEXT,
-                GPS TEXT,
-                Matricula TEXT
+                Photo BLOB,
+                GPS VARCHAR(40),
+                LicensePlate VARCHAT(30)
             )";
             command.ExecuteNonQuery();
             connection.Close();
         }
     }
 
-    public List<Ciudadano> GetAll()
+    public List<Citizen> GetAll()
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -37,71 +37,75 @@ public class DbConnection
 
             var cmd = connection.CreateCommand();
             cmd.CommandText = @"
-            SELECT Photo,GPS,Matricula FROM Ciudadanos
+            SELECT Photo,GPS,LicensePlate FROM Citizens
             ";            
 
-            List<Ciudadano> ciudadanos = new List<Ciudadano>();
+            List<Citizen> citizens = new List<Citizen>();
 
             using (var reader = cmd.ExecuteReader())
             {
                 while(reader.Read())
                 {
-                    ciudadanos.Add(
-                        new Ciudadano
+                    string photoBase64 = Convert.ToBase64String((byte[])reader["Photo"]);
+
+                    citizens.Add(
+                        new Citizen
                         {
-                            Photo = reader["Photo"].ToString(),
+                            Photo = photoBase64,
                             GPS = reader["GPS"].ToString(),
-                            Matricula = reader["Matricula"].ToString()
+                            LicensePlate = reader["LicensePlate"].ToString()
                         }
                     );
                 }
             }
             connection.Close();
-            return ciudadanos;
+            return citizens;
         }
     }
 
-    public Ciudadano? GetByMatricula(string matricula)
+    public Citizen? GetByLicensePlate(string licensePlate)
     {
         try
         {
             using (var connection = new SqliteConnection(connectionString))
             {
-            Ciudadano? ciudadano = null;
+            Citizen? citizen = null;
             connection.Open();
             var command = connection.CreateCommand();
             command.CommandText = @"
-            SELECT Photo, GPS, Matricula FROM Ciudadanos WHERE Matricula = @matricula
+            SELECT Photo, GPS, LicensePlate FROM Citizens WHERE LicensePlate = @licensePlate
             ";
-            command.Parameters.AddWithValue("@matricula", matricula);
+            command.Parameters.AddWithValue("@licensePlate", licensePlate);
 
             var reader = command.ExecuteReader();
 
             if (reader.Read())
             {
-                ciudadano = new Ciudadano {
-                    Photo = reader["Photo"].ToString(),
+                string photoBase64 = Convert.ToBase64String((byte[])reader["Photo"]);
+
+                citizen = new Citizen {
+                    Photo = photoBase64,
                     GPS = reader["GPS"].ToString(),
-                    Matricula = reader["Matricula"].ToString()
+                    LicensePlate = reader["LicensePlate"].ToString()
                 };
             }
 
             connection.Close();
-            return ciudadano;
+            return citizen;
             }
         }
         catch(Exception ex)
         {
-            return new Ciudadano{
+            return new Citizen{
                 Photo = ex.Message,
                 GPS = ex.Message,
-                Matricula = null
+                LicensePlate = null
             };
         }
     }
 
-    // Verify if Ciudadano exists
-    public bool Exists(string matricula)
+    // Verify if Citizen exists
+    public bool Exists(string licensePlate)
     {
         try
         {
@@ -109,8 +113,8 @@ public class DbConnection
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "SELECT Matricula FROM Ciudadanos WHERE Matricula = @matricula";
-                command.Parameters.AddWithValue("@matricula", matricula);
+                command.CommandText = "SELECT LicensePlate FROM Citizens WHERE LicensePlate = @licensePlate";
+                command.Parameters.AddWithValue("@licensePlate", licensePlate);
 
                 using (var reader = command.ExecuteReader())
                 {
@@ -131,7 +135,7 @@ public class DbConnection
         }
     }
 
-    public Ciudadano Add(Ciudadano ciudadano)
+    public Citizen Add(Citizen citizen)
     {
         try
         {
@@ -141,30 +145,33 @@ public class DbConnection
 
                 var cmd = connection.CreateCommand();
                 cmd.CommandText = @"
-                INSERT INTO Ciudadanos (Photo, GPS, Matricula)
-                VALUES (@photo, @gps, @matricula)
+                INSERT INTO Citizens (Photo, GPS, LicensePlate)
+                VALUES (@photo, @gps, @licensePlate)
                 ";
-                cmd.Parameters.AddWithValue("@photo", ciudadano.Photo);
-                cmd.Parameters.AddWithValue("@gps", ciudadano.GPS);
-                cmd.Parameters.AddWithValue("@matricula", ciudadano.Matricula);
+
+                byte[] photoBytes = Convert.FromBase64String(citizen.Photo);
+
+                cmd.Parameters.AddWithValue("@photo", photoBytes);
+                cmd.Parameters.AddWithValue("@gps", citizen.GPS);
+                cmd.Parameters.AddWithValue("@licensePlate", citizen.LicensePlate);
 
                 cmd.ExecuteNonQuery();
 
                 connection.Close();
             }
-            return ciudadano;
+            return citizen;
         }
         catch (Exception ex)
         {
-            return new Ciudadano{
-                Photo = ex.Message.ToString(),
-                GPS = ex.Message.ToString(),
-                Matricula = null
+            return new Citizen{
+                Photo = ex.Message,
+                GPS = ex.Message,
+                LicensePlate = null
             };
         }
     }
 
-    public Ciudadano? Update(Ciudadano ciudadano)
+    public Citizen? Update(Citizen citizen)
     {
         try
         {
@@ -174,32 +181,35 @@ public class DbConnection
 
                 var command = connection.CreateCommand();
                 command.CommandText = @"
-                UPDATE Ciudadanos
+                UPDATE Citizens
                 SET Photo = @photo, GPS = @gps
-                WHERE Matricula = @matricula
+                WHERE LicensePlate = @licensePlate
                 ";
-                command.Parameters.AddWithValue("@photo", ciudadano.Photo);
-                command.Parameters.AddWithValue("@gps", ciudadano.GPS);
-                command.Parameters.AddWithValue("@matricula", ciudadano.Matricula);
+
+                byte[] photoBytes = Convert.FromBase64String(citizen.Photo);
+
+                command.Parameters.AddWithValue("@photo", photoBytes);
+                command.Parameters.AddWithValue("@gps", citizen.GPS);
+                command.Parameters.AddWithValue("@licensePlate", citizen.LicensePlate);
 
                 command.ExecuteNonQuery();
 
                 connection.Close();
             }
-            return this.GetByMatricula(ciudadano.Matricula);
+            return this.GetByLicensePlate(citizen.LicensePlate);
         }
         catch (Exception ex)
         {
-            return new Ciudadano
+            return new Citizen
             {
                 Photo = ex.Message,
                 GPS = ex.Message,
-                Matricula = null
+                LicensePlate = null
             };
         }
     }
 
-    public string Delete(string matricula)
+    public string Delete(string licensePlate)
     {
         try
         {
@@ -209,9 +219,9 @@ public class DbConnection
 
                 var command = connection.CreateCommand();
                 command.CommandText = @"
-                DELETE FROM Ciudadanos WHERE Matricula = @matricula
+                DELETE FROM Citizens WHERE LicensePlate = @licensePlate
                 ";
-                command.Parameters.AddWithValue("@matricula", matricula);
+                command.Parameters.AddWithValue("@licensePlate", licensePlate);
                 command.ExecuteNonQuery();
 
                 connection.Close();

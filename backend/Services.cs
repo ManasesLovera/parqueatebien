@@ -1,109 +1,111 @@
 using Newtonsoft.Json; // Serialization/Deserialization for JSON
+using System.IO;
 using db;
 
 namespace Services;
 
-public class Ciudadanos {
+public class Citizens {
   // Database
   public DbConnection connectiondb = new DbConnection();
 
   // GET ALL
-  public List<Ciudadano> GetCiudadanos() {
+  public List<Citizen> GetCitizens() {
     // Show all data
     return connectiondb.GetAll();
   }
 
   // GET
-  public Ciudadano? GetCiudadano(HttpContext context) 
+  public Citizen? GetCitizen(HttpContext context) 
   {
     try
     {
-      // Take the "matricula" string from the endpoint
-      string matricula = context.Request.RouteValues["matricula"].ToString();
+      // Take the "licensePlate" string from the endpoint
+      string licensePlate = context.Request.RouteValues["licensePlate"].ToString();
 
-      // Verify if matricula exists
-      if(string.IsNullOrEmpty(matricula))
+      // Verify if licensePlate exists
+      if(string.IsNullOrEmpty(licensePlate))
       {
         context.Response.StatusCode = 400;
-        return new Ciudadano {
-          Photo = $"Matricula was not found, you must add it to the endpoint ${matricula}",
-          GPS = $"Matricula was not found, you must add it to the endpoint ${matricula}",
-          Matricula = null
+        return new Citizen {
+          Photo = $"LicensePlate was not found, you must add it to the endpoint ${licensePlate}",
+          GPS = $"LicensePlate was not found, you must add it to the endpoint ${licensePlate}",
+          LicensePlate = null
         };
       }
-      // Search the ciudadano using the matricula
-      Ciudadano ciudadano = connectiondb.GetByMatricula(matricula);
-      // Verify if ciudadano exists
-      if(ciudadano == null)
+      // Search the citizen using the licensePlate
+      Citizen citizen = connectiondb.GetByLicensePlate(licensePlate);
+      // Verify if citizen exists
+      if(citizen == null)
       {
         context.Response.StatusCode = 404;
-        return new Ciudadano {
+        return new Citizen {
           Photo = "Not found",
           GPS = "Not found",
-          Matricula = null
+          LicensePlate = null
         };
       }
-      return ciudadano;
+      return citizen;
     }
     // Show error if an exception
     catch (Exception ex)
     {
-      return new Ciudadano{
+      return new Citizen{
         Photo = ex.Message,
         GPS = ex.Message,
-        Matricula = null
+        LicensePlate = null
       };
     }
   }
 
   // POST
-  public Ciudadano AddCiudadano(HttpContext context) 
+  public Citizen AddCitizen(HttpContext context) 
   {
     try{
       using (StreamReader reader = new StreamReader(context.Request.Body))
       {
         string body = reader.ReadToEndAsync().GetAwaiter().GetResult();
 
-        Ciudadano ciudadano = JsonConvert.DeserializeObject<Ciudadano>(body);
+        Citizen citizen = JsonConvert.DeserializeObject<Citizen>(body);
 
-        bool sonString = (!string.IsNullOrEmpty(ciudadano.Photo) && ciudadano.Photo is string) &&
-                        (!string.IsNullOrEmpty(ciudadano.GPS) && ciudadano.GPS is string) &&
-                        (!string.IsNullOrEmpty(ciudadano.Matricula) && ciudadano.Matricula is string);
+        bool sonString = (!string.IsNullOrEmpty(citizen.Photo) && citizen.Photo is string) &&
+                        (!string.IsNullOrEmpty(citizen.GPS) && citizen.GPS is string) &&
+                        (!string.IsNullOrEmpty(citizen.LicensePlate) && citizen.LicensePlate is string);
       
         if (!sonString)
         {
           context.Response.StatusCode = 400;
-          return new Ciudadano {
+          return new Citizen {
             Photo = "Missing info or data is not in the correct format",
             GPS = "Missing info or data is not in the correct format",
-            Matricula = null
+            LicensePlate = null
           };
         }
-        if(connectiondb.Exists(ciudadano.Matricula))
+        if(connectiondb.Exists(citizen.LicensePlate))
         {
           context.Response.StatusCode = 400;
-          return new Ciudadano {
-            Photo = "This Ciudadano already exists",
-            GPS = "This Ciudadano already exists",
-            Matricula = null
+          return new Citizen {
+            Photo = "This Citizen already exists",
+            GPS = "This Citizen already exists",
+            LicensePlate = null
           };
         }
-        return connectiondb.Add(ciudadano);
+        return connectiondb.Add(citizen);
       }
     }
     catch (Exception ex)
     {
-      return new Ciudadano {
+      context.Response.StatusCode = 400;
+      return new Citizen {
         Photo = ex.Message,
         GPS = ex.Message,
-        Matricula = null
+        LicensePlate = null
       };
     }
     
   }
 
   // PUT
-  public Ciudadano UpdateCiudadano(HttpContext context) 
+  public Citizen UpdateCitizen(HttpContext context) 
   {
     try
     {
@@ -111,33 +113,33 @@ public class Ciudadanos {
       {
         string body = reader.ReadToEndAsync().GetAwaiter().GetResult();
 
-        Ciudadano ciudadano = JsonConvert.DeserializeObject<Ciudadano>(body);
+        Citizen citizen = JsonConvert.DeserializeObject<Citizen>(body);
 
-        bool sonString = (!string.IsNullOrEmpty(ciudadano.Photo) && ciudadano.Photo is string) &&
-                        (!string.IsNullOrEmpty(ciudadano.GPS) && ciudadano.GPS is string) &&
-                        (!string.IsNullOrEmpty(ciudadano.Matricula) && ciudadano.Matricula is string);
+        bool sonString = (!string.IsNullOrEmpty(citizen.Photo) && citizen.Photo is string) &&
+                        (!string.IsNullOrEmpty(citizen.GPS) && citizen.GPS is string) &&
+                        (!string.IsNullOrEmpty(citizen.LicensePlate) && citizen.LicensePlate is string);
         
         if(!sonString)
         {
           context.Response.StatusCode = 400;
           context.Response.ContentType = "application/json";
-          return new Ciudadano{
+          return new Citizen{
             Photo = "Missing Info or data is not string",
             GPS = "Missing Info or data is not string",
-            Matricula = null
+            LicensePlate = null
           };
         }
-        // Si envia nulo es que no existe, si envia un Ciudadano es que se modifico con exito
-        var c = connectiondb.Update(ciudadano);
+        // Si envia nulo es que no existe, si envia un Citizen es que se modifico con exito
+        var c = connectiondb.Update(citizen);
 
         if(c == null)
         {
           context.Response.StatusCode = 404;
           context.Response.ContentType = "application/json";
-          return new Ciudadano {
+          return new Citizen {
           Photo = "Not Found",
           GPS = "Not Found",
-          Matricula = null
+          LicensePlate = null
           };
         }
         return c;
@@ -148,32 +150,32 @@ public class Ciudadanos {
     {
       context.Response.StatusCode = 400;
       context.Response.ContentType = "application/json";
-      return new Ciudadano 
+      return new Citizen 
       {
         Photo = e.Message,
         GPS = e.Message,
-        Matricula = null
+        LicensePlate = null
       };
     }
   }
 
   // DELETE
-  public string DeleteCiudadano(HttpContext context)
+  public string DeleteCitizen(HttpContext context)
   {
-    string matricula = context.Request.RouteValues["matricula"].ToString();
-    var ciudadano = connectiondb.GetByMatricula(matricula);
-    if(ciudadano == null)
+    string licensePlate = context.Request.RouteValues["licensePlate"].ToString();
+    var citizen = connectiondb.GetByLicensePlate(licensePlate);
+    if(citizen == null)
     {
       context.Response.StatusCode = 404;
-      return $"This Ciudadano does not exist or is not a valid data ${matricula}";
+      return $"This Citizen does not exist or is not a valid data ${licensePlate}";
     }
-    return connectiondb.Delete(matricula);
+    return connectiondb.Delete(licensePlate);
   }
 }
-public class Ciudadano {
+public class Citizen {
 
   public string? Photo { get; set; }
   public string? GPS { get; set; }
-  public string? Matricula { get; set; }
+  public string? LicensePlate { get; set; }
 
 }
