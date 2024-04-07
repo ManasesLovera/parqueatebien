@@ -21,7 +21,8 @@ public class DbConnection
             CREATE TABLE IF NOT EXISTS Citizens (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 Photo BLOB,
-                GPS VARCHAR(40),
+                Lat VARCHAR(60),
+                Lon VARCHAR(60),
                 LicensePlate VARCHAT(30)
             )";
             command.ExecuteNonQuery();
@@ -37,7 +38,7 @@ public class DbConnection
 
             var cmd = connection.CreateCommand();
             cmd.CommandText = @"
-            SELECT Photo,GPS,LicensePlate FROM Citizens
+            SELECT Photo,Lat,Lon,LicensePlate FROM Citizens
             ";            
 
             List<Citizen> citizens = new List<Citizen>();
@@ -52,7 +53,10 @@ public class DbConnection
                         new Citizen
                         {
                             Photo = photoBase64,
-                            GPS = reader["GPS"].ToString(),
+                            Location = new Coordinates {
+                                Lat = reader["Lat"].ToString(),
+                                Lon = reader["Lon"].ToString(),
+                            },
                             LicensePlate = reader["LicensePlate"].ToString()
                         }
                     );
@@ -73,7 +77,7 @@ public class DbConnection
             connection.Open();
             var command = connection.CreateCommand();
             command.CommandText = @"
-            SELECT Photo, GPS, LicensePlate FROM Citizens WHERE LicensePlate = @licensePlate
+            SELECT Photo, Lat, Lon, LicensePlate FROM Citizens WHERE LicensePlate = @licensePlate
             ";
             command.Parameters.AddWithValue("@licensePlate", licensePlate);
 
@@ -85,7 +89,10 @@ public class DbConnection
 
                 citizen = new Citizen {
                     Photo = photoBase64,
-                    GPS = reader["GPS"].ToString(),
+                    Location = new Coordinates{
+                        Lat = reader["Lat"].ToString(), 
+                        Lon = reader["Lon"].ToString()
+                        },
                     LicensePlate = reader["LicensePlate"].ToString()
                 };
             }
@@ -98,7 +105,7 @@ public class DbConnection
         {
             return new Citizen{
                 Photo = ex.Message,
-                GPS = ex.Message,
+                Location = new Coordinates {Lat = "", Lon = ""},
                 LicensePlate = null
             };
         }
@@ -145,14 +152,15 @@ public class DbConnection
 
                 var cmd = connection.CreateCommand();
                 cmd.CommandText = @"
-                INSERT INTO Citizens (Photo, GPS, LicensePlate)
-                VALUES (@photo, @gps, @licensePlate)
+                INSERT INTO Citizens (Photo, Lat, Lon, LicensePlate)
+                VALUES (@photo, @lat, @lon, @licensePlate)
                 ";
 
                 byte[] photoBytes = Convert.FromBase64String(citizen.Photo);
 
                 cmd.Parameters.AddWithValue("@photo", photoBytes);
-                cmd.Parameters.AddWithValue("@gps", citizen.GPS);
+                cmd.Parameters.AddWithValue("@lat", citizen.Location.Lat);
+                cmd.Parameters.AddWithValue("@lon", citizen.Location.Lon);
                 cmd.Parameters.AddWithValue("@licensePlate", citizen.LicensePlate);
 
                 cmd.ExecuteNonQuery();
@@ -165,7 +173,7 @@ public class DbConnection
         {
             return new Citizen{
                 Photo = ex.Message,
-                GPS = ex.Message,
+                Location = new Coordinates {Lat = "", Lon = ""},
                 LicensePlate = null
             };
         }
@@ -182,14 +190,15 @@ public class DbConnection
                 var command = connection.CreateCommand();
                 command.CommandText = @"
                 UPDATE Citizens
-                SET Photo = @photo, GPS = @gps
+                SET Photo = @photo, Lat = @lat, Lon = @lon
                 WHERE LicensePlate = @licensePlate
                 ";
 
                 byte[] photoBytes = Convert.FromBase64String(citizen.Photo);
 
                 command.Parameters.AddWithValue("@photo", photoBytes);
-                command.Parameters.AddWithValue("@gps", citizen.GPS);
+                command.Parameters.AddWithValue("@lat", citizen.Location.Lat);
+                 command.Parameters.AddWithValue("@lon", citizen.Location.Lon);
                 command.Parameters.AddWithValue("@licensePlate", citizen.LicensePlate);
 
                 command.ExecuteNonQuery();
@@ -203,7 +212,7 @@ public class DbConnection
             return new Citizen
             {
                 Photo = ex.Message,
-                GPS = ex.Message,
+                Location = new Coordinates {Lat = "", Lon = ""},
                 LicensePlate = null
             };
         }
