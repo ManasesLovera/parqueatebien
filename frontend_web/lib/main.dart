@@ -33,7 +33,7 @@ class _MainAppState extends State<MainApp> {
       });
     } else {
      
-     print('Error al realizar la solicitud: ${response.statusCode}');
+     print('Error when making request: ${response.statusCode}');
     }
   }
 
@@ -52,7 +52,7 @@ class _MainAppState extends State<MainApp> {
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Buscar Incautos'),
+          title: const Text('Search Incautos'),
           centerTitle: true,
         ),
         body: Padding(
@@ -63,14 +63,14 @@ class _MainAppState extends State<MainApp> {
               TextField(
                 controller: _matriculaController,
                 decoration: const InputDecoration(
-                  labelText: 'Ingrese la Matrícula',
+                  labelText: 'Enter the Registration',
                   border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: _buscarIncautos,
-                child: const Text('Buscar'),
+                child: const Text('Search'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -97,7 +97,7 @@ class _MainAppState extends State<MainApp> {
                         },
                       )
                     : const Center(
-                        child: Text('No se encontraron incautos'),
+                        child: Text('No suspects were found'),
                       ),
               ),
             ],
