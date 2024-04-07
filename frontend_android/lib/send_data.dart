@@ -66,6 +66,7 @@ class _SendDataState extends State<SendData> {
       final description = _descriptionController.text;
       final latitude = _currentPosition!.latitude;
       final longitude = _currentPosition!.longitude;
+      final image = widget.imageFile;
 
       final response = await http.post(
         Uri.parse('YOUR_ENDPOINT_URL_HERE'),
@@ -77,6 +78,7 @@ class _SendDataState extends State<SendData> {
           'description': description,
           'latitude': latitude,
           'longitude': longitude,
+          'file': image
         }),
       );
 
