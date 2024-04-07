@@ -113,11 +113,11 @@ public class Ciudadanos {
 
         Ciudadano ciudadano = JsonConvert.DeserializeObject<Ciudadano>(body);
 
-        bool isString = (!string.IsNullOrEmpty(ciudadano.Photo) && ciudadano.Photo is string) &&
+        bool sonString = (!string.IsNullOrEmpty(ciudadano.Photo) && ciudadano.Photo is string) &&
                         (!string.IsNullOrEmpty(ciudadano.GPS) && ciudadano.GPS is string) &&
                         (!string.IsNullOrEmpty(ciudadano.Matricula) && ciudadano.Matricula is string);
         
-        if(!isString)
+        if(!sonString)
         {
           context.Response.StatusCode = 400;
           context.Response.ContentType = "application/json";
