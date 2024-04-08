@@ -95,7 +95,7 @@ public class CitizensService {
   
 
   // PUT
-  public Citizen UpdateCitizen(HttpContext context) 
+  public Res? UpdateCitizen(HttpContext context) 
   {
     try
     {
@@ -105,7 +105,7 @@ public class CitizensService {
 
         Citizen citizen = JsonConvert.DeserializeObject<Citizen>(body);
 
-        bool sonString = (!string.IsNullOrEmpty(citizen.Photo) && citizen.Photo is string) &&
+        bool sonString = (!string.IsNullOrEmpty(citizen.Photo)) &&
                         (!string.IsNullOrEmpty(citizen.Location.Lat) && citizen.Location.Lat is string) &&
                         (!string.IsNullOrEmpty(citizen.Location.Lon) && citizen.Location.Lon is string) &&
                         (!string.IsNullOrEmpty(citizen.LicensePlate) && citizen.LicensePlate is string);
@@ -114,7 +114,10 @@ public class CitizensService {
         {
           context.Response.StatusCode = 400;
           context.Response.ContentType = "application/json";
-          return null; // Missing info or data is not string
+          return new Res {
+            citizen = null,
+            message = "Missing info or invalid format"
+          }; // Missing info or data is not string
         }
         // Si envia nulo es que no existe, si envia un Citizen es que se modifico con exito
         var c = connectiondb.Update(citizen);
@@ -122,9 +125,15 @@ public class CitizensService {
         if(c == null)
         {
           context.Response.StatusCode = 404;
-          return null;
+          return new Res {
+            citizen = null,
+            message = "Citizen doesn't exist"
+          };
         }
-        return c;
+        return new Res {
+          citizen = c,
+          message = ""
+        };
       }
     }
   
@@ -132,21 +141,33 @@ public class CitizensService {
     {
       context.Response.StatusCode = 500;
       context.Response.ContentType = "application/json";
-      return null;
+      return new Res {
+        citizen = null,
+        message = e.Message
+      };
     }
   }
 
   // DELETE
   public string DeleteCitizen(HttpContext context)
   {
-    string licensePlate = context.Request.RouteValues["licensePlate"].ToString();
-    var citizen = connectiondb.GetByLicensePlate(licensePlate);
-    if(citizen == null)
+    try
     {
-      context.Response.StatusCode = 404;
-      return $"This Citizen does not exist or is not a valid data ${licensePlate}";
+      string licensePlate = context.Request.RouteValues["licensePlate"].ToString();
+      var citizen = connectiondb.GetByLicensePlate(licensePlate);
+      if(citizen == null)
+      {
+        context.Response.StatusCode = 404;
+        return $"This Citizen does not exist or is not a valid data ${licensePlate}";
+      }
+      return connectiondb.Delete(licensePlate);
     }
-    return connectiondb.Delete(licensePlate);
+    catch (Exception ex)
+    {
+      context.Response.StatusCode = 500;
+      return ex.Message;
+    }
+    
   }
 }
 

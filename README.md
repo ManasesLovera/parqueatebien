@@ -30,6 +30,14 @@ Demo para la aplicacion que estamos haciendo de incautacion de vehiculos.
             "LicensePlate": string
             }
         ```
+
+    > [!CAUTION]
+    > When you are sending a base64 encoded string please remove all the characters previus the first comma.
+    > Example: `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII`
+    > REMOVE: `data:image/png;base64,`
+    > And send: `iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII`
+    > Or this will be rejected.
+
 4. PUT / -> `"/ciudadanos"`:
     - You must add the full object to the body, and it will find it with the licensePlate
     if it exists, it will update it with the information uploaded, if not, it will show an error.
