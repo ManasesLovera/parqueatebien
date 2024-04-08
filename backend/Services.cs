@@ -89,10 +89,7 @@ public class CitizensService {
         message = ex.Message
       };
     }
-    
   }
-
-  
 
   // PUT
   public Res? UpdateCitizen(HttpContext context) 
@@ -158,7 +155,7 @@ public class CitizensService {
       if(citizen == null)
       {
         context.Response.StatusCode = 404;
-        return $"This Citizen does not exist or is not a valid data ${licensePlate}";
+        return $"This Citizen does not exist or is not a valid data: {licensePlate}";
       }
       return connectiondb.Delete(licensePlate);
     }
@@ -167,7 +164,6 @@ public class CitizensService {
       context.Response.StatusCode = 500;
       return ex.Message;
     }
-    
   }
 }
 
