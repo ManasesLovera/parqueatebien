@@ -19,7 +19,7 @@ Demo para la aplicacion que estamos haciendo de incautacion de vehiculos.
             },
         ...
         ]
-        ```
+    ```
 2. GET / -> `"/ciudadanos/{licensePlate}"`:
     - This will return an object that matches with the licensePlate inserted into the route passed.
     ```json
