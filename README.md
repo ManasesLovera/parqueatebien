@@ -33,6 +33,7 @@ Demo para la aplicacion que estamos haciendo de incautacion de vehiculos.
 
     > [!CAUTION]
     > When you are sending a base64 encoded string please remove all the characters previus the first comma.
+    
     > Example: `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII`
     > REMOVE: `data:image/png;base64,`
     > And send: `iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII`
