@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
+import 'dart:convert';
 
 void main() async {
   runApp(const MainApp());
@@ -14,17 +14,17 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  final TextEditingController _matriculaController = TextEditingController();
+  final TextEditingController _licensePlateController = TextEditingController();
   List<Incauto> _incautos = [];
 
   @override
   void dispose() {
-    _matriculaController.dispose();
+    _licensePlateController.dispose();
     super.dispose();
   }
 
   Future<void> _buscarIncautos() async {
-    String matricula = _matriculaController.text;
+    String matricula = _licensePlateController.text;
     var response = await http.get(Uri.parse('http://localhost:8089/ciudadanos/$matricula'));
      print('su inf:${response.body}');
     if (response.statusCode == 200) {
@@ -38,12 +38,20 @@ class _MainAppState extends State<MainApp> {
   }
 
   List<Incauto> parseResponse(String responseBody) {
-    // Implementa la lógica para parsear la respuesta del servidor y crear objetos Incauto aquí
+  print("Respuesta JSON cruda: $responseBody");
+  
+  final parsed = json.decode(responseBody);
+  if (parsed['citizen'] != null) {
+    Incauto incauto = Incauto.fromJson(parsed['citizen']);
+    print("Objeto Incauto después del parseo: $incauto");
+    return [incauto];
+  } else {
+    print("No se encontró el objeto 'citizen' en la respuesta.");
     return [];
   }
-
+}
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){ 
     return MaterialApp(
       theme: ThemeData(
         primaryColor: Colors.blue,
@@ -61,7 +69,7 @@ class _MainAppState extends State<MainApp> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TextField(
-                controller: _matriculaController,
+                controller: _licensePlateController,
                 decoration: const InputDecoration(
                   labelText: 'Enter the Registration',
                   border: OutlineInputBorder(),
@@ -84,13 +92,23 @@ class _MainAppState extends State<MainApp> {
                         itemBuilder: (BuildContext context, int index) {
                           return Card(
                             elevation: 2.0,
-                            margin: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: ListTile(
-                              title: Text(
-                                _incautos[index].nombre,
-                                style: const TextStyle(fontWeight: FontWeight.bold),
+                            margin: const EdgeInsets.symmetric(vertical: 2.0),                         
+                            child: ListTile(                           
+                              title: Column(
+                                children: [
+                                  Text(
+                                   _incautos[index].lat,
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                  ),Text(
+                                   _incautos[index].lon,
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                  ),Text(
+                                   _incautos[index].photo,
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ],
                               ),
-                              subtitle: Text(_incautos[index].apellido),
+                              subtitle: Text(_incautos[index].licensePlate),
                               // Agrega más elementos ListTile según los datos que quieras mostrar
                             ),
                           );
@@ -109,8 +127,23 @@ class _MainAppState extends State<MainApp> {
 }
 
 class Incauto {
-  final String nombre;
-  final String apellido;
+  final String photo;
+  final String licensePlate;
+  final String lat;
+  final String lon;
 
-  Incauto({required this.nombre, required this.apellido});
-}
+  Incauto({
+    required this.photo,
+    required this.licensePlate,
+    required this.lat,
+    required this.lon,
+  });
+
+  factory Incauto.fromJson(Map<String, dynamic> json) {
+    return Incauto(
+      photo: json['photo'] as String,
+      licensePlate: json['licensePlate'] as String,
+      lat: json['location']['lat'] as String,
+      lon: json['location']['lon'] as String,
+    );
+  }}
