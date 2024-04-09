@@ -48,12 +48,12 @@ public class CitizensService {
   }
 
   // POST
-  public Res? AddCitizen(HttpContext context) 
+  public async Task<Res> AddCitizen(HttpContext context) 
   {
     try{
       using (StreamReader reader = new StreamReader(context.Request.Body))
       {
-        string body = reader.ReadToEndAsync().GetAwaiter().GetResult();
+        string body = await reader.ReadToEndAsync();
 
         Citizen citizen = JsonConvert.DeserializeObject<Citizen>(body);
 
@@ -75,10 +75,15 @@ public class CitizensService {
           context.Response.StatusCode = 400;
           return new Res {
             citizen = null,
-            message = "Not Found"
+            message = "Citizen already exist"
           };
         }
-        return new Res {citizen = connectiondb.Add(citizen), message = ""};
+        var citizenRes = connectiondb.Add(citizen);
+        if (citizenRes.citizen == null)
+           {
+              return new Res {citizen = null, message = citizenRes.message };
+           }
+        return new Res {citizen = citizenRes.citizen, message = ""};
       }
     }
     catch (Exception ex)
@@ -116,19 +121,28 @@ public class CitizensService {
             message = "Missing info or invalid format"
           }; // Missing info or data is not string
         }
-        // Si envia nulo es que no existe, si envia un Citizen es que se modifico con exito
-        var c = connectiondb.Update(citizen);
+        // Verify if citizen exist
+        var citizenExist = connectiondb.Exists(citizen.LicensePlate);
+        if (!citizenExist)
+           {
+              context.Response.StatusCode = 404;
+              return new Res {
+                  citizen = null,
+                  message = "Not Found"
+              };
+           }
+        var citizenRes = connectiondb.Update(citizen);
 
-        if(c == null)
+        if(citizenRes.citizen == null)
         {
-          context.Response.StatusCode = 404;
+          context.Response.StatusCode = 500;
           return new Res {
             citizen = null,
-            message = "Citizen doesn't exist"
+            message = citizenRes.message
           };
         }
         return new Res {
-          citizen = c,
+          citizen = citizenRes.citizen,
           message = ""
         };
       }
@@ -137,7 +151,6 @@ public class CitizensService {
     catch (Exception e)
     {
       context.Response.StatusCode = 500;
-      context.Response.ContentType = "application/json";
       return new Res {
         citizen = null,
         message = e.Message
@@ -150,7 +163,7 @@ public class CitizensService {
   {
     try
     {
-      string licensePlate = context.Request.RouteValues["licensePlate"].ToString();
+      string? licensePlate = context.Request.RouteValues["licensePlate"].ToString();
       var citizen = connectiondb.GetByLicensePlate(licensePlate);
       if(citizen == null)
       {
@@ -168,21 +181,21 @@ public class CitizensService {
 }
 
 public class Res {
-  public Citizen citizen { get; set; }
-  public string message { get; set; }
+    public Citizen? citizen { get; set; }
+    public string message { get; set; } = String.Empty;
 }
 
 public class Citizen {
 
-  public string? Photo { get; set; }
-  public Coordinates? Location { get; set; }
-  public string? LicensePlate { get; set; }
+    public string? Photo { get; set; }
+    public Coordinates? Location { get; set; }
+    public string LicensePlate { get; set; } = String.Empty;
 
 }
 
 public class Coordinates {
 
-  public string? Lat { get; set; }
-  public string? Lon { get; set; }
+    public string Lat { get; set; } = String.Empty;
+    public string Lon { get; set; } = String.Empty;
 
 }

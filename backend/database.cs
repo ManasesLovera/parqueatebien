@@ -142,7 +142,7 @@ public class DbConnection
         }
     }
 
-    public Citizen Add(Citizen citizen)
+    public Res Add(Citizen citizen)
     {
         try
         {
@@ -156,7 +156,7 @@ public class DbConnection
                 VALUES (@photo, @lat, @lon, @licensePlate)
                 ";
 
-                byte[] photoBytes = Convert.FromBase64String(citizen.Photo);
+                byte[] photoBytes = Convert.FromBase64String((citizen.Photo));
 
                 cmd.Parameters.AddWithValue("@photo", photoBytes);
                 cmd.Parameters.AddWithValue("@lat", citizen.Location.Lat);
@@ -167,19 +167,18 @@ public class DbConnection
 
                 connection.Close();
             }
-            return citizen;
+            return new Res { citizen = citizen, message = "" };
         }
         catch (Exception ex)
         {
-            return new Citizen{
-                Photo = ex.Message,
-                Location = new Coordinates {Lat = "", Lon = ""},
-                LicensePlate = null
+            return new Res {
+                citizen = null,
+                message = ex.Message
             };
         }
     }
 
-    public Citizen? Update(Citizen citizen)
+    public Res? Update(Citizen citizen)
     {
         try
         {
@@ -205,15 +204,14 @@ public class DbConnection
 
                 connection.Close();
             }
-            return this.GetByLicensePlate(citizen.LicensePlate);
+            return new Res { citizen = this.GetByLicensePlate(citizen.LicensePlate), message = "" };
         }
         catch (Exception ex)
         {
-            return new Citizen
+            return new Res
             {
-                Photo = ex.Message,
-                Location = new Coordinates {Lat = "", Lon = ""},
-                LicensePlate = null
+                citizen = null,
+                message = ex.Message
             };
         }
     }

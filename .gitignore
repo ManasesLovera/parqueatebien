@@ -2,3 +2,4 @@
 backend/bin/
 backend/obj/
 backend/obj/Debug/
+.vs/
