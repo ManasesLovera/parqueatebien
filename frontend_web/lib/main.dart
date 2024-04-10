@@ -64,9 +64,9 @@ class _MainAppState extends State<MainApp> {
           centerTitle: true,
         ),
         body: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(11.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextField(
                 controller: _licensePlateController,
@@ -91,9 +91,9 @@ class _MainAppState extends State<MainApp> {
                         itemCount: _incautos.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Card(
-                            elevation: 2.0,
-                            margin: const EdgeInsets.symmetric(vertical: 2.0),                         
-                            child: ListTile(                           
+                            elevation: 8.0,
+                            margin: const EdgeInsets.symmetric(vertical: 8.0),                         
+                            child: ListTile(
                               title: Column(
                                 children: [
                                   Text(
@@ -106,6 +106,7 @@ class _MainAppState extends State<MainApp> {
                                    _incautos[index].photo,
                                     style: const TextStyle(fontWeight: FontWeight.bold),
                                   ),
+                                  
                                 ],
                               ),
                               subtitle: Text(_incautos[index].licensePlate),
