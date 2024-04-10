@@ -21,11 +21,11 @@ public class DbConnection
             CREATE TABLE IF NOT EXISTS Citizens (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 LicensePlate VARCHAR(30),
-                Description VARCHAR(50),
+                Description VARCHAR(100),
                 Lat VARCHAR(60),
                 Lon VARCHAR(60),
                 File BLOB,
-                FileType VARCHAR(20)
+                FileType VARCHAR(40)
                 
             )";
             command.ExecuteNonQuery();
