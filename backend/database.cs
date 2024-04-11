@@ -20,10 +20,13 @@ public class DbConnection
             command.CommandText = @"
             CREATE TABLE IF NOT EXISTS Citizens (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                Photo BLOB,
+                LicensePlate VARCHAR(30),
+                Description VARCHAR(100),
                 Lat VARCHAR(60),
                 Lon VARCHAR(60),
-                LicensePlate VARCHAT(30)
+                File BLOB,
+                FileType VARCHAR(40)
+                
             )";
             command.ExecuteNonQuery();
             connection.Close();
@@ -38,7 +41,7 @@ public class DbConnection
 
             var cmd = connection.CreateCommand();
             cmd.CommandText = @"
-            SELECT Photo,Lat,Lon,LicensePlate FROM Citizens
+            SELECT LicensePlate,Description,Lat,Lon,File,FileType FROM Citizens
             ";            
 
             List<Citizen> citizens = new List<Citizen>();
@@ -47,17 +50,17 @@ public class DbConnection
             {
                 while(reader.Read())
                 {
-                    string photoBase64 = Convert.ToBase64String((byte[])reader["Photo"]);
+                    string photoBase64 = Convert.ToBase64String((byte[])reader["File"]);
 
                     citizens.Add(
                         new Citizen
                         {
-                            Photo = photoBase64,
-                            Location = new Coordinates {
-                                Lat = reader["Lat"].ToString(),
-                                Lon = reader["Lon"].ToString(),
-                            },
-                            LicensePlate = reader["LicensePlate"].ToString()
+                            licensePlate = reader["LicensePlate"].ToString(),
+                            description = reader["Description"].ToString(),
+                            lat = reader["Lat"].ToString(),
+                            lon = reader["Lon"].ToString(),
+                            file = photoBase64,
+                            fileType = reader["FileType"].ToString()
                         }
                     );
                 }
@@ -67,7 +70,7 @@ public class DbConnection
         }
     }
 
-    public Citizen? GetByLicensePlate(string licensePlate)
+    public Res? GetByLicensePlate(string licensePlate)
     {
         try
         {
@@ -77,7 +80,7 @@ public class DbConnection
             connection.Open();
             var command = connection.CreateCommand();
             command.CommandText = @"
-            SELECT Photo, Lat, Lon, LicensePlate FROM Citizens WHERE LicensePlate = @licensePlate
+            SELECT LicensePlate, Description, Lat, Lon, File, FileType  FROM Citizens WHERE LicensePlate = @licensePlate
             ";
             command.Parameters.AddWithValue("@licensePlate", licensePlate);
 
@@ -85,64 +88,53 @@ public class DbConnection
 
             if (reader.Read())
             {
-                string photoBase64 = Convert.ToBase64String((byte[])reader["Photo"]);
+                string photoBase64 = Convert.ToBase64String((byte[])reader["File"]);
 
                 citizen = new Citizen {
-                    Photo = photoBase64,
-                    Location = new Coordinates{
-                        Lat = reader["Lat"].ToString(), 
-                        Lon = reader["Lon"].ToString()
-                        },
-                    LicensePlate = reader["LicensePlate"].ToString()
+
+                    licensePlate = reader["LicensePlate"].ToString(),
+                    description = reader["Description"].ToString(),
+                    lat = reader["Lat"].ToString(), 
+                    lon = reader["Lon"].ToString(),
+                    file = photoBase64,
+                    fileType = reader["FileType"].ToString()
                 };
             }
 
             connection.Close();
-            return citizen;
+            return new Res { citizen = citizen, message = "" };
             }
         }
         catch(Exception ex)
         {
-            return new Citizen{
-                Photo = ex.Message,
-                Location = new Coordinates {Lat = "", Lon = ""},
-                LicensePlate = null
-            };
+            return new Res { citizen = null, message = ex.Message };
         }
     }
 
     // Verify if Citizen exists
     public bool Exists(string licensePlate)
     {
-        try
-        {
-            using (var connection = new SqliteConnection(connectionString))
-            {
-                connection.Open();
-                var command = connection.CreateCommand();
-                command.CommandText = "SELECT LicensePlate FROM Citizens WHERE LicensePlate = @licensePlate";
-                command.Parameters.AddWithValue("@licensePlate", licensePlate);
 
-                using (var reader = command.ExecuteReader())
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT LicensePlate FROM Citizens WHERE LicensePlate = @licensePlate";
+            command.Parameters.AddWithValue("@licensePlate", licensePlate);
+
+            using (var reader = command.ExecuteReader())
+            {
+                if(reader.Read())
                 {
-                    if(reader.Read())
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return true;
                 }
+                return false;
             }
         }
-        catch(Exception)
-        {
-            return false;
-        }
+
     }
 
-    public Citizen Add(Citizen citizen)
+    public Res Add(Citizen citizen)
     {
         try
         {
@@ -152,34 +144,36 @@ public class DbConnection
 
                 var cmd = connection.CreateCommand();
                 cmd.CommandText = @"
-                INSERT INTO Citizens (Photo, Lat, Lon, LicensePlate)
-                VALUES (@photo, @lat, @lon, @licensePlate)
+                INSERT INTO Citizens (LicensePlate, Description, Lat, Lon, File, FileType)
+                VALUES (@licensePlate, @description, @lat, @lon, @file, @fileType)
                 ";
 
-                byte[] photoBytes = Convert.FromBase64String(citizen.Photo);
+                byte[] photoBytes = Convert.FromBase64String(citizen.file);
 
-                cmd.Parameters.AddWithValue("@photo", photoBytes);
-                cmd.Parameters.AddWithValue("@lat", citizen.Location.Lat);
-                cmd.Parameters.AddWithValue("@lon", citizen.Location.Lon);
-                cmd.Parameters.AddWithValue("@licensePlate", citizen.LicensePlate);
+                cmd.Parameters.AddWithValue("@licensePlate", citizen.licensePlate);
+                cmd.Parameters.AddWithValue("@description", citizen.description);
+                cmd.Parameters.AddWithValue("@lat", citizen.lat);
+                cmd.Parameters.AddWithValue("@lon", citizen.lon);
+                cmd.Parameters.AddWithValue("@file", photoBytes);
+                cmd.Parameters.AddWithValue("@fileType", citizen.fileType);
+
 
                 cmd.ExecuteNonQuery();
 
                 connection.Close();
             }
-            return citizen;
+            return new Res { citizen = citizen, message = "" };
         }
         catch (Exception ex)
         {
-            return new Citizen{
-                Photo = ex.Message,
-                Location = new Coordinates {Lat = "", Lon = ""},
-                LicensePlate = null
+            return new Res {
+                citizen = null,
+                message = ex.Message
             };
         }
     }
 
-    public Citizen? Update(Citizen citizen)
+    public Res? Update(Citizen citizen)
     {
         try
         {
@@ -190,30 +184,31 @@ public class DbConnection
                 var command = connection.CreateCommand();
                 command.CommandText = @"
                 UPDATE Citizens
-                SET Photo = @photo, Lat = @lat, Lon = @lon
+                SET Description = @description, Lat = @lat, Lon = @lon, File = @file, FileType = @fileType
                 WHERE LicensePlate = @licensePlate
                 ";
 
-                byte[] photoBytes = Convert.FromBase64String(citizen.Photo);
+                byte[] photoBytes = Convert.FromBase64String(citizen.file);
 
-                command.Parameters.AddWithValue("@photo", photoBytes);
-                command.Parameters.AddWithValue("@lat", citizen.Location.Lat);
-                 command.Parameters.AddWithValue("@lon", citizen.Location.Lon);
-                command.Parameters.AddWithValue("@licensePlate", citizen.LicensePlate);
-
+                command.Parameters.AddWithValue("@licensePlate", citizen.licensePlate);
+                command.Parameters.AddWithValue("@description", citizen.description);
+                command.Parameters.AddWithValue("@lat", citizen.lat);
+                command.Parameters.AddWithValue("@lon", citizen.lon);
+                command.Parameters.AddWithValue("@file", photoBytes);
+                command.Parameters.AddWithValue("fileType", citizen.fileType);
+                
                 command.ExecuteNonQuery();
 
                 connection.Close();
             }
-            return this.GetByLicensePlate(citizen.LicensePlate);
+            return new Res { citizen = this.GetByLicensePlate(citizen.licensePlate).citizen, message = "" };
         }
         catch (Exception ex)
         {
-            return new Citizen
+            return new Res
             {
-                Photo = ex.Message,
-                Location = new Coordinates {Lat = "", Lon = ""},
-                LicensePlate = null
+                citizen = null,
+                message = ex.Message
             };
         }
     }
