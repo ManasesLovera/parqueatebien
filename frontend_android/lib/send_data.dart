@@ -20,12 +20,12 @@ class SendData extends StatefulWidget {
 class _SendDataState extends State<SendData> {
   final LocationService _locationService = LocationService();
   Position? _currentPosition;
-  TextEditingController _matriculaController = TextEditingController();
+  TextEditingController _licensePlateController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
 
   @override
   void dispose() {
-    _matriculaController.dispose();
+    _licensePlateController.dispose();
     _descriptionController.dispose();
     super.dispose();
   }
@@ -65,7 +65,7 @@ class _SendDataState extends State<SendData> {
 
   Future<void> _submitData() async {
     try {
-      final matricula = _matriculaController.text;
+      final licensePlate = _licensePlateController.text;
       final description = _descriptionController.text;
       final latitude = _currentPosition!.latitude;
       final longitude = _currentPosition!.longitude;
@@ -91,10 +91,10 @@ class _SendDataState extends State<SendData> {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, dynamic>{
-          'matricula': matricula,
+          'licensePlate': licensePlate,
           'description': description,
-          'latitude': latitude,
-          'longitude': longitude,
+          'lat': latitude,
+          'lon': longitude,
           'file': base64Image,
           'fileType': type
         }),
@@ -126,7 +126,7 @@ class _SendDataState extends State<SendData> {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: TextFormField(
-              controller: _matriculaController,
+              controller: _licensePlateController,
               decoration: const InputDecoration(
                 labelText: 'Matricula',
               ),
