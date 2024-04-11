@@ -71,8 +71,7 @@ public class CitizensService {
                 (!string.IsNullOrEmpty(citizen.description) && citizen.description is string) &&
                 (!string.IsNullOrEmpty(citizen.lat) && citizen.lat is string) &&
                 (!string.IsNullOrEmpty(citizen.lon) && citizen.lon is string) &&
-                (!string.IsNullOrEmpty(citizen.file)) &&
-                (!string.IsNullOrEmpty(citizen.fileType) && citizen.fileType is string);
+                (!string.IsNullOrEmpty(citizen.file)) && (citizen.fileType is string);
 
                 if (!sonString)
                 {
@@ -176,8 +175,7 @@ public class CitizensService {
                         (!string.IsNullOrEmpty(citizen.description) && citizen.description is string) &&
                         (!string.IsNullOrEmpty(citizen.lat) && citizen.lat is string) &&
                         (!string.IsNullOrEmpty(citizen.lon) && citizen.lon is string) &&
-                        (!string.IsNullOrEmpty(citizen.file)) &&
-                        (!string.IsNullOrEmpty(citizen.fileType) && citizen.fileType is string);
+                        (!string.IsNullOrEmpty(citizen.file)) && (citizen.fileType is string);
         
         if(!sonString)
         {
