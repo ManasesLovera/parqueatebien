@@ -85,8 +85,8 @@ class _SendDataState extends State<SendData> {
       String base64Image = base64Encode(imageBytes);
 
       final response = await http.post(
-         Uri.parse('http://192.168.0.236:8089/ciudadanos'),
-       //Uri.parse('http://localhost:8089/ciudadanos'),
+    //    Uri.parse('http://192.168.0.236:8089/ciudadanos'),
+      Uri.parse('http://localhost:8089/ciudadanos'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -99,13 +99,55 @@ class _SendDataState extends State<SendData> {
           'fileType': type
         }),
       );
-
       if (response.statusCode == 200) {
-        // Handle successful response
-        print('Data submitted successfully');
+        // Handle successful responses
+        print('Datos enviados Correctamente');
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Éxito'),
+            content: const Text('Datos enviados correctamente.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
       } else {
-        // Handle error response
-        print('Failed to submit data: ${response.statusCode}');
+        // Manejamos los Status
+        String message;
+        switch (response.statusCode) {
+          case 409:
+            message = 'Error Matricula Ya Existe !.';
+            break;
+          case 500:
+            message = 'Error Interno, Por favor, inténtelo más tarde.';
+            break;
+          case 400:
+            message = 'Error. Verifique los datos e Intente Nuevamente.';
+            break;
+          default:
+            message = 'Error desconocido. Por favor, inténtelo más tarde.';
+        }
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error '),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
       }
     } catch (e) {
       // Handle any exceptions
@@ -163,15 +205,18 @@ class _SendDataState extends State<SendData> {
                   onPressed: () {
                     if (_currentPosition != null &&
                         _licensePlateController.text.isNotEmpty &&
+                        _licensePlateController.text.length ==
+                            7 && // Validamos Que debe de ser 7 Caracteres.
                         _descriptionController.text.isNotEmpty) {
                       _submitData();
                     } else {
                       // Notificamos Si Mat,Desc and Geo no estan todos llenos
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text(
-                              'Todos los campos deben estar llenos, incluyendo la localización'),
-                          duration: Duration(seconds: 2),
+                          content: Text('Matricula Debe De Tener 7 Caracteres'
+                              '\nincluyendo la localización'
+                              '\nDATOS IMCOMPLETOS'),
+                          duration: Duration(seconds: 4),
                         ),
                       );
                     }
