@@ -85,7 +85,7 @@ class _SendDataState extends State<SendData> {
 
       final response = await http.post(
         //Uri.parse('http://192.168.0.236:8089/ciudadanos'),
-        Uri.parse('http://10.0.2.2:8089/ciudadanos'),
+        Uri.parse('http://localhost:8089/ciudadanos'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
