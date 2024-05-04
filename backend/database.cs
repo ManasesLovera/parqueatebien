@@ -43,25 +43,25 @@ public class DbConnection
             var cmd = connection.CreateCommand();
             cmd.CommandText = @"
             SELECT LicensePlate,Description,Lat,Lon,File,FileType FROM Citizens
-            ";            
+            ";
 
             List<Citizen> citizens = new List<Citizen>();
 
             using (var reader = cmd.ExecuteReader())
             {
-                while(reader.Read())
+                while (reader.Read())
                 {
                     string photoBase64 = Convert.ToBase64String((byte[])reader["File"]);
 
                     citizens.Add(
                         new Citizen
                         {
-                            licensePlate = reader["LicensePlate"].ToString(),
-                            description = reader["Description"].ToString(),
-                            lat = reader["Lat"].ToString(),
-                            lon = reader["Lon"].ToString(),
-                            file = photoBase64,
-                            fileType = reader["FileType"].ToString()
+                            LicensePlate = reader["LicensePlate"].ToString(),
+                            Description = reader["Description"].ToString(),
+                            Lat = reader["Lat"].ToString(),
+                            Lon = reader["Lon"].ToString(),
+                            File = photoBase64,
+                            FileType = reader["FileType"].ToString()
                         }
                     );
                 }
@@ -79,36 +79,37 @@ public class DbConnection
 
             using (var connection = new SqliteConnection(connectionString))
             {
-            Citizen? citizen = null;
-            connection.Open();
-            var command = connection.CreateCommand();
-            command.CommandText = @"
+                Citizen? citizen = null;
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = @"
             SELECT LicensePlate, Description, Lat, Lon, File, FileType  FROM Citizens WHERE LicensePlate = @licensePlate
             ";
-            command.Parameters.AddWithValue("@licensePlate", licensePlate);
+                command.Parameters.AddWithValue("@licensePlate", licensePlate);
 
-            var reader = command.ExecuteReader();
+                var reader = command.ExecuteReader();
 
-            if (reader.Read())
-            {
-                string photoBase64 = Convert.ToBase64String((byte[])reader["File"]);
+                if (reader.Read())
+                {
+                    string photoBase64 = Convert.ToBase64String((byte[])reader["File"]);
 
-                citizen = new Citizen {
+                    citizen = new Citizen
+                    {
 
-                    licensePlate = reader["LicensePlate"].ToString()!,
-                    description = reader["Description"].ToString()!,
-                    lat = reader["Lat"].ToString()!, 
-                    lon = reader["Lon"].ToString()!,
-                    file = photoBase64,
-                    fileType = reader["FileType"].ToString()!
-                };
-            }
+                        LicensePlate = reader["LicensePlate"].ToString()!,
+                        Description = reader["Description"].ToString()!,
+                        Lat = reader["Lat"].ToString()!,
+                        Lon = reader["Lon"].ToString()!,
+                        File = photoBase64,
+                        FileType = reader["FileType"].ToString()!
+                    };
+                }
 
-            connection.Close();
+                connection.Close();
                 return citizen;
             }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             throw new Exception("An error occured" + ex.Message);
         }
@@ -127,7 +128,7 @@ public class DbConnection
 
             using (var reader = command.ExecuteReader())
             {
-                if(reader.Read())
+                if (reader.Read())
                 {
                     return true;
                 }
@@ -151,27 +152,28 @@ public class DbConnection
                 VALUES (@licensePlate, @description, @lat, @lon, @file, @fileType)
                 ";
 
-                byte[] photoBytes = Convert.FromBase64String(citizen.file);
+                byte[] photoBytes = Convert.FromBase64String(citizen.File);
 
-                cmd.Parameters.AddWithValue("@licensePlate", citizen.licensePlate);
-                cmd.Parameters.AddWithValue("@description", citizen.description);
-                cmd.Parameters.AddWithValue("@lat", citizen.lat);
-                cmd.Parameters.AddWithValue("@lon", citizen.lon);
+                cmd.Parameters.AddWithValue("@licensePlate", citizen.LicensePlate);
+                cmd.Parameters.AddWithValue("@description", citizen.Description);
+                cmd.Parameters.AddWithValue("@lat", citizen.Lat);
+                cmd.Parameters.AddWithValue("@lon", citizen.Lon);
                 cmd.Parameters.AddWithValue("@file", photoBytes);
-                cmd.Parameters.AddWithValue("@fileType", citizen.fileType);
+                cmd.Parameters.AddWithValue("@fileType", citizen.FileType);
 
 
                 cmd.ExecuteNonQuery();
 
                 connection.Close();
             }
-            return new Res { citizen = citizen, message = "" };
+            return new Res { Citizen = citizen, Message = "" };
         }
         catch (Exception ex)
         {
-            return new Res {
-                citizen = null,
-                message = ex.Message
+            return new Res
+            {
+                Citizen = null,
+                Message = ex.Message
             };
         }
     }
@@ -191,27 +193,27 @@ public class DbConnection
                 WHERE LicensePlate = @licensePlate
                 ";
 
-                byte[] photoBytes = Convert.FromBase64String(citizen.file);
+                byte[] photoBytes = Convert.FromBase64String(citizen.File);
 
-                command.Parameters.AddWithValue("@licensePlate", citizen.licensePlate);
-                command.Parameters.AddWithValue("@description", citizen.description);
-                command.Parameters.AddWithValue("@lat", citizen.lat);
-                command.Parameters.AddWithValue("@lon", citizen.lon);
+                command.Parameters.AddWithValue("@licensePlate", citizen.LicensePlate);
+                command.Parameters.AddWithValue("@description", citizen.Description);
+                command.Parameters.AddWithValue("@lat", citizen.Lat);
+                command.Parameters.AddWithValue("@lon", citizen.Lon);
                 command.Parameters.AddWithValue("@file", photoBytes);
-                command.Parameters.AddWithValue("fileType", citizen.fileType);
-                
+                command.Parameters.AddWithValue("fileType", citizen.FileType);
+
                 command.ExecuteNonQuery();
 
                 connection.Close();
             }
-            return new Res { citizen = this.GetByLicensePlate(citizen.licensePlate), message = "" };
+            return new Res { Citizen = this.GetByLicensePlate(citizen.LicensePlate), Message = "" };
         }
         catch (Exception ex)
         {
             return new Res
             {
-                citizen = null,
-                message = ex.Message
+                Citizen = null,
+                Message = ex.Message
             };
         }
     }
@@ -236,7 +238,7 @@ public class DbConnection
                 return "Deleted successfully";
             }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             return ex.Message;
         }

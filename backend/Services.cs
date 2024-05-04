@@ -4,49 +4,50 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
+using System.ComponentModel;
 
 namespace Services;
 
+public struct ValidationResult<T>
+{
+  public T? Result { get; set; }
+  public List<String> ErrorMessages { get; set; }
+}
+
 public class CitizensService
 {
-  // Database
   public DbConnection connectiondb = new DbConnection();
 
-  // GET ALL
   public List<Citizen> GetCitizens()
   {
-    // Show all data
     return connectiondb.GetAll();
   }
 
-    // ValidateGetCitizenRequest
-    // que reciba un httpcontext que me diga si es valido
-    // que me devuelva el license plate
-    // si no es valido que devuelva un bad request
-    // debe verificar si el licenseplate esta en el http context
-    // cuando el getcitizen mande un null debe responder con un NotFound 404
-
-  // GET
   public Citizen? GetCitizen(string licensePlate)
   {
-        // Get the citizen using the licensePlate and returns it
-        return connectiondb.GetByLicensePlate(licensePlate);
+    return connectiondb.GetByLicensePlate(licensePlate);
   }
-  // Validate bool
-  public string? ValidateGetCitizenRequest(HttpContext context)
+
+  public ValidationResult<string> ValidateGetCitizenRequest(HttpContext context)
+  {
+
+    string? licensePlate = context.Request.RouteValues["licensePlate"]!.ToString();
+
+    if (licensePlate == null)
     {
-        // Take the "licensePlate" string from the endpoint
-        string? licensePlate = context.Request.RouteValues["licensePlate"]!.ToString();
-
-        // Verify if the licensePlate is not null, it only contains 7 letters, but also only Uppercase letters, numbers and hyphens
-        if (licensePlate != null && licensePlate!.Trim().Length >= 5 && licensePlate!.Trim().Length <= 7 && Regex.IsMatch(licensePlate, "^[A-Z0-9-]*$"))
-            return licensePlate;
-
-        // If it doesn't comply with the conditions it will return null
-        return null;
+      return new ValidationResult<string>() { Result = null, ErrorMessages = new List<string>() { "Route parameter 'licensePlate' was not provided." } };
     }
 
-  // POST
+    if (licensePlate!.Trim().Length >= 5 && licensePlate!.Trim().Length <= 7 && Regex.IsMatch(licensePlate, "^[A-Z0-9-]*$"))
+    {
+      return new ValidationResult<string>() { Result = licensePlate, ErrorMessages = new() };
+    }
+    else
+    {
+      return new ValidationResult<string>() { Result = null, ErrorMessages = new List<string>() { $"License plate '{licensePlate}' is invalid." } };
+    }
+  }
+
   public Res AddCitizen(HttpContext context)
   {
     try
@@ -59,37 +60,37 @@ public class CitizensService
         Citizen citizen = JsonConvert.DeserializeObject<Citizen>(body)!;
         Console.WriteLine(body);
 
-        bool sonString = (!string.IsNullOrEmpty(citizen.licensePlate) && citizen.licensePlate is string) &&
-        (!string.IsNullOrEmpty(citizen.description) && citizen.description is string) &&
-        (!string.IsNullOrEmpty(citizen.lat) && citizen.lat is string) &&
-        (!string.IsNullOrEmpty(citizen.lon) && citizen.lon is string) &&
-        (!string.IsNullOrEmpty(citizen.file)) && (citizen.fileType is string);
+        bool sonString = (!string.IsNullOrEmpty(citizen.LicensePlate) && citizen.LicensePlate is string) &&
+        (!string.IsNullOrEmpty(citizen.Description) && citizen.Description is string) &&
+        (!string.IsNullOrEmpty(citizen.Lat) && citizen.Lat is string) &&
+        (!string.IsNullOrEmpty(citizen.Lon) && citizen.Lon is string) &&
+        (!string.IsNullOrEmpty(citizen.File)) && (citizen.FileType is string);
 
         if (!sonString)
         {
           context.Response.StatusCode = 400;
           return new Res
           {
-            citizen = null,
-            message = "Missing info or invalid data"
+            Citizen = null,
+            Message = "Missing info or invalid data"
           };
         }
-        if (connectiondb.Exists(citizen.licensePlate))
+        if (connectiondb.Exists(citizen.LicensePlate))
         {
           context.Response.StatusCode = 400;
           return new Res
           {
-            citizen = null,
-            message = "Citizen already exist"
+            Citizen = null,
+            Message = "Citizen already exist"
           };
         }
         var citizenRes = connectiondb.Add(citizen);
-        if (citizenRes.citizen == null)
+        if (citizenRes.Citizen == null)
         {
           context.Response.StatusCode = 500;
-          return new Res { citizen = null, message = citizenRes.message };
+          return new Res { Citizen = null, Message = citizenRes.Message };
         }
-        return new Res { citizen = citizenRes.citizen, message = "" };
+        return new Res { Citizen = citizenRes.Citizen, Message = "" };
       }
     }
     catch (Exception ex)
@@ -97,12 +98,12 @@ public class CitizensService
       context.Response.StatusCode = 500;
       return new Res
       {
-        citizen = null,
-        message = ex.Message
+        Citizen = null,
+        Message = ex.Message
       };
     }
   }
-  // PUT
+
   public Res? UpdateCitizen(HttpContext context)
   {
     try
@@ -113,11 +114,11 @@ public class CitizensService
 
         Citizen citizen = JsonConvert.DeserializeObject<Citizen>(body);
 
-        bool sonString = (!string.IsNullOrEmpty(citizen.licensePlate) && citizen.licensePlate is string) &&
-                        (!string.IsNullOrEmpty(citizen.description) && citizen.description is string) &&
-                        (!string.IsNullOrEmpty(citizen.lat) && citizen.lat is string) &&
-                        (!string.IsNullOrEmpty(citizen.lon) && citizen.lon is string) &&
-                        (!string.IsNullOrEmpty(citizen.file)) && (citizen.fileType is string);
+        bool sonString = (!string.IsNullOrEmpty(citizen.LicensePlate) && citizen.LicensePlate is string) &&
+                        (!string.IsNullOrEmpty(citizen.Description) && citizen.Description is string) &&
+                        (!string.IsNullOrEmpty(citizen.Lat) && citizen.Lat is string) &&
+                        (!string.IsNullOrEmpty(citizen.Lon) && citizen.Lon is string) &&
+                        (!string.IsNullOrEmpty(citizen.File)) && (citizen.FileType is string);
 
         if (!sonString)
         {
@@ -125,36 +126,36 @@ public class CitizensService
           context.Response.ContentType = "application/json";
           return new Res
           {
-            citizen = null,
-            message = "Missing info or invalid format"
+            Citizen = null,
+            Message = "Missing info or invalid format"
           }; // Missing info or data is not string
         }
         // Verify if citizen exist
-        var citizenExist = connectiondb.Exists(citizen.licensePlate);
+        var citizenExist = connectiondb.Exists(citizen.LicensePlate);
         if (!citizenExist)
         {
           context.Response.StatusCode = 404;
           return new Res
           {
-            citizen = null,
-            message = "Not Found"
+            Citizen = null,
+            Message = "Not Found"
           };
         }
         var citizenRes = connectiondb.Update(citizen);
 
-        if (citizenRes.citizen == null)
+        if (citizenRes.Citizen == null)
         {
           context.Response.StatusCode = 500;
           return new Res
           {
-            citizen = null,
-            message = citizenRes.message
+            Citizen = null,
+            Message = citizenRes.Message
           };
         }
         return new Res
         {
-          citizen = citizenRes.citizen,
-          message = ""
+          Citizen = citizenRes.Citizen,
+          Message = ""
         };
       }
     }
@@ -164,8 +165,8 @@ public class CitizensService
       context.Response.StatusCode = 500;
       return new Res
       {
-        citizen = null,
-        message = e.Message
+        Citizen = null,
+        Message = e.Message
       };
     }
   }
@@ -194,18 +195,18 @@ public class CitizensService
 
 public class Res
 {
-  public Citizen? citizen { get; set; }
-  public string message { get; set; } = String.Empty;
+  public Citizen? Citizen { get; set; }
+  public string Message { get; set; } = String.Empty;
 }
 
 public class Citizen
 {
 
-  public string licensePlate { get; set; } = String.Empty;
-  public string description { get; set; } = String.Empty;
-  public string lat { get; set; } = String.Empty;
-  public string lon { get; set; } = String.Empty;
-  public string? file { get; set; }
-  public string fileType { get; set; } = String.Empty;
+  public string LicensePlate { get; set; } = String.Empty;
+  public string Description { get; set; } = String.Empty;
+  public string Lat { get; set; } = String.Empty;
+  public string Lon { get; set; } = String.Empty;
+  public string? File { get; set; }
+  public string FileType { get; set; } = String.Empty;
 
 }
