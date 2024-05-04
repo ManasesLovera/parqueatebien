@@ -85,8 +85,8 @@ class _SendDataState extends State<SendData> {
       String base64Image = base64Encode(imageBytes);
 
       final response = await http.post(
-      //  Uri.parse('http://192.168.0.236:8089/ciudadanos'),
-       Uri.parse('http://localhost:8089/ciudadanos'),
+         Uri.parse('http://192.168.0.236:8089/ciudadanos'),
+       //Uri.parse('http://localhost:8089/ciudadanos'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -129,6 +129,8 @@ class _SendDataState extends State<SendData> {
               padding: const EdgeInsets.all(20.0),
               child: TextFormField(
                 controller: _licensePlateController,
+                // Limit Matricula to 7 Like DR matricula
+                maxLength: 7,
                 decoration: const InputDecoration(
                   labelText: 'Matricula',
                 ),
@@ -139,7 +141,7 @@ class _SendDataState extends State<SendData> {
               child: TextFormField(
                 controller: _descriptionController,
                 decoration: const InputDecoration(
-                  labelText: 'Description',
+                  labelText: 'Descripcion',
                 ),
               ),
             ),
