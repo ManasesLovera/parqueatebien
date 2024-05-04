@@ -46,61 +46,23 @@ public class CitizensService
       return new ValidationResult<string>() { Result = null, ErrorMessages = new List<string>() { $"License plate '{licensePlate}' is invalid." } };
     }
   }
-
-  public Res AddCitizen(HttpContext context)
-  {
-    try
+  public Citizen? ValidatePostCitizenBody(string body)
     {
-      Console.WriteLine("AddCitizen");
-      using (StreamReader reader = new StreamReader(context.Request.Body))
-      {
-        string body = reader.ReadToEndAsync().GetAwaiter().GetResult();
 
-        Citizen citizen = JsonConvert.DeserializeObject<Citizen>(body)!;
-        Console.WriteLine(body);
-
-        bool sonString = (!string.IsNullOrEmpty(citizen.LicensePlate) && citizen.LicensePlate is string) &&
+        Citizen? citizen = JsonConvert.DeserializeObject<Citizen>(body);
+        bool isValid = (!string.IsNullOrEmpty(citizen!.LicensePlate) && citizen.LicensePlate is string) &&
         (!string.IsNullOrEmpty(citizen.Description) && citizen.Description is string) &&
         (!string.IsNullOrEmpty(citizen.Lat) && citizen.Lat is string) &&
         (!string.IsNullOrEmpty(citizen.Lon) && citizen.Lon is string) &&
         (!string.IsNullOrEmpty(citizen.File)) && (citizen.FileType is string);
 
-        if (!sonString)
-        {
-          context.Response.StatusCode = 400;
-          return new Res
-          {
-            Citizen = null,
-            Message = "Missing info or invalid data"
-          };
-        }
-        if (connectiondb.Exists(citizen.LicensePlate))
-        {
-          context.Response.StatusCode = 400;
-          return new Res
-          {
-            Citizen = null,
-            Message = "Citizen already exist"
-          };
-        }
-        var citizenRes = connectiondb.Add(citizen);
-        if (citizenRes.Citizen == null)
-        {
-          context.Response.StatusCode = 500;
-          return new Res { Citizen = null, Message = citizenRes.Message };
-        }
-        return new Res { Citizen = citizenRes.Citizen, Message = "" };
-      }
+        return isValid ? citizen : null;
+
     }
-    catch (Exception ex)
-    {
-      context.Response.StatusCode = 500;
-      return new Res
-      {
-        Citizen = null,
-        Message = ex.Message
-      };
-    }
+
+  public Citizen? AddCitizen(Citizen citizen)
+  {
+        return connectiondb.Add(citizen);
   }
 
   public Res? UpdateCitizen(HttpContext context)
@@ -111,9 +73,9 @@ public class CitizensService
       {
         string body = reader.ReadToEndAsync().GetAwaiter().GetResult();
 
-        Citizen citizen = JsonConvert.DeserializeObject<Citizen>(body);
+        Citizen? citizen = JsonConvert.DeserializeObject<Citizen>(body);
 
-        bool sonString = (!string.IsNullOrEmpty(citizen.LicensePlate) && citizen.LicensePlate is string) &&
+        bool sonString = (!string.IsNullOrEmpty(citizen!.LicensePlate) && citizen.LicensePlate is string) &&
                         (!string.IsNullOrEmpty(citizen.Description) && citizen.Description is string) &&
                         (!string.IsNullOrEmpty(citizen.Lat) && citizen.Lat is string) &&
                         (!string.IsNullOrEmpty(citizen.Lon) && citizen.Lon is string) &&
@@ -140,9 +102,9 @@ public class CitizensService
             Message = "Not Found"
           };
         }
-        var citizenRes = connectiondb.Update(citizen);
+        Res? citizenRes = connectiondb.Update(citizen);
 
-        if (citizenRes.Citizen == null)
+        if (citizenRes!.Citizen == null)
         {
           context.Response.StatusCode = 500;
           return new Res
@@ -175,14 +137,14 @@ public class CitizensService
   {
     try
     {
-      string? licensePlate = context.Request.RouteValues["licensePlate"].ToString();
-      var citizen = connectiondb.GetByLicensePlate(licensePlate);
+      string? licensePlate = context.Request.RouteValues["licensePlate"]!.ToString();
+      var citizen = connectiondb.GetByLicensePlate(licensePlate!);
       if (citizen == null)
       {
         context.Response.StatusCode = 404;
         return $"This Citizen does not exist or is not a valid data: {licensePlate}";
       }
-      return connectiondb.Delete(licensePlate);
+      return connectiondb.Delete(licensePlate!);
     }
     catch (Exception ex)
     {

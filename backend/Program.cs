@@ -47,7 +47,37 @@ app.MapGet("/ciudadanos/{licensePlate}", async (HttpContext context) =>
     }
 
 });
-app.MapPost("/ciudadanos", (HttpContext httpContext) => citizens.AddCitizen(httpContext));
+app.MapPost("/ciudadanos", async (HttpContext httpContext) =>
+{
+    try
+    {
+        StreamReader reader = new StreamReader(httpContext.Request.Body);
+        string body = reader.ReadToEndAsync().GetAwaiter().GetResult();
+        Citizen? citizen = citizens.ValidatePostCitizenBody(body);
+
+        if (citizen == null)
+        {
+            httpContext.Response.StatusCode = 400;
+            await httpContext.Response.WriteAsync("Missing info or Invalid data");
+            return;
+        }
+        if(citizens.GetCitizen(citizen!.LicensePlate) != null)
+        {
+            httpContext.Response.StatusCode = 409;
+            await httpContext.Response.WriteAsync("409 Conflict: This licensePlate already exists");
+            return;
+        }
+        citizens.AddCitizen(citizen);
+        httpContext.Response.StatusCode = 200;
+        await httpContext.Response.WriteAsync("Citizen added successfully!");
+    }
+    catch(Exception ex)
+    {
+        httpContext.Response.StatusCode = 500;
+        await httpContext.Response.WriteAsync(ex.Message);
+    }
+    //citizens.AddCitizen(httpContext);
+});
 app.MapPut("/ciudadanos", (HttpContext httpContext) => citizens.UpdateCitizen(httpContext));
 app.MapDelete("/ciudadanos/{licensePlate}", (HttpContext httpContext) => citizens.DeleteCitizen(httpContext));
 
