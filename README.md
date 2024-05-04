@@ -21,22 +21,18 @@ Demo para la aplicacion que estamos haciendo de incautacion de vehiculos.
         ]
     ```
 2. GET / -> `"/ciudadanos/{licensePlate}"`:
-    - This will return an object that matches with the licensePlate inserted into the route passed.
+    - This will return a citizen that matches with the licensePlate inserted into the route passed.
     ```json
     {
-        "citizen": 
-            {
-                "licensePlate": string,
-                "description": string,
-                "lat": string,
-                "lon": string,
-                "file": base64 encoded string,
-                "fileType": string
-            },
-        "message": string
+        "licensePlate": string,
+        "description": string,
+        "lat": string,
+        "lon": string,
+        "file": base64 encoded string,
+        "fileType": string
     }
     ```
-    > If citizen is `null`, there was an error, please check the `"message"` and the status code, if everything is correct the message will be empty and the object will be provided.
+    > If citizen doesn't exist it will return a 404 status code, if the licensePlate data is not valid (it is vaid if it's a number between 5 and 7, it only contains upper case letters and numbers, and it does exists) it will return a Bad Request 400 status code, and if it returns a 500 server error there was an exception (server error, database error, etc).
 3. POST / -> `"/ciudadanos"`:
     - This will take an object from the request.body, it must have the following format:
         - Your must send the data this way:
