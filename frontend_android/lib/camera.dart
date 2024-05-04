@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:frontend_android/send_data.dart'; // Import the DisplayImageScreen
 
 class MyPage extends StatefulWidget {
-  const MyPage({Key? key}) : super(key: key);
+  const MyPage({super.key});
 
   @override
   _MyPageState createState() => _MyPageState();

@@ -11,7 +11,7 @@ class SendData extends StatefulWidget {
   // Cambios sugeridos Gracias
   final String mimeType;
   // Requerimos mimeType
-  const SendData({required this.imageFile, required this.mimeType});
+  const SendData({super.key, required this.imageFile, required this.mimeType});
 
   @override
   _SendDataState createState() => _SendDataState();
@@ -20,8 +20,8 @@ class SendData extends StatefulWidget {
 class _SendDataState extends State<SendData> {
   final LocationService _locationService = LocationService();
   Position? _currentPosition;
-  TextEditingController _licensePlateController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _licensePlateController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   void dispose() {
@@ -48,14 +48,14 @@ class _SendDataState extends State<SendData> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Error'),
-          content: Text('Failed to retrieve current location.'),
+          title: const Text('Error'),
+          content: const Text('Failed to retrieve current location.'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         ),
@@ -80,13 +80,12 @@ class _SendDataState extends State<SendData> {
         type = 'image/gif';
       }
 
-
       List<int> imageBytes = image.readAsBytesSync();
       String base64Image = base64Encode(imageBytes);
 
       final response = await http.post(
-        Uri.parse('http://192.168.0.236:8089/ciudadanos'),
-        //  Uri.parse('http://localhost:8089/ciudadanos'),
+        //Uri.parse('http://192.168.0.236:8089/ciudadanos'),
+        Uri.parse('http://10.0.2.2:8089/ciudadanos'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -160,7 +159,7 @@ class _SendDataState extends State<SendData> {
                 onPressed: _submitData,
                 child: const Text('Submit'),
               ),
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();

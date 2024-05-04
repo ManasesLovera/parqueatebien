@@ -7,7 +7,7 @@ void main() async {
 }
 
 class MainApp extends StatefulWidget {
-  const MainApp({Key? key}) : super(key: key);
+  const MainApp({super.key});
 
   @override
   _MainAppState createState() => _MainAppState();
@@ -78,11 +78,11 @@ class _MainAppState extends State<MainApp> {
               const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: _buscarIncautos,
-                child: const Text('Search'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                 ),
+                child: const Text('Search'),
               ),
                const SizedBox(height: 16.0),
                Expanded(
