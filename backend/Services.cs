@@ -30,7 +30,6 @@ public class CitizensService
 
   public ValidationResult<string> ValidateGetCitizenRequest(HttpContext context)
   {
-
     string? licensePlate = context.Request.RouteValues["licensePlate"]!.ToString();
 
     if (licensePlate == null)
