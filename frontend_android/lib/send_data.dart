@@ -48,8 +48,9 @@ class _SendDataState extends State<SendData> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Error'),
-          content: const Text('Failed to retrieve current location.'),
+          title: const Text('Error Localización'),
+          content: const Text(
+              'No se pudo Obtener la Localización !\nAsegurese que este encendida.!'),
           actions: [
             TextButton(
               onPressed: () {
@@ -84,8 +85,8 @@ class _SendDataState extends State<SendData> {
       String base64Image = base64Encode(imageBytes);
 
       final response = await http.post(
-        //Uri.parse('http://192.168.0.236:8089/ciudadanos'),
-        Uri.parse('http://localhost:8089/ciudadanos'),
+      //  Uri.parse('http://192.168.0.236:8089/ciudadanos'),
+       Uri.parse('http://localhost:8089/ciudadanos'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -156,7 +157,23 @@ class _SendDataState extends State<SendData> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: _currentPosition != null ? _submitData : null,
+                  // Condicionamos que no esten en Mat,Desc and Geo
+                  onPressed: () {
+                    if (_currentPosition != null &&
+                        _licensePlateController.text.isNotEmpty &&
+                        _descriptionController.text.isNotEmpty) {
+                      _submitData();
+                    } else {
+                      // Notificamos Si Mat,Desc and Geo no estan todos llenos
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                              'Todos los campos deben estar llenos, incluyendo la localización'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    }
+                  },
                   child: const Text('Submit'),
                 ),
                 const SizedBox(width: 20),

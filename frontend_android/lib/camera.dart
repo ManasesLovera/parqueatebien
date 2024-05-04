@@ -123,7 +123,7 @@ class _MyPageState extends State<MyPage> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Your device does not have a camera.'),
+            content: Text('Su Dispositivo no Cuenta con una Camara Disponible.'),
             duration: Duration(seconds: 3), // Adjust the duration as needed
           ),
         );
@@ -134,8 +134,8 @@ class _MyPageState extends State<MyPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Error'),
-            content: const Text('Failed to access camera.'),
+            title: const Text('Error Camara'),
+            content: const Text('No se pudo Aceder a la Camara.'),
             actions: [
               TextButton(
                 onPressed: () {
