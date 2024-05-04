@@ -34,7 +34,8 @@ class _MyPageState extends State<MyPage> {
             // Fix Size from 500px to 200px
             height: 200,
             child: GestureDetector(
-              onTap: () {
+              // Manejamos Null 
+              onTap: imageFile != null ? () {
             //    if (imageFile != null && mimeType != null) {
                   Navigator.push(
                     context,
@@ -47,7 +48,7 @@ class _MyPageState extends State<MyPage> {
                     ),
                   );
        //         }
-              },
+              }: null,
               child: DottedBorder(
                 borderType: BorderType.RRect,
                 radius: const Radius.circular(10),
