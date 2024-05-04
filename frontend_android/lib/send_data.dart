@@ -156,7 +156,10 @@ class _SendDataState extends State<SendData> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                onPressed: _submitData,
+                /* Boton Sunmit desabilitado para evitar enviar la data si la location
+                no esta habilitada, y condicionado para los null
+                */
+                onPressed: _currentPosition != null ?  _submitData :null,
                 child: const Text('Submit'),
               ),
               const SizedBox(width: 20),
