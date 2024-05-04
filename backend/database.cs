@@ -1,5 +1,6 @@
 using Microsoft.Data.Sqlite;
 using Services;
+using System.Data.Common;
 
 namespace db;
 
@@ -70,10 +71,12 @@ public class DbConnection
         }
     }
 
-    public Res? GetByLicensePlate(string licensePlate)
+    public Citizen? GetByLicensePlate(string licensePlate)
     {
         try
         {
+            if (!this.Exists(licensePlate)) return null;
+
             using (var connection = new SqliteConnection(connectionString))
             {
             Citizen? citizen = null;
@@ -92,22 +95,22 @@ public class DbConnection
 
                 citizen = new Citizen {
 
-                    licensePlate = reader["LicensePlate"].ToString(),
-                    description = reader["Description"].ToString(),
-                    lat = reader["Lat"].ToString(), 
-                    lon = reader["Lon"].ToString(),
+                    licensePlate = reader["LicensePlate"].ToString()!,
+                    description = reader["Description"].ToString()!,
+                    lat = reader["Lat"].ToString()!, 
+                    lon = reader["Lon"].ToString()!,
                     file = photoBase64,
-                    fileType = reader["FileType"].ToString()
+                    fileType = reader["FileType"].ToString()!
                 };
             }
 
             connection.Close();
-            return new Res { citizen = citizen, message = "" };
+                return citizen;
             }
         }
         catch(Exception ex)
         {
-            return new Res { citizen = null, message = ex.Message };
+            throw new Exception("An error occured" + ex.Message);
         }
     }
 
@@ -201,7 +204,7 @@ public class DbConnection
 
                 connection.Close();
             }
-            return new Res { citizen = this.GetByLicensePlate(citizen.licensePlate).citizen, message = "" };
+            return new Res { citizen = this.GetByLicensePlate(citizen.licensePlate), message = "" };
         }
         catch (Exception ex)
         {
