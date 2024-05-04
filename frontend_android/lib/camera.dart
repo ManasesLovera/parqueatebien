@@ -31,7 +31,8 @@ class _MyPageState extends State<MyPage> {
           Container(
             margin: const EdgeInsets.all(10),
             width: size.width,
-            height: 500,
+            // Fix Size from 500px to 200px
+            height: 200,
             child: GestureDetector(
               onTap: () {
             //    if (imageFile != null && mimeType != null) {
