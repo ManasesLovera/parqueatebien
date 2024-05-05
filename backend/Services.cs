@@ -89,9 +89,8 @@ public class CitizensService
           {
             Citizen = null,
             Message = "Missing info or invalid format"
-          }; // Missing info or data is not string
+          }; 
         }
-        // Verify if citizen exist
         var citizenExist = connectiondb.Exists(citizen.LicensePlate);
         if (!citizenExist)
         {
@@ -132,25 +131,9 @@ public class CitizensService
     }
   }
 
-  // DELETE
-  public string DeleteCitizen(HttpContext context)
+  public void DeleteCitizen(string licensePlate)
   {
-    try
-    {
-      string? licensePlate = context.Request.RouteValues["licensePlate"]!.ToString();
-      var citizen = connectiondb.GetByLicensePlate(licensePlate!);
-      if (citizen == null)
-      {
-        context.Response.StatusCode = 404;
-        return $"This Citizen does not exist or is not a valid data: {licensePlate}";
-      }
-      return connectiondb.Delete(licensePlate!);
-    }
-    catch (Exception ex)
-    {
-      context.Response.StatusCode = 500;
-      return ex.Message;
-    }
+     connectiondb.Delete(licensePlate);
   }
 }
 

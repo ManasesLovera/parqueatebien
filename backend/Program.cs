@@ -16,7 +16,7 @@ app.UseCors();
 
 CitizensService citizens = new();
 
-app.MapGet("/ciudadanos/", () => citizens.GetCitizens());
+app.MapGet("/ciudadanos", () => citizens.GetCitizens());
 app.MapGet("/ciudadanos/{licensePlate}", async (HttpContext context) =>
 {
     try
@@ -76,9 +76,35 @@ app.MapPost("/ciudadanos", async (HttpContext httpContext) =>
         httpContext.Response.StatusCode = 500;
         await httpContext.Response.WriteAsync(ex.Message);
     }
-    //citizens.AddCitizen(httpContext);
 });
 app.MapPut("/ciudadanos", (HttpContext httpContext) => citizens.UpdateCitizen(httpContext));
-app.MapDelete("/ciudadanos/{licensePlate}", (HttpContext httpContext) => citizens.DeleteCitizen(httpContext));
+app.MapDelete("/ciudadanos/{licensePlate}", async (HttpContext httpContext) =>
+{
+    try
+    {
+        var validation = citizens.ValidateGetCitizenRequest(httpContext);
+        if (validation.Result == null)
+        {
+            httpContext.Response.StatusCode = 400;
+            await httpContext.Response.WriteAsJsonAsync(validation.ErrorMessages);
+            return;
+        }
+        if (citizens.GetCitizen(validation.Result) == null)
+        {
+            httpContext.Response.StatusCode = 404;
+            await httpContext.Response.WriteAsync("Citizen was not found");
+            return;
+        }
+        citizens.DeleteCitizen(validation.Result);
+        httpContext.Response.StatusCode = 200;
+        await httpContext.Response.WriteAsync("Deleted Successfully!");
+
+    }
+    catch (Exception ex)
+    {
+        httpContext.Response.StatusCode = 500;
+        await httpContext.Response.WriteAsync(ex.Message);
+    }
+});
 
 app.Run();

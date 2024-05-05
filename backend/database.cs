@@ -208,30 +208,20 @@ public class DbConnection
         }
     }
 
-    public string Delete(string licensePlate)
+    public void Delete(string licensePlate)
     {
-        try
+        using (var connection = new SqliteConnection(connectionString))
         {
-            using (var connection = new SqliteConnection(connectionString))
-            {
-                connection.Open();
+            connection.Open();
 
-                var command = connection.CreateCommand();
-                command.CommandText = @"
-                DELETE FROM Citizens WHERE LicensePlate = @licensePlate
-                ";
-                command.Parameters.AddWithValue("@licensePlate", licensePlate);
-                command.ExecuteNonQuery();
+            var command = connection.CreateCommand();
+            command.CommandText = @"
+            DELETE FROM Citizens WHERE LicensePlate = @licensePlate
+            ";
+            command.Parameters.AddWithValue("@licensePlate", licensePlate);
+            command.ExecuteNonQuery();
 
-                connection.Close();
-
-                return "Deleted successfully";
-            }
-        }
-        catch (Exception ex)
-        {
-            return ex.Message;
+            connection.Close();
         }
     }
-
 }
