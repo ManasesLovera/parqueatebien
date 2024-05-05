@@ -21,7 +21,7 @@ app.MapGet("/ciudadanos/{licensePlate}", async (HttpContext context) =>
 {
     try
     {
-        var Validation = citizens.ValidateGetCitizenRequest(context);
+        var Validation = citizens.ValidateCitizenRequest(context);
         if (Validation.Result == null)
         {
             context.Response.StatusCode = 400;
@@ -53,7 +53,7 @@ app.MapPost("/ciudadanos", async (HttpContext httpContext) =>
     {
         StreamReader reader = new StreamReader(httpContext.Request.Body);
         string body = reader.ReadToEndAsync().GetAwaiter().GetResult();
-        Citizen? citizen = citizens.ValidatePostCitizenBody(body);
+        Citizen? citizen = citizens.ValidateCitizenBody(body);
 
         if (citizen == null)
         {
@@ -77,12 +77,41 @@ app.MapPost("/ciudadanos", async (HttpContext httpContext) =>
         await httpContext.Response.WriteAsync(ex.Message);
     }
 });
-app.MapPut("/ciudadanos", (HttpContext httpContext) => citizens.UpdateCitizen(httpContext));
+app.MapPut("/ciudadanos", async (HttpContext httpContext) =>
+{
+    try
+    {
+        StreamReader reader = new StreamReader(httpContext.Request.Body);
+        string body = reader.ReadToEndAsync().GetAwaiter().GetResult();
+        Citizen? citizen = citizens.ValidateCitizenBody(body);
+
+        if (citizen == null)
+        {
+            httpContext.Response.StatusCode = 400;
+            await httpContext.Response.WriteAsync("Missing info or Invalid data");
+            return;
+        }
+        if (citizens.GetCitizen(citizen!.LicensePlate) == null)
+        {
+            httpContext.Response.StatusCode = 404;
+            await httpContext.Response.WriteAsync("Not Found");
+            return;
+        }
+        citizens.UpdateCitizen(citizen);
+        httpContext.Response.StatusCode = 200;
+        await httpContext.Response.WriteAsync("Updated successfully");
+    }
+    catch (Exception ex)
+    {
+        httpContext.Response.StatusCode = 500;
+        await httpContext.Response.WriteAsync(ex.Message);
+    }
+});
 app.MapDelete("/ciudadanos/{licensePlate}", async (HttpContext httpContext) =>
 {
     try
     {
-        var validation = citizens.ValidateGetCitizenRequest(httpContext);
+        var validation = citizens.ValidateCitizenRequest(httpContext);
         if (validation.Result == null)
         {
             httpContext.Response.StatusCode = 400;
@@ -95,10 +124,9 @@ app.MapDelete("/ciudadanos/{licensePlate}", async (HttpContext httpContext) =>
             await httpContext.Response.WriteAsync("Citizen was not found");
             return;
         }
-        citizens.DeleteCitizen(validation.Result);
+        string responseMessage = citizens.DeleteCitizen(validation.Result);
         httpContext.Response.StatusCode = 200;
-        await httpContext.Response.WriteAsync("Deleted Successfully!");
-
+        await httpContext.Response.WriteAsync(responseMessage);
     }
     catch (Exception ex)
     {

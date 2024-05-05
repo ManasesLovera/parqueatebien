@@ -168,47 +168,36 @@ public class DbConnection
         return GetByLicensePlate(citizen.LicensePlate);
     }
 
-    public Res? Update(Citizen citizen)
+    public Citizen? Update(Citizen citizen)
     {
-        try
+        using (var connection = new SqliteConnection(connectionString))
         {
-            using (var connection = new SqliteConnection(connectionString))
-            {
-                connection.Open();
+            connection.Open();
 
-                var command = connection.CreateCommand();
-                command.CommandText = @"
-                UPDATE Citizens
-                SET Description = @description, Lat = @lat, Lon = @lon, File = @file, FileType = @fileType
-                WHERE LicensePlate = @licensePlate
-                ";
+            var command = connection.CreateCommand();
+            command.CommandText = @"
+            UPDATE Citizens
+            SET Description = @description, Lat = @lat, Lon = @lon, File = @file, FileType = @fileType
+            WHERE LicensePlate = @licensePlate
+            ";
 
-                byte[] photoBytes = Convert.FromBase64String(citizen.File!);
+            byte[] photoBytes = Convert.FromBase64String(citizen.File!);
 
-                command.Parameters.AddWithValue("@licensePlate", citizen.LicensePlate);
-                command.Parameters.AddWithValue("@description", citizen.Description);
-                command.Parameters.AddWithValue("@lat", citizen.Lat);
-                command.Parameters.AddWithValue("@lon", citizen.Lon);
-                command.Parameters.AddWithValue("@file", photoBytes);
-                command.Parameters.AddWithValue("fileType", citizen.FileType);
+            command.Parameters.AddWithValue("@licensePlate", citizen.LicensePlate);
+            command.Parameters.AddWithValue("@description", citizen.Description);
+            command.Parameters.AddWithValue("@lat", citizen.Lat);
+            command.Parameters.AddWithValue("@lon", citizen.Lon);
+            command.Parameters.AddWithValue("@file", photoBytes);
+            command.Parameters.AddWithValue("fileType", citizen.FileType);
 
-                command.ExecuteNonQuery();
+            command.ExecuteNonQuery();
 
-                connection.Close();
-            }
-            return new Res { Citizen = this.GetByLicensePlate(citizen.LicensePlate), Message = "" };
+            connection.Close();
         }
-        catch (Exception ex)
-        {
-            return new Res
-            {
-                Citizen = null,
-                Message = ex.Message
-            };
-        }
+        return GetByLicensePlate(citizen.LicensePlate);
     }
 
-    public void Delete(string licensePlate)
+    public string Delete(string licensePlate)
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -222,6 +211,8 @@ public class DbConnection
             command.ExecuteNonQuery();
 
             connection.Close();
+
+            return "Deleted successfully";
         }
     }
 }

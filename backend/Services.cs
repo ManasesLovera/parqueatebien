@@ -28,7 +28,7 @@ public class CitizensService
     return connectiondb.GetByLicensePlate(licensePlate);
   }
 
-  public ValidationResult<string> ValidateGetCitizenRequest(HttpContext context)
+  public ValidationResult<string> ValidateCitizenRequest(HttpContext context)
   {
     string? licensePlate = context.Request.RouteValues["licensePlate"]!.ToString();
 
@@ -46,9 +46,8 @@ public class CitizensService
       return new ValidationResult<string>() { Result = null, ErrorMessages = new List<string>() { $"License plate '{licensePlate}' is invalid." } };
     }
   }
-  public Citizen? ValidatePostCitizenBody(string body)
+  public Citizen? ValidateCitizenBody(string body)
     {
-
         Citizen? citizen = JsonConvert.DeserializeObject<Citizen>(body);
         bool isValid = (!string.IsNullOrEmpty(citizen!.LicensePlate) && citizen.LicensePlate is string) &&
         (!string.IsNullOrEmpty(citizen.Description) && citizen.Description is string) &&
@@ -57,7 +56,6 @@ public class CitizensService
         (!string.IsNullOrEmpty(citizen.File)) && (citizen.FileType is string);
 
         return isValid ? citizen : null;
-
     }
 
   public Citizen? AddCitizen(Citizen citizen)
@@ -65,75 +63,14 @@ public class CitizensService
         return connectiondb.Add(citizen);
   }
 
-  public Res? UpdateCitizen(HttpContext context)
+  public Citizen? UpdateCitizen(Citizen citizen)
   {
-    try
-    {
-      using (StreamReader reader = new StreamReader(context.Request.Body))
-      {
-        string body = reader.ReadToEndAsync().GetAwaiter().GetResult();
-
-        Citizen? citizen = JsonConvert.DeserializeObject<Citizen>(body);
-
-        bool sonString = (!string.IsNullOrEmpty(citizen!.LicensePlate) && citizen.LicensePlate is string) &&
-                        (!string.IsNullOrEmpty(citizen.Description) && citizen.Description is string) &&
-                        (!string.IsNullOrEmpty(citizen.Lat) && citizen.Lat is string) &&
-                        (!string.IsNullOrEmpty(citizen.Lon) && citizen.Lon is string) &&
-                        (!string.IsNullOrEmpty(citizen.File)) && (citizen.FileType is string);
-
-        if (!sonString)
-        {
-          context.Response.StatusCode = 400;
-          context.Response.ContentType = "application/json";
-          return new Res
-          {
-            Citizen = null,
-            Message = "Missing info or invalid format"
-          }; 
-        }
-        var citizenExist = connectiondb.Exists(citizen.LicensePlate);
-        if (!citizenExist)
-        {
-          context.Response.StatusCode = 404;
-          return new Res
-          {
-            Citizen = null,
-            Message = "Not Found"
-          };
-        }
-        Res? citizenRes = connectiondb.Update(citizen);
-
-        if (citizenRes!.Citizen == null)
-        {
-          context.Response.StatusCode = 500;
-          return new Res
-          {
-            Citizen = null,
-            Message = citizenRes.Message
-          };
-        }
-        return new Res
-        {
-          Citizen = citizenRes.Citizen,
-          Message = ""
-        };
-      }
-    }
-
-    catch (Exception e)
-    {
-      context.Response.StatusCode = 500;
-      return new Res
-      {
-        Citizen = null,
-        Message = e.Message
-      };
-    }
+        return connectiondb.Update(citizen);
   }
 
-  public void DeleteCitizen(string licensePlate)
+  public string DeleteCitizen(string licensePlate)
   {
-     connectiondb.Delete(licensePlate);
+     return connectiondb.Delete(licensePlate);
   }
 }
 
