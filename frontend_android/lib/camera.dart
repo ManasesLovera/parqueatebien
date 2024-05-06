@@ -34,21 +34,22 @@ class _MyPageState extends State<MyPage> {
             // Fix Size from 500px to 200px
             height: 200,
             child: GestureDetector(
-              // Manejamos Null 
-              onTap: imageFile != null ? () {
-            //    if (imageFile != null && mimeType != null) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SendData(
-                        imageFile: imageFile!,
-                         mimeType: 'image/jpeg'
-                    //    mimeType: mimeType!,
-                      ),
-                    ),
-                  );
-       //         }
-              }: null,
+              // Manejamos Null
+              onTap: imageFile != null
+                  ? () {
+                      //    if (imageFile != null && mimeType != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SendData(
+                              imageFile: imageFile!, mimeType: 'image/jpeg'
+                              //    mimeType: mimeType!,
+                              ),
+                        ),
+                      );
+                      //         }
+                    }
+                  : null,
               child: DottedBorder(
                 borderType: BorderType.RRect,
                 radius: const Radius.circular(10),
@@ -109,14 +110,43 @@ class _MyPageState extends State<MyPage> {
 
   // get from camera
   Future<void> getFromCamera() async {
-    final pickedFile = await _imagePicker.pickImage(
-      source: ImageSource.camera,
-    );
-    if (pickedFile != null) {
-      setState(() {
-        imageFile = File(pickedFile.path);
-   //     mimeType = pickedFile.mimeType;
-      });
+    // Testing
+    try {
+      final pickedFile = await _imagePicker.pickImage(
+        source: ImageSource.camera,
+      );
+      if (pickedFile != null) {
+        setState(() {
+          imageFile = File(pickedFile.path);
+          //     mimeType = pickedFile.mimeType;
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Su Dispositivo no Cuenta con una Camara Disponible.'),
+            duration: Duration(seconds: 3), // Adjust the duration as needed
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error: $e');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error Camara'),
+            content: const Text('No se pudo Aceder a la Camara.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 }
