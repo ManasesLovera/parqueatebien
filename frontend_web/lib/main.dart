@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:typed_data';
+import 'dart:io';
 
 void main() {
   runApp(const MainApp());
 }
 
 class MainApp extends StatefulWidget {
-  const MainApp({Key? key}) : super(key: key);
+  const MainApp({super.key});
 
   @override
   _MainAppState createState() => _MainAppState();
@@ -37,14 +39,15 @@ var response = await http.get(Uri.parse('http://localhost:8089/ciudadanos/$licen
       if (response.statusCode == 200) {
         setState(() {
           _citizens = parseResponse(response.body);
+          print(response.body);
         });
       } else if (response.statusCode == 404) {
         setState(() {
-          _errorMessage = 'Citizen not found';
+          _errorMessage = 'Incauto not found';
         });
       } else {
         setState(() {
-          _errorMessage = 'Error: ${response.statusCode}';
+          _errorMessage = 'invalid plate: ${response.statusCode}';
         });
       }
     } catch (e) {
@@ -60,8 +63,9 @@ var response = await http.get(Uri.parse('http://localhost:8089/ciudadanos/$licen
 
   List<Citizen> parseResponse(String responseBody) {
     final parsed = json.decode(responseBody);
-    if (parsed['citizen'] != null) {
-      return [Citizen.fromJson(parsed['citizen'])];
+    print(parsed);
+    if (parsed['licensePlate'] == null) {
+      return [Citizen.fromJson(parsed['licensePlate'])];
     } else {
       return [];
     }
@@ -118,11 +122,24 @@ var response = await http.get(Uri.parse('http://localhost:8089/ciudadanos/$licen
                                         title: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Text('License Plate: ${_citizens[index].licensePlate}'),
-                                            Text('Description: ${_citizens[index].description}'),
-                                            Text('Location: ${_citizens[index].lat}, ${_citizens[index].lon}'),
+                                            Text(
+                                            _citizens[index].licensePlate,
+                                             style: const TextStyle(fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                            _citizens[index].lat,
+                                            style: const TextStyle(fontWeight: FontWeight.bold),
+                                            ),Text(
+                                            _citizens[index].lon,
+                                             style: const TextStyle(fontWeight: FontWeight.bold),
+                                            ),Text(
+                                            _citizens[index].description,
+                                             style: const TextStyle(fontWeight: FontWeight.bold),
+                                            ),
+
                                           ],
                                         ),
+                                         subtitle: Text(_citizens[index].licensePlate),
                                       ),
                                     );
                                   },
@@ -144,13 +161,20 @@ class Citizen {
   final String description;
   final String lat;
   final String lon;
+  final String photoBase64;
 
   Citizen({
     required this.licensePlate,
     required this.description,
     required this.lat,
     required this.lon,
+    required this.photoBase64,
   });
+
+  Future<void> savePhoto(String filePath) async {
+    Uint8List bytes = base64Decode(photoBase64);
+    await File(filePath).writeAsBytes(bytes);
+  }
 
   factory Citizen.fromJson(Map<String, dynamic> json) {
     return Citizen(
@@ -158,6 +182,7 @@ class Citizen {
       description: json['description'] as String,
       lat: json['lat'] as String,
       lon: json['lon'] as String,
+      photoBase64: json['photo'] as String,
     );
   }
 }
