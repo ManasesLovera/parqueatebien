@@ -26,7 +26,6 @@ class LocationService {
       );
       return position;
     } catch (e) {
-      print(e);
       return null;
     }
   }
