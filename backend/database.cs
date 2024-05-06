@@ -43,25 +43,25 @@ public class DbConnection
             var cmd = connection.CreateCommand();
             cmd.CommandText = @"
             SELECT LicensePlate,Description,Lat,Lon,File,FileType FROM Citizens
-            ";            
+            ";
 
             List<Citizen> citizens = new List<Citizen>();
 
             using (var reader = cmd.ExecuteReader())
             {
-                while(reader.Read())
+                while (reader.Read())
                 {
                     string photoBase64 = Convert.ToBase64String((byte[])reader["File"]);
 
                     citizens.Add(
                         new Citizen
                         {
-                            licensePlate = reader["LicensePlate"].ToString(),
-                            description = reader["Description"].ToString(),
-                            lat = reader["Lat"].ToString(),
-                            lon = reader["Lon"].ToString(),
-                            file = photoBase64,
-                            fileType = reader["FileType"].ToString()
+                            LicensePlate = reader["LicensePlate"].ToString()!,
+                            Description = reader["Description"].ToString()!,
+                            Lat = reader["Lat"].ToString()!,
+                            Lon = reader["Lon"].ToString()!,
+                            File = photoBase64,
+                            FileType = reader["FileType"].ToString()!
                         }
                     );
                 }
@@ -79,36 +79,37 @@ public class DbConnection
 
             using (var connection = new SqliteConnection(connectionString))
             {
-            Citizen? citizen = null;
-            connection.Open();
-            var command = connection.CreateCommand();
-            command.CommandText = @"
+                Citizen? citizen = null;
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = @"
             SELECT LicensePlate, Description, Lat, Lon, File, FileType  FROM Citizens WHERE LicensePlate = @licensePlate
             ";
-            command.Parameters.AddWithValue("@licensePlate", licensePlate);
+                command.Parameters.AddWithValue("@licensePlate", licensePlate);
 
-            var reader = command.ExecuteReader();
+                var reader = command.ExecuteReader();
 
-            if (reader.Read())
-            {
-                string photoBase64 = Convert.ToBase64String((byte[])reader["File"]);
+                if (reader.Read())
+                {
+                    string photoBase64 = Convert.ToBase64String((byte[])reader["File"]);
 
-                citizen = new Citizen {
+                    citizen = new Citizen
+                    {
 
-                    licensePlate = reader["LicensePlate"].ToString()!,
-                    description = reader["Description"].ToString()!,
-                    lat = reader["Lat"].ToString()!, 
-                    lon = reader["Lon"].ToString()!,
-                    file = photoBase64,
-                    fileType = reader["FileType"].ToString()!
-                };
-            }
+                        LicensePlate = reader["LicensePlate"].ToString()!,
+                        Description = reader["Description"].ToString()!,
+                        Lat = reader["Lat"].ToString()!,
+                        Lon = reader["Lon"].ToString()!,
+                        File = photoBase64,
+                        FileType = reader["FileType"].ToString()!
+                    };
+                }
 
-            connection.Close();
+                connection.Close();
                 return citizen;
             }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             throw new Exception("An error occured" + ex.Message);
         }
@@ -127,7 +128,7 @@ public class DbConnection
 
             using (var reader = command.ExecuteReader())
             {
-                if(reader.Read())
+                if (reader.Read())
                 {
                     return true;
                 }
@@ -137,109 +138,81 @@ public class DbConnection
 
     }
 
-    public Res Add(Citizen citizen)
+    public Citizen? Add(Citizen citizen)
     {
-        try
+
+        using (var connection = new SqliteConnection(connectionString))
         {
-            using (var connection = new SqliteConnection(connectionString))
-            {
-                connection.Open();
+            connection.Open();
 
-                var cmd = connection.CreateCommand();
-                cmd.CommandText = @"
-                INSERT INTO Citizens (LicensePlate, Description, Lat, Lon, File, FileType)
-                VALUES (@licensePlate, @description, @lat, @lon, @file, @fileType)
-                ";
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = @"
+            INSERT INTO Citizens (LicensePlate, Description, Lat, Lon, File, FileType)
+            VALUES (@licensePlate, @description, @lat, @lon, @file, @fileType)
+            ";
 
-                byte[] photoBytes = Convert.FromBase64String(citizen.file);
+            byte[] photoBytes = Convert.FromBase64String(citizen.File!);
 
-                cmd.Parameters.AddWithValue("@licensePlate", citizen.licensePlate);
-                cmd.Parameters.AddWithValue("@description", citizen.description);
-                cmd.Parameters.AddWithValue("@lat", citizen.lat);
-                cmd.Parameters.AddWithValue("@lon", citizen.lon);
-                cmd.Parameters.AddWithValue("@file", photoBytes);
-                cmd.Parameters.AddWithValue("@fileType", citizen.fileType);
+            cmd.Parameters.AddWithValue("@licensePlate", citizen.LicensePlate);
+            cmd.Parameters.AddWithValue("@description", citizen.Description);
+            cmd.Parameters.AddWithValue("@lat", citizen.Lat);
+            cmd.Parameters.AddWithValue("@lon", citizen.Lon);
+            cmd.Parameters.AddWithValue("@file", photoBytes);
+            cmd.Parameters.AddWithValue("@fileType", citizen.FileType);
 
 
-                cmd.ExecuteNonQuery();
+            cmd.ExecuteNonQuery();
 
-                connection.Close();
-            }
-            return new Res { citizen = citizen, message = "" };
+            connection.Close();
         }
-        catch (Exception ex)
-        {
-            return new Res {
-                citizen = null,
-                message = ex.Message
-            };
-        }
+        return GetByLicensePlate(citizen.LicensePlate);
     }
 
-    public Res? Update(Citizen citizen)
+    public Citizen? Update(Citizen citizen)
     {
-        try
+        using (var connection = new SqliteConnection(connectionString))
         {
-            using (var connection = new SqliteConnection(connectionString))
-            {
-                connection.Open();
+            connection.Open();
 
-                var command = connection.CreateCommand();
-                command.CommandText = @"
-                UPDATE Citizens
-                SET Description = @description, Lat = @lat, Lon = @lon, File = @file, FileType = @fileType
-                WHERE LicensePlate = @licensePlate
-                ";
+            var command = connection.CreateCommand();
+            command.CommandText = @"
+            UPDATE Citizens
+            SET Description = @description, Lat = @lat, Lon = @lon, File = @file, FileType = @fileType
+            WHERE LicensePlate = @licensePlate
+            ";
 
-                byte[] photoBytes = Convert.FromBase64String(citizen.file);
+            byte[] photoBytes = Convert.FromBase64String(citizen.File!);
 
-                command.Parameters.AddWithValue("@licensePlate", citizen.licensePlate);
-                command.Parameters.AddWithValue("@description", citizen.description);
-                command.Parameters.AddWithValue("@lat", citizen.lat);
-                command.Parameters.AddWithValue("@lon", citizen.lon);
-                command.Parameters.AddWithValue("@file", photoBytes);
-                command.Parameters.AddWithValue("fileType", citizen.fileType);
-                
-                command.ExecuteNonQuery();
+            command.Parameters.AddWithValue("@licensePlate", citizen.LicensePlate);
+            command.Parameters.AddWithValue("@description", citizen.Description);
+            command.Parameters.AddWithValue("@lat", citizen.Lat);
+            command.Parameters.AddWithValue("@lon", citizen.Lon);
+            command.Parameters.AddWithValue("@file", photoBytes);
+            command.Parameters.AddWithValue("fileType", citizen.FileType);
 
-                connection.Close();
-            }
-            return new Res { citizen = this.GetByLicensePlate(citizen.licensePlate), message = "" };
+            command.ExecuteNonQuery();
+
+            connection.Close();
         }
-        catch (Exception ex)
-        {
-            return new Res
-            {
-                citizen = null,
-                message = ex.Message
-            };
-        }
+        return GetByLicensePlate(citizen.LicensePlate);
     }
 
     public string Delete(string licensePlate)
     {
-        try
+        using (var connection = new SqliteConnection(connectionString))
         {
-            using (var connection = new SqliteConnection(connectionString))
-            {
-                connection.Open();
+            connection.Open();
 
-                var command = connection.CreateCommand();
-                command.CommandText = @"
-                DELETE FROM Citizens WHERE LicensePlate = @licensePlate
-                ";
-                command.Parameters.AddWithValue("@licensePlate", licensePlate);
-                command.ExecuteNonQuery();
+            var command = connection.CreateCommand();
+            command.CommandText = @"
+            DELETE FROM Citizens WHERE LicensePlate = @licensePlate
+            ";
+            command.Parameters.AddWithValue("@licensePlate", licensePlate);
+            command.ExecuteNonQuery();
 
-                connection.Close();
+            connection.Close();
 
-                return "Deleted successfully";
-            }
-        }
-        catch(Exception ex)
-        {
-            return ex.Message;
+            return "Deleted successfully";
         }
     }
-
 }
