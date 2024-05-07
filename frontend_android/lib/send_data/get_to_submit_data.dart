@@ -3,13 +3,11 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-// Use logger FrameWork
 import 'package:logger/logger.dart';
 
-// Use logger FrameWork
 final Logger _logger = Logger();
-// Using callback to avoid directly passing the BuildContext
-typedef ShowDialogCallback = void Function();
+
+typedef ShowDialogCallback = void Function(String);
 
 Future<void> submitData({
   required BuildContext context,
@@ -34,41 +32,26 @@ Future<void> submitData({
     List<int> imageBytes = imageFile.readAsBytesSync();
     String base64Image = base64Encode(imageBytes);
 
-    final response = await http.post(
-      Uri.parse('http://192.168.0.236:8089/ciudadanos'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'licensePlate': licensePlate,
-        'description': description,
-        'lat': latitude,
-        'lon': longitude,
-        'file': base64Image,
-        'fileType': type
-      }),
-    );
+    final response = await http
+        .post(Uri.parse('http://192.168.0.236:8089/ciudadanos'),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode(<String, dynamic>{
+              'licensePlate': licensePlate,
+              'description': description,
+              'lat': latitude,
+              'lon': longitude,
+              'file': base64Image,
+              'fileType': type
+            }))
+        /* De esta forma, hago test rapido y muestro el mensaje 
+            solo con motivo de testing
+            */
+        .timeout(const Duration(seconds: 1));
     if (response.statusCode == 200) {
-      //  print('Datos enviados Correctamente');
       _logger.e('Exito !: Datos enviados Correctamente');
-      /*
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Éxito Enviados !'),
-          content: const Text('Exito !: Datos enviados Correctamente'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
-    
-    */
+      showDialog('Exito Data Enviada !');
     } else {
       String message;
       switch (response.statusCode) {
@@ -85,30 +68,10 @@ Future<void> submitData({
           message = 'Error desconocido. Por favor, inténtelo más tarde.';
       }
       _logger.e('Error: $message');
-      showDialog();
-      /*
-      // using mounted property of the State.
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Error '),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
-    
-    */
+      showDialog('Error !, Los datos no fueron enviados');
     }
   } catch (e) {
-    // Handle any exceptions
     _logger.e('Error: Al enviar los datos $e');
-    showDialog();
+    showDialog('Servidor no responde');
   }
 }

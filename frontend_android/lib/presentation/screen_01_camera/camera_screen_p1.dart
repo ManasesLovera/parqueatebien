@@ -21,7 +21,7 @@ class CameraState extends State<Camera> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("AMET"),
+        title: const Text("DEMO ORIONTEK"),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

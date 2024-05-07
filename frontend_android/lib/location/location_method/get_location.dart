@@ -18,26 +18,6 @@ class GetLocationMethod {
         // Using Future
         return Future.error(
             "Location service is disabled or permission denied");
-        /*
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text("Error Localización"),
-            content: const Text(
-                "No se pudo Obtener la Localización !\nAsegurese que este encendida.!"),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
-        return null;
-      */
-        // } catch (e) {
       }
     } catch (e) {
       //print('Error: $e');

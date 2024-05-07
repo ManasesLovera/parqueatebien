@@ -5,7 +5,6 @@ import 'package:frontend_android/location/location_service/location_service.dart
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
 
-// Use logger FrameWork
 final Logger _logger = Logger();
 
 class SendData extends StatefulWidget {
@@ -122,60 +121,37 @@ class SendDataState extends State<SendData> {
     );
   }
 
-  Future<void> _submitData() async {
-    await submitData(
-      context: context,
-      licensePlateController: _licensePlateController,
-      descriptionController: _descriptionController,
-      currentPosition: _currentPosition!,
-      imageFile: widget.imageFile,
-      showDialog: () {},
-    );
-  }
-
 // Location
   Future<void> _getCurrentLocation() async {
     Position? position = await locationService.getCurrentLocation();
-    if (position != null) {
-      setState(() {
-        _currentPosition = position;
-      });
-    } else {
-      _logger.e('Failed to retrieve current location');
-      /*  Don't use 'BuildContext's across async gaps. 
-      This is the fix
-      */
-
-      _showLocationErrorDialog();
-      /*
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("Error de Localización"),
-          content: const Text(
-              "No se pudo obtener la localización.\nAsegúrese de que la ubicación esté activada."),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
-      */
+    if (mounted) {
+      if (position != null) {
+        _logger.e('Localizacion Fue Obetenida con exito');
+        setState(() {
+          _currentPosition = position;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Localización obtenida exitosamente'),
+            duration: Duration(seconds: 2), // Adjust the duration as needed
+          ),
+        );
+      } else {
+        _logger.e('Failed to retrieve current location');
+        _showLocationErrorDialog();
+      }
     }
   }
 
-// esto evita usar el  BuildContext's across async gaps.
   void _showLocationErrorDialog() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text("Error de Localización"),
-        content: const Text(
-            "No se pudo obtener la localización.\nAsegúrese de que la ubicación esté activada."),
+        content: const Text("NO SE PUDO OBTENER LA LOCALIZACION.\n\n"
+            "Ubicación Y WIFI !!!\n"
+            "DEBEN ESTAR ACTIVADOS\n"
+            "PARA ENVIAR LOS DATOS Y OBTENER LA LOCALIZACION\n"),
         actions: [
           TextButton(
             onPressed: () {
@@ -184,6 +160,30 @@ class SendDataState extends State<SendData> {
             child: const Text('OK'),
           ),
         ],
+      ),
+    );
+  }
+
+  Future<void> _submitData() async {
+    try {
+      await submitData(
+        context: context,
+        licensePlateController: _licensePlateController,
+        descriptionController: _descriptionController,
+        currentPosition: _currentPosition!,
+        imageFile: widget.imageFile,
+        showDialog: _showMessage,
+      );
+    } catch (e) {
+      _showMessage('Error');
+    }
+  }
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
