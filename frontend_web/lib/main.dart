@@ -49,7 +49,6 @@ var response = await http.get(Uri.parse('http://localhost:8089/ciudadanos/$licen
       } else {
         setState(() {
           _errorMessage = 'invalid plate: ${response.statusCode}';
-          showErrorDialog(_errorMessage);
         });
       }
     } catch (e) {
@@ -62,25 +61,7 @@ var response = await http.get(Uri.parse('http://localhost:8089/ciudadanos/$licen
       });
     }
   }
-void showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Error'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+
   List<Citizen> parseResponse(String responseBody) {
     final parsed = json.decode(responseBody);
     if (parsed['LicensePlate'] != null) {
@@ -218,3 +199,22 @@ class Citizen {
     );
   }
 }
+void showErrorDialog(String message,BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
