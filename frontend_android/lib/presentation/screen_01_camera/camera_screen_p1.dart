@@ -2,8 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:frontend_android/camera/camera_method/get_camera.dart';
 import 'package:frontend_android/presentation/screen_03_send/send_screen_p3.dart';
-// Se remplazo dotted_border por BoxDecoration con un grosor de 2.5
-//import 'package:dotted_border/dotted_border.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Camera extends StatefulWidget {

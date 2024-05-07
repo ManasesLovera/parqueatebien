@@ -3,6 +3,11 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+// Use logger FrameWork
+import 'package:logger/logger.dart';
+
+// Use logger FrameWork
+final Logger _logger = Logger();
 
 Future<void> submitData({
   required BuildContext context,
@@ -41,12 +46,13 @@ Future<void> submitData({
       }),
     );
     if (response.statusCode == 200) {
-      print('Datos enviados Correctamente');
+      //  print('Datos enviados Correctamente');
+      _logger.e('Exito !: Datos enviados Correctamente');
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Éxito'),
-          content: const Text('Datos enviados correctamente.'),
+          title: const Text('Éxito Enviados !'),
+          content: const Text('Exito !: Datos enviados Correctamente'),
           actions: [
             TextButton(
               onPressed: () {
@@ -91,6 +97,6 @@ Future<void> submitData({
     }
   } catch (e) {
     // Handle any exceptions
-    print('Error: $e');
+    _logger.e('Error: Al enviar los datos $e');
   }
 }

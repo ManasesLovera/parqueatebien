@@ -3,6 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:frontend_android/location/location_service/location_service.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:logger/logger.dart';
+
+// Use logger FrameWork
+final Logger _logger = Logger();
 
 class SendData extends StatefulWidget {
   final File imageFile;
@@ -10,15 +14,9 @@ class SendData extends StatefulWidget {
   const SendData({super.key, required this.imageFile, required this.mimeType});
 
   @override
-  /* _SendDataState createState() => _SendDataState();
-  Fix visibility 
-  */
   SendDataState createState() => SendDataState();
 }
 
-/* class _SendDataState extends State<SendData> {
-Fix visibility 
-*/
 class SendDataState extends State<SendData> {
   final LocationService locationService = LocationService();
   Position? _currentPosition;
@@ -91,6 +89,7 @@ class SendDataState extends State<SendData> {
                         _descriptionController.text.isNotEmpty) {
                       _submitData();
                     } else {
+                      _logger.e('Error Fatal ! , Enviar Datos');
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Matricula Debe De Tener 7 Caracteres'
@@ -141,6 +140,7 @@ class SendDataState extends State<SendData> {
         _currentPosition = position;
       });
     } else {
+      _logger.e('Failed to retrieve current location');
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
