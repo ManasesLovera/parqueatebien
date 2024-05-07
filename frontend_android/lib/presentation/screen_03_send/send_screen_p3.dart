@@ -129,6 +129,7 @@ class SendDataState extends State<SendData> {
       descriptionController: _descriptionController,
       currentPosition: _currentPosition!,
       imageFile: widget.imageFile,
+      showDialog: () {},
     );
   }
 
@@ -141,6 +142,12 @@ class SendDataState extends State<SendData> {
       });
     } else {
       _logger.e('Failed to retrieve current location');
+      /*  Don't use 'BuildContext's across async gaps. 
+      This is the fix
+      */
+
+      _showLocationErrorDialog();
+      /*
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -157,6 +164,27 @@ class SendDataState extends State<SendData> {
           ],
         ),
       );
+      */
     }
+  }
+
+// esto evita usar el  BuildContext's across async gaps.
+  void _showLocationErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Error de Localización"),
+        content: const Text(
+            "No se pudo obtener la localización.\nAsegúrese de que la ubicación esté activada."),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 }
