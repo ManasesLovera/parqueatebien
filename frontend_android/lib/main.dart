@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_android/presentation/screen_01_camera/camera_screen_p1.dart';
+import 'package:frontend_android/presentation/screen_00_login/login_screen_p0.dart';
 
 void main() async => runApp(const MyApp());
 
@@ -8,9 +8,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Camera(),
+      //For testing
+      home: Login(),
+      //  home: Camera(),
     );
   }
 }

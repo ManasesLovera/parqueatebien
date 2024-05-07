@@ -41,7 +41,6 @@ class SendDataState extends State<SendData> {
       appBar: AppBar(
         title: const Text('Enviar Datos'),
       ),
-      // Hice la pantalla scroleable para evitar overflows
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
