@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:typed_data';
+ import 'package:flutter/widgets.dart';
 import 'dart:io';
 
 void main() {
@@ -39,7 +40,7 @@ var response = await http.get(Uri.parse('http://localhost:8089/ciudadanos/$licen
       if (response.statusCode == 200) {
         setState(() {
           _citizens = parseResponse(response.body);
-          print(response.body);
+          // print(response.body);
         });
       } else if (response.statusCode == 404) {
         setState(() {
@@ -48,6 +49,7 @@ var response = await http.get(Uri.parse('http://localhost:8089/ciudadanos/$licen
       } else {
         setState(() {
           _errorMessage = 'invalid plate: ${response.statusCode}';
+          showErrorDialog(_errorMessage);
         });
       }
     } catch (e) {
@@ -60,17 +62,33 @@ var response = await http.get(Uri.parse('http://localhost:8089/ciudadanos/$licen
       });
     }
   }
-
+void showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
   List<Citizen> parseResponse(String responseBody) {
     final parsed = json.decode(responseBody);
-    print(parsed);
-    if (parsed['licensePlate'] == null) {
-      return [Citizen.fromJson(parsed['licensePlate'])];
+    if (parsed['LicensePlate'] != null) {
+      return [Citizen.fromJson(parsed)];
     } else {
       return [];
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -122,6 +140,17 @@ var response = await http.get(Uri.parse('http://localhost:8089/ciudadanos/$licen
                                         title: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
+SizedBox(
+  width: 150, 
+  height: 150,
+  child: ClipRRect(
+    borderRadius: BorderRadius.circular(8.0),
+    child: Image.memory(
+      base64Decode(_citizens[index].photoBase64),
+      fit: BoxFit.cover, 
+    ),
+  ),
+),                                           
                                             Text(
                                             _citizens[index].licensePlate,
                                              style: const TextStyle(fontWeight: FontWeight.bold),
@@ -162,6 +191,7 @@ class Citizen {
   final String lat;
   final String lon;
   final String photoBase64;
+  final String fileType;
 
   Citizen({
     required this.licensePlate,
@@ -169,6 +199,7 @@ class Citizen {
     required this.lat,
     required this.lon,
     required this.photoBase64,
+    required this.fileType
   });
 
   Future<void> savePhoto(String filePath) async {
@@ -178,11 +209,12 @@ class Citizen {
 
   factory Citizen.fromJson(Map<String, dynamic> json) {
     return Citizen(
-      licensePlate: json['licensePlate'] as String,
-      description: json['description'] as String,
-      lat: json['lat'] as String,
-      lon: json['lon'] as String,
-      photoBase64: json['photo'] as String,
+      licensePlate: json['LicensePlate'] as String,
+      description: json['Description'] as String,
+      lat: json['Lat'] as String,
+      lon: json['Lon'] as String,
+      photoBase64: json['File'] as String,
+      fileType: json['FileType'] as String
     );
   }
 }
