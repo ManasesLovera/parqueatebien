@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_android/presentation/screen_00_login/componentes/my_textfield.dart';
 
 class Login extends StatelessWidget {
   const Login({super.key});
@@ -35,8 +36,14 @@ class Login extends StatelessWidget {
               ),
               //Spaciamos el subtitulo del texbox a continuacion.
               const SizedBox(
-                height: 50,
+                height: 10,
               ),
+              MyTextField(),
+              const SizedBox(
+                height: 10,
+              ),
+              MyTextField(),
+              // Rellenos horizontal
             ],
           ),
         ),
