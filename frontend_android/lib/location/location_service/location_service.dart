@@ -12,7 +12,6 @@ class LocationService {
       if (!serviceEnabled) {
         throw 'Location services are disabled.';
       }
-
       PermissionStatus permission = await Permission.location.status;
       if (permission == PermissionStatus.denied) {
         permission = await Permission.location.request();
@@ -20,11 +19,9 @@ class LocationService {
           throw 'Location permissions are denied.';
         }
       }
-
       if (permission == PermissionStatus.permanentlyDenied) {
         throw 'Location permissions are permanently denied, we cannot request permissions.';
       }
-
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
