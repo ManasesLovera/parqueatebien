@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_android/presentation/screen_00_login/componentes/my_button.dart';
-import 'package:frontend_android/presentation/screen_00_login/componentes/my_textfield.dart';
+import 'package:frontend_android/componentes_visuales/my_button.dart';
+import 'package:frontend_android/componentes_visuales/my_textfield.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
@@ -8,6 +8,10 @@ class Login extends StatelessWidget {
   // for usernameControllers TextFields
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+
+  // Metodo De iniciar sesión
+  // Pending...
+  void signUserIn() {}
 
   @override
   Widget build(BuildContext context) {
@@ -75,11 +79,13 @@ class Login extends StatelessWidget {
                   ],
                 ),
               ),
-
               const SizedBox(
                 height: 20,
               ),
-              const MyButton(),
+              MyButton(
+                // Iniciar...
+                onTap: signUserIn,
+              ),
             ],
           ),
         ),

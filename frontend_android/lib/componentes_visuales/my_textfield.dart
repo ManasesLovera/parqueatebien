@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class MyTextField extends StatelessWidget {
-  final controller; // controlamos la informacion en la caja de texto
-  final String hintText; // pista guia para el usuario
-  final bool obscuretext; // hide typing password data in the textfield
+  // Dynamic, para eliminar la queja del typeof data
+  final dynamic controller;
+  final String hintText;
+  final bool obscuretext;
 
   const MyTextField(
       {super.key,
