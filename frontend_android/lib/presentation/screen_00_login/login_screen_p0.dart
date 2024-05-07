@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_android/presentation/screen_00_login/componentes/my_button.dart';
 import 'package:frontend_android/presentation/screen_00_login/componentes/my_textfield.dart';
 
 class Login extends StatelessWidget {
@@ -76,9 +77,9 @@ class Login extends StatelessWidget {
               ),
 
               const SizedBox(
-                height: 15,
+                height: 20,
               ),
-              // Rellenos horizontal
+              const MyButton(),
             ],
           ),
         ),
