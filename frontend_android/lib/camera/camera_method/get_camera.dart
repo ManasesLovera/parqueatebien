@@ -16,7 +16,9 @@ class CameraMethods {
       if (pickedFile != null) {
         setImageFile(File(pickedFile.path));
       } else {
-        showError('Su Dispositivo no Cuenta con una Cámara Disponible.');
+        //  showError('Su Dispositivo no Cuenta con una Cámara Disponible.');
+        // Alertamos al usuario que cancelo la toma de foto
+        showError('Toma De Foto cancelada !.');
       }
     } catch (e) {
       showError('No se pudo Acceder a la Cámara.');

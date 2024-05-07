@@ -8,6 +8,8 @@ import 'package:logger/logger.dart';
 
 // Use logger FrameWork
 final Logger _logger = Logger();
+// Using callback to avoid directly passing the BuildContext
+typedef ShowDialogCallback = void Function();
 
 Future<void> submitData({
   required BuildContext context,
@@ -15,6 +17,7 @@ Future<void> submitData({
   required TextEditingController descriptionController,
   required Position currentPosition,
   required File imageFile,
+  required ShowDialogCallback showDialog,
 }) async {
   try {
     final licensePlate = licensePlateController.text;
@@ -48,6 +51,7 @@ Future<void> submitData({
     if (response.statusCode == 200) {
       //  print('Datos enviados Correctamente');
       _logger.e('Exito !: Datos enviados Correctamente');
+      /*
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -63,6 +67,8 @@ Future<void> submitData({
           ],
         ),
       );
+    
+    */
     } else {
       String message;
       switch (response.statusCode) {
@@ -78,6 +84,9 @@ Future<void> submitData({
         default:
           message = 'Error desconocido. Por favor, inténtelo más tarde.';
       }
+      _logger.e('Error: $message');
+      showDialog();
+      /*
       // using mounted property of the State.
       showDialog(
         context: context,
@@ -94,9 +103,12 @@ Future<void> submitData({
           ],
         ),
       );
+    
+    */
     }
   } catch (e) {
     // Handle any exceptions
     _logger.e('Error: Al enviar los datos $e');
+    showDialog();
   }
 }
