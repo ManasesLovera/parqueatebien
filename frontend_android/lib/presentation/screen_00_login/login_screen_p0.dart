@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:frontend_android/presentation/screen_00_login/componentes/my_textfield.dart';
 
 class Login extends StatelessWidget {
-  const Login({super.key});
+  Login({super.key});
+
+  // for usernameControllers TextFields
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -23,26 +27,57 @@ class Login extends StatelessWidget {
               // logo lock icon
               const Icon(
                 Icons.lock,
-                size: 125,
+                size: 100,
               ),
               //Spaciamos el lock icon
               const SizedBox(
-                height: 50,
+                height: 40,
               ),
               // Subtitulo lock Icon
               Text(
                 'Sistema Demo OrionTek',
-                style: TextStyle(color: Colors.grey[700], fontSize: 16),
+                style: TextStyle(color: Colors.grey[700], fontSize: 20),
               ),
               //Spaciamos el subtitulo del texbox a continuacion.
               const SizedBox(
                 height: 10,
               ),
-              MyTextField(),
+              MyTextField(
+                //Controller Username
+                controller: usernameController,
+                hintText: 'Nombre De Usuario',
+                // Ocultamos
+                obscuretext: false,
+              ),
               const SizedBox(
                 height: 10,
               ),
-              MyTextField(),
+              MyTextField(
+                // Password
+                controller: passwordController,
+                hintText: 'Contraseña',
+                // Mostramos
+                obscuretext: true,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      'Olvido Su Contraseña ?',
+                      style: TextStyle(color: Colors.grey[600], fontSize: 12.5),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(
+                height: 15,
+              ),
               // Rellenos horizontal
             ],
           ),
