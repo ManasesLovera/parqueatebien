@@ -3,7 +3,6 @@ import 'package:frontend_android/location/location_service/location_service.dart
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
 
-// Use logger FrameWork
 final Logger _logger = Logger();
 
 class GetLocationMethod {

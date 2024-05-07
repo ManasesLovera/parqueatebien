@@ -2,7 +2,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:logger/logger.dart';
 
-// u
 final Logger _logger = Logger();
 
 class LocationService {
