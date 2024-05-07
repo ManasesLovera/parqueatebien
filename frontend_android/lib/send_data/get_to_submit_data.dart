@@ -33,7 +33,7 @@ Future<void> submitData({
     String base64Image = base64Encode(imageBytes);
 
     final response = await http
-        .post(Uri.parse('http://192.168.0.236:8089/ciudadanos'),
+        .post(Uri.parse('http://localhost:8089/ciudadanos'),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
             },
@@ -45,13 +45,10 @@ Future<void> submitData({
               'file': base64Image,
               'fileType': type
             }))
-        /* De esta forma, hago test rapido y muestro el mensaje 
-            solo con motivo de testing
-            */
-        .timeout(const Duration(seconds: 1));
+        .timeout(const Duration(seconds: 3));
     if (response.statusCode == 200) {
       _logger.e('Exito !: Datos enviados Correctamente');
-      showDialog('Exito Data Enviada !');
+      showDialog('Exito Registrado!');
     } else {
       String message;
       switch (response.statusCode) {
@@ -71,7 +68,7 @@ Future<void> submitData({
       showDialog('Error !, Los datos no fueron enviados');
     }
   } catch (e) {
-    _logger.e('Error: Al enviar los datos $e');
+    _logger.e('Error: Al  enviar los datos $e');
     showDialog('Servidor no responde');
   }
 }

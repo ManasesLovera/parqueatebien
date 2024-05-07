@@ -78,7 +78,6 @@ class CameraState extends State<Camera> {
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () {
-                      // Metodo Restructurado
                       CameraMethods.getFromCamera(
                         context,
                         _imagePicker,
@@ -106,14 +105,12 @@ class CameraState extends State<Camera> {
     );
   }
 
-// Fix
   void setImageFile(File? file) {
     setState(() {
       imageFile = file;
     });
   }
 
-//
   void showErrorCamera(String errorMessage) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
