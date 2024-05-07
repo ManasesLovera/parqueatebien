@@ -1,5 +1,9 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:logger/logger.dart';
+
+// u
+final Logger _logger = Logger();
 
 class LocationService {
   Future<Position?> getCurrentLocation() async {
@@ -26,7 +30,7 @@ class LocationService {
       );
       return position;
     } catch (e) {
-      print(e);
+      _logger.e('Error Fatal! Localization');
       return null;
     }
   }
