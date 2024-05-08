@@ -3,17 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:frontend_android/login/login_service/login_send_data.dart';
 
 Future<void> signUserIn(
-  BuildContext context,
+  context,
   TextEditingController usernameController,
   TextEditingController passwordController,
 ) async {
   final String username = usernameController.text;
   final String password = passwordController.text;
   try {
+    // validamos si no estan vacios
     if (username.isNotEmpty && password.isNotEmpty) {
+      // enviamos
       final success = await LoginSendData.signIn(username, password);
+      // si el bool es true 1
       if (success) {
-        // Show a success message as an alert dialog
+        /* Exito y mostramos con una alerta grafica y vamos a la pantalla tomar foto*/
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -34,7 +37,7 @@ Future<void> signUserIn(
           },
         );
       } else {
-        // Show an error message as an alert dialog
+        // si el bool es false !, mostramos de igual manera el mensaje
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -55,7 +58,7 @@ Future<void> signUserIn(
         );
       }
     } else {
-      // Show a message indicating empty fields
+      // Mostramos mensaje en caso de que los campos user y password esten vacios
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -66,7 +69,7 @@ Future<void> signUserIn(
             actions: <Widget>[
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
+                  Navigator.of(context).pop(); // cerramos dialogo
                 },
                 child: const Text('OK'),
               ),
@@ -75,8 +78,8 @@ Future<void> signUserIn(
         },
       );
     }
+    // Cualquier otra cosa, exeption.
   } catch (e) {
-    // Show an error message if an exception occurs
     showDialog(
       context: context,
       builder: (BuildContext context) {
