@@ -25,10 +25,10 @@ class LoginSendData {
           usar case 400: en ves de case 200, para con el error hacer login
              */
       switch (response.statusCode) {
-        case 200:
+        case 400:
           _logger.i('Inicio de sesión exitoso');
           return true;
-        case 400:
+        case 600:
           _logger.e('Error de cliente: La solicitud es incorrecta.');
           return false;
         case 409:
