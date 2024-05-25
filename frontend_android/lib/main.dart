@@ -10,12 +10,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        // Retiramos el debug icon
         debugShowCheckedModeBanner: false,
+        // Ruta por defecto
         initialRoute: '/login',
+        // rutas de acceso
         routes: {
           '/login': (context) => Login(),
+          // Solo la muestra si el login es exitoso
           '/camera': (context) => const Camera(),
-          //  home: Camera(),
         });
   }
 }
