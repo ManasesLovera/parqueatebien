@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
 using System.ComponentModel;
+using Models;
 
 namespace Services;
 
@@ -17,16 +18,6 @@ public struct ValidationResult<T>
 public class CitizensService
 {
   public DbConnection connectiondb = new DbConnection();
-
-  public List<Citizen> GetCitizens()
-  {
-    return connectiondb.GetAll();
-  }
-
-  public Citizen? GetCitizen(string licensePlate)
-  {
-    return connectiondb.GetByLicensePlate(licensePlate);
-  }
 
   public ValidationResult<string> ValidateCitizenRequest(HttpContext context)
   {
@@ -47,7 +38,7 @@ public class CitizensService
     }
   }
   public Citizen? ValidateCitizenBody(string body)
-    {
+  {
         Citizen? citizen = JsonConvert.DeserializeObject<Citizen>(body);
         bool isValid = (!string.IsNullOrEmpty(citizen!.LicensePlate) && citizen.LicensePlate is string) &&
         (!string.IsNullOrEmpty(citizen.Description) && citizen.Description is string) &&
@@ -56,38 +47,20 @@ public class CitizensService
         (!string.IsNullOrEmpty(citizen.File)) && (citizen.FileType is string);
 
         return isValid ? citizen : null;
-    }
+  }
 
   public Citizen? AddCitizen(Citizen citizen)
   {
-        return connectiondb.Add(citizen);
+        return connectiondb.AddCitizen(citizen);
   }
 
   public Citizen? UpdateCitizen(Citizen citizen)
   {
-        return connectiondb.Update(citizen);
+        return connectiondb.UpdateCitizen(citizen);
   }
 
   public string DeleteCitizen(string licensePlate)
   {
-     return connectiondb.Delete(licensePlate);
+     return connectiondb.DeleteCitizen(licensePlate);
   }
-}
-
-public class Res
-{
-  public Citizen? Citizen { get; set; }
-  public string Message { get; set; } = String.Empty;
-}
-
-public class Citizen
-{
-
-  public string LicensePlate { get; set; } = String.Empty;
-  public string Description { get; set; } = String.Empty;
-  public string Lat { get; set; } = String.Empty;
-  public string Lon { get; set; } = String.Empty;
-  public string? File { get; set; }
-  public string FileType { get; set; } = String.Empty;
-
 }

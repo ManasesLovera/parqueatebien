@@ -1,5 +1,25 @@
 using Services;
 using System.Text.Json;
+using Models;
+using Newtonsoft.Json;
+using System.Security.Claims;
+using System.Text;
+using db;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using System.Net.Http;
+
+// Agregar direccion de incautar autos, y color del vehiculo DONE
+// Modificar usuarios, debe agregar cedula y contraseña DONE
+// Estado del vehiculo si fue incautado o si esta en el parqueadero
+// CRUD de usuarios
+// Para la demo no se necesita hash o encriptacion para las password
+// validar con listas
+// multiples fotos MISSING
+
+// Debe contener roles de usuario -> BackOffice, Agente
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
@@ -16,7 +36,12 @@ app.UseCors();
 
 CitizensService citizens = new();
 
-app.MapGet("/ciudadanos", () => citizens.GetCitizens());
+app.MapGet("/", async (HttpContext context) =>
+{
+    await context.Response.WriteAsync("Try another endpoint");
+});
+
+app.MapGet("/ciudadanos", () => DbConnection.GetAllCitizens());
 app.MapGet("/ciudadanos/{licensePlate}", async (HttpContext context) =>
 {
     try
@@ -29,14 +54,14 @@ app.MapGet("/ciudadanos/{licensePlate}", async (HttpContext context) =>
             return;
         }
 
-        Citizen? citizen = citizens.GetCitizen(Validation.Result);
+        Citizen? citizen = DbConnection.GetByLicensePlate(Validation.Result);
         if (citizen == null)
         {
             context.Response.StatusCode = 404;
             return;
         }
 
-        string citizenJson = JsonSerializer.Serialize(citizen);
+        string citizenJson = System.Text.Json.JsonSerializer.Serialize(citizen);
         context.Response.StatusCode = 200;
         await context.Response.WriteAsync(citizenJson);
     }
@@ -61,7 +86,7 @@ app.MapPost("/ciudadanos", async (HttpContext httpContext) =>
             await httpContext.Response.WriteAsync("Missing info or Invalid data");
             return;
         }
-        if(citizens.GetCitizen(citizen!.LicensePlate) != null)
+        if(DbConnection.GetByLicensePlate(citizen!.LicensePlate) != null)
         {
             httpContext.Response.StatusCode = 409;
             await httpContext.Response.WriteAsync("409 Conflict: This licensePlate already exists");
@@ -91,7 +116,7 @@ app.MapPut("/ciudadanos", async (HttpContext httpContext) =>
             await httpContext.Response.WriteAsync("Missing info or Invalid data");
             return;
         }
-        if (citizens.GetCitizen(citizen!.LicensePlate) == null)
+        if (DbConnection.GetByLicensePlate(citizen!.LicensePlate) == null)
         {
             httpContext.Response.StatusCode = 404;
             await httpContext.Response.WriteAsync("Not Found");
@@ -118,7 +143,7 @@ app.MapDelete("/ciudadanos/{licensePlate}", async (HttpContext httpContext) =>
             await httpContext.Response.WriteAsJsonAsync(validation.ErrorMessages);
             return;
         }
-        if (citizens.GetCitizen(validation.Result) == null)
+        if (DbConnection.GetByLicensePlate(validation.Result) == null)
         {
             httpContext.Response.StatusCode = 404;
             await httpContext.Response.WriteAsync("Citizen was not found");
@@ -134,5 +159,118 @@ app.MapDelete("/ciudadanos/{licensePlate}", async (HttpContext httpContext) =>
         await httpContext.Response.WriteAsync(ex.Message);
     }
 });
+
+app.MapGet("/login", ([FromBody] User User) =>
+{
+    try
+    {
+        if (User.GovernmentID == null || User.GovernmentID == null)
+            Results.BadRequest();
+
+        if (DbConnection.IsValidUser(User.GovernmentID!, User.Password))
+            Results.Ok();
+
+        else
+            Results.Unauthorized();
+        
+    }
+    catch (Exception)
+    {
+        Results.StatusCode(500);
+    }
+});
+
+app.MapGet("/usuarios", () => 
+    DbConnection.GetAllUsers());
+
+app.MapGet("/usuario/{governmentID}", ([FromRoute] string governmentID) => 
+    DbConnection.GetUserByGovernmentID(governmentID));
+
+app.MapPost("/usuario", async (HttpContext httpContext, [FromBody] User user) =>
+{
+    try
+    {
+        if (user == null)
+        {
+            httpContext.Response.StatusCode = 400;
+            await httpContext.Response.WriteAsync("Missing info or Invalid data");
+            return;
+        }
+        if (DbConnection.GetUserByGovernmentID(user.GovernmentID) != null)
+        {
+            httpContext.Response.StatusCode = 409;
+            await httpContext.Response.WriteAsync("409 Conflict: The governmentID already exists");
+            return;
+        }
+        DbConnection.AddUser(user);
+        httpContext.Response.StatusCode = 200;
+        await httpContext.Response.WriteAsync("User added successfully!");
+    }
+    catch (Exception ex)
+    {
+        httpContext.Response.StatusCode = 500;
+        await httpContext.Response.WriteAsync(ex.Message);
+    }
+});
+
+app.MapPut("/usuario/changePassword", async (HttpContext httpContext, [FromBody] User user) =>
+{
+    try
+    {
+        if (user == null || user.GovernmentID == null || user.Password == null)
+        {
+            httpContext.Response.StatusCode = 400;
+            await httpContext.Response.WriteAsync("Missing info or Invalid data");
+            return;
+        }
+        if (DbConnection.GetUserByGovernmentID(user!.GovernmentID) == null)
+        {
+            httpContext.Response.StatusCode = 404;
+            await httpContext.Response.WriteAsync("Not Found");
+            return;
+        }
+        DbConnection.ChangeUserPassword(user);
+        httpContext.Response.StatusCode = 200;
+        await httpContext.Response.WriteAsync("Updated successfully");
+    }
+    catch (Exception ex)
+    {
+        httpContext.Response.StatusCode = 500;
+        await httpContext.Response.WriteAsync(ex.Message);
+    }
+});
+
+app.MapDelete("/usuario/{governmentID}", async (HttpContext httpContext, [FromRoute] string governmentID) =>
+{
+    try
+    {
+        if (governmentID == null)
+        {
+            httpContext.Response.StatusCode = 400;
+            return;
+        }
+        if (DbConnection.GetUserByGovernmentID(governmentID) == null)
+        {
+            httpContext.Response.StatusCode = 404;
+            await httpContext.Response.WriteAsync("User was not found");
+            return;
+        }
+        DbConnection.DeleteUser(governmentID);
+        httpContext.Response.StatusCode = 200;
+        await httpContext.Response.WriteAsync("Deleted successfully");
+    }
+    catch (Exception ex)
+    {
+        httpContext.Response.StatusCode = 500;
+        await httpContext.Response.WriteAsync(ex.Message);
+    }
+});
+
+// Endpoint que modifique el estado de INCAUTADO a PARQUEADERO
+
+//app.MapPost("/usuario/setStatus", () =>
+//{
+
+//});
 
 app.Run();
