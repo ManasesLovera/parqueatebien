@@ -54,7 +54,7 @@ public class DbConnection
         }
     }
 
-    public static List<CitizenResponse> GetAllCitizens()
+    public static List<Citizen> GetAllCitizens()
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -65,7 +65,7 @@ public class DbConnection
             SELECT * FROM Citizens
             ";
 
-            List<CitizenResponse> citizens = new List<CitizenResponse>();
+            List<Citizen> citizens = new List<Citizen>();
 
             using (var reader = cmd.ExecuteReader())
             {
@@ -74,7 +74,7 @@ public class DbConnection
                     string photoBase64 = Convert.ToBase64String((byte[])reader["File"]);
 
                     citizens.Add(
-                        new CitizenResponse
+                        new Citizen
                         {
                             LicensePlate = reader["LicensePlate"].ToString()!,
                             Description = reader["Description"].ToString()!,
@@ -94,14 +94,14 @@ public class DbConnection
         }
     }
 
-    public static CitizenResponse? GetByLicensePlate(string licensePlate)
+    public static Citizen? GetByLicensePlate(string licensePlate)
     {
 
-        if (!DbConnection.CitizenExists(licensePlate)) return null;
+        if (!CitizenExists(licensePlate)) return null;
 
         using (var connection = new SqliteConnection(connectionString))
         {
-            CitizenResponse? citizen = null;
+            Citizen? citizen = null;
             connection.Open();
             var command = connection.CreateCommand();
             command.CommandText = @"
@@ -115,7 +115,7 @@ public class DbConnection
             {
                 string photoBase64 = Convert.ToBase64String((byte[])reader["File"]);
 
-                citizen = new CitizenResponse
+                citizen = new Citizen
                 {
 
                     LicensePlate = reader["LicensePlate"].ToString()!,
@@ -157,7 +157,7 @@ public class DbConnection
         }
     }
 
-    public CitizenResponse? AddCitizen(Citizen citizen)
+    public Citizen? AddCitizen(Citizen citizen)
     {
 
         using (var connection = new SqliteConnection(connectionString))
@@ -199,7 +199,7 @@ public class DbConnection
             var command = connection.CreateCommand();
             command.CommandText = @"
             UPDATE Citizens
-            SET Description = @description, Address = @address, VehicleColor = @vehicleColor, Lat = @lat, Lon = @lon, File = @file, FileType = @fileType
+            SET Description = @description, Address = @address, VehicleColor = @vehicleColor, Status = @status, Lat = @lat, Lon = @lon, File = @file, FileType = @fileType
             WHERE LicensePlate = @licensePlate
             ";
 
@@ -209,6 +209,7 @@ public class DbConnection
             command.Parameters.AddWithValue("@description", citizen.Description);
             command.Parameters.AddWithValue("@address", citizen.Address);
             command.Parameters.AddWithValue("@vehicleColor", citizen.VehicleColor);
+            command.Parameters.AddWithValue("@status", citizen.Status);
             command.Parameters.AddWithValue("@lat", citizen.Lat);
             command.Parameters.AddWithValue("@lon", citizen.Lon);
             command.Parameters.AddWithValue("@file", photoBytes);
@@ -221,7 +222,7 @@ public class DbConnection
         return GetByLicensePlate(citizen.LicensePlate);
     }
 
-    public string DeleteCitizen(string licensePlate)
+    public static string DeleteCitizen(string licensePlate)
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -237,6 +238,42 @@ public class DbConnection
             connection.Close();
 
             return "Deleted successfully";
+        }
+    }
+    public static void UpdateCitizenStatusToP(string licensePlate)
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = @"UPDATE Citizens
+                              Set Status = @status
+                              WHERE LicensePlate = @licensePlate";
+            cmd.Parameters.AddWithValue("@status", "EN PARQUEADERO");
+            cmd.Parameters.AddWithValue("@licensePlate", licensePlate);
+
+            cmd.ExecuteNonQuery();
+
+            connection.Close();
+        }
+    }
+    public static void UpdateCitizenStatusToI(string licensePlate)
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = @"UPDATE Citizens
+                              Set Status = @status
+                              WHERE LicensePlate = @licensePlate";
+            cmd.Parameters.AddWithValue("@status", "INCAUTADO");
+            cmd.Parameters.AddWithValue("@licensePlate", licensePlate);
+
+            cmd.ExecuteNonQuery();
+
+            connection.Close();
         }
     }
 
@@ -266,7 +303,6 @@ public class DbConnection
             return users;
         }
     }
-
     public static bool IsValidUser(string governmentID, string password)
     {
         using (var connection = new SqliteConnection(connectionString))

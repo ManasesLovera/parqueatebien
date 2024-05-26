@@ -11,32 +11,29 @@ namespace Services;
 
 public struct ValidationResult<T>
 {
-  public T? Result { get; set; }
-  public List<String> ErrorMessages { get; set; }
+    public T? Result { get; set; }
+    public List<String> ErrorMessages { get; set; }
 }
 
 public class CitizensService
 {
-  public DbConnection connectiondb = new DbConnection();
+    public DbConnection connectiondb = new DbConnection();
 
-  public ValidationResult<string> ValidateCitizenRequest(HttpContext context)
-  {
-    string? licensePlate = context.Request.RouteValues["licensePlate"]!.ToString();
-
-    if (licensePlate == null)
+    public ValidationResult<string> ValidateCitizenRequest(string licensePlate)
     {
-      return new ValidationResult<string>() { Result = null, ErrorMessages = new List<string>() { "Route parameter 'licensePlate' was not provided." } };
+        if (licensePlate == null)
+        {
+            return new ValidationResult<string>() { Result = null, ErrorMessages = new List<string>() { "Route parameter 'licensePlate' was not provided." } };
+        }
+        if (licensePlate!.Trim().Length >= 5 && licensePlate!.Trim().Length <= 7 && Regex.IsMatch(licensePlate, "^[A-Z0-9-]*$"))
+        {
+            return new ValidationResult<string>() { Result = licensePlate, ErrorMessages = new() };
+        }
+        else
+        {
+            return new ValidationResult<string>() { Result = null, ErrorMessages = new List<string>() { $"License plate '{licensePlate}' is invalid." } };
+        }
     }
-
-    if (licensePlate!.Trim().Length >= 5 && licensePlate!.Trim().Length <= 7 && Regex.IsMatch(licensePlate, "^[A-Z0-9-]*$"))
-    {
-      return new ValidationResult<string>() { Result = licensePlate, ErrorMessages = new() };
-    }
-    else
-    {
-      return new ValidationResult<string>() { Result = null, ErrorMessages = new List<string>() { $"License plate '{licensePlate}' is invalid." } };
-    }
-  }
   public Citizen? ValidateCitizenBody(string body)
   {
         Citizen? citizen = JsonConvert.DeserializeObject<Citizen>(body);
@@ -57,10 +54,5 @@ public class CitizensService
   public Citizen? UpdateCitizen(Citizen citizen)
   {
         return connectiondb.UpdateCitizen(citizen);
-  }
-
-  public string DeleteCitizen(string licensePlate)
-  {
-     return connectiondb.DeleteCitizen(licensePlate);
   }
 }
