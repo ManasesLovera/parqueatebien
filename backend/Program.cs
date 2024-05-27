@@ -80,21 +80,23 @@ app.MapPost("/ciudadanos", async (HttpContext httpContext, [FromBody] Citizen ci
 {
     try
     {
-        if (citizen == null)
+        if (citizen == null || !citizens.ValidateCitizenBody(citizen))
         {
             httpContext.Response.StatusCode = 400;
             await httpContext.Response.WriteAsync("Missing info or Invalid data");
-            return;
         }
         if(DbConnection.GetByLicensePlate(citizen!.LicensePlate) != null)
         {
             httpContext.Response.StatusCode = 409;
             await httpContext.Response.WriteAsync("409 Conflict: This licensePlate already exists");
-            return;
         }
-        citizens.AddCitizen(citizen);
-        httpContext.Response.StatusCode = 200;
-        await httpContext.Response.WriteAsync("Citizen added successfully!");
+        else
+        {
+            citizens.AddCitizen(citizen);
+            httpContext.Response.StatusCode = 200;
+            await httpContext.Response.WriteAsync("Citizen added successfully!");
+        }
+        
     }
     catch(Exception ex)
     {
@@ -176,7 +178,7 @@ app.MapPut("/ciudadanos/updateStatus/{licensePlate}", async (HttpContext httpCon
         }
         else
         {
-            DbConnection.UpdateCitizenStatusToP(validation.Result!);
+            DbConnection.UpdateCitizenStatusToParqueadero(validation.Result!);
             httpContext.Response.StatusCode = 200;
             await httpContext.Response.WriteAsync("Status Updated successfully");
         }

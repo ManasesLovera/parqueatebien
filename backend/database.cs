@@ -21,9 +21,9 @@ public class DbConnection
             CREATE TABLE IF NOT EXISTS Citizens (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 LicensePlate VARCHAR(30) UNIQUE,
-                Description VARCHAR(100),
-                Address VARCHAR(100),
+                VehicleType VARCHAR(100),
                 VehicleColor VARCHAR(20),
+                Address VARCHAR(100),
                 Status VARCHAR(20),
                 Lat VARCHAR(60),
                 Lon VARCHAR(60),
@@ -33,7 +33,15 @@ public class DbConnection
             command.ExecuteNonQuery();
 
             command.CommandText = @"
-            CREATE TABLE IF NOT EXISTS Users (
+            CREATE TABLE IF NOT EXISTS Agents (
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                GovernmentID VARCHAR(50) UNIQUE,
+                Password VARCHAR(255)
+            )";
+            command.ExecuteNonQuery();
+
+            command.CommandText = @"
+            CREATE TABLE IF NOT EXISTS Admins (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 GovernmentID VARCHAR(50) UNIQUE,
                 Password VARCHAR(255)
@@ -77,7 +85,7 @@ public class DbConnection
                         new Citizen
                         {
                             LicensePlate = reader["LicensePlate"].ToString()!,
-                            Description = reader["Description"].ToString()!,
+                            VehicleType = reader["VehicleType"].ToString()!,
                             Address = reader["Address"].ToString()!,
                             VehicleColor = reader["VehicleColor"].ToString()!,
                             Status = reader["Status"].ToString()!,
@@ -119,7 +127,7 @@ public class DbConnection
                 {
 
                     LicensePlate = reader["LicensePlate"].ToString()!,
-                    Description = reader["Description"].ToString()!,
+                    VehicleType = reader["VehicleType"].ToString()!,
                     Address = reader["Address"].ToString()!,
                     VehicleColor = reader["VehicleColor"].ToString()!,
                     Status = reader["Status"].ToString()!,
@@ -166,17 +174,17 @@ public class DbConnection
 
             var cmd = connection.CreateCommand();
             cmd.CommandText = @"
-            INSERT INTO Citizens (LicensePlate, Description, Address, VehicleColor, Status, Lat, Lon, File, FileType)
-            VALUES (@licensePlate, @description, @address, @vehicleColor, @status, @lat, @lon, @file, @fileType)
+            INSERT INTO Citizens (LicensePlate, VehicleType, VehicleColor, Address, Status, Lat, Lon, File, FileType)
+            VALUES (@licensePlate, @vehicleType, @vehicleColor, @address, @status, @lat, @lon, @file, @fileType)
             ";
 
             byte[] photoBytes = Convert.FromBase64String(citizen.File!);
 
             cmd.Parameters.AddWithValue("@licensePlate", citizen.LicensePlate);
-            cmd.Parameters.AddWithValue("@description", citizen.Description);
-            cmd.Parameters.AddWithValue("@address", citizen.Address);
+            cmd.Parameters.AddWithValue("@vehicleType", citizen.VehicleType);
             cmd.Parameters.AddWithValue("@vehicleColor", citizen.VehicleColor);
-            cmd.Parameters.AddWithValue("@status", "INCAUTADO");
+            cmd.Parameters.AddWithValue("@address", citizen.Address);
+            cmd.Parameters.AddWithValue("@status", "Reportado");
             cmd.Parameters.AddWithValue("@lat", citizen.Lat);
             cmd.Parameters.AddWithValue("@lon", citizen.Lon);
             cmd.Parameters.AddWithValue("@file", photoBytes);
@@ -199,16 +207,16 @@ public class DbConnection
             var command = connection.CreateCommand();
             command.CommandText = @"
             UPDATE Citizens
-            SET Description = @description, Address = @address, VehicleColor = @vehicleColor, Status = @status, Lat = @lat, Lon = @lon, File = @file, FileType = @fileType
+            SET VehicleType = @vehicleType, VehicleColor = @vehicleColor, Address = @address, Status = @status, Lat = @lat, Lon = @lon, File = @file, FileType = @fileType
             WHERE LicensePlate = @licensePlate
             ";
 
             byte[] photoBytes = Convert.FromBase64String(citizen.File!);
 
             command.Parameters.AddWithValue("@licensePlate", citizen.LicensePlate);
-            command.Parameters.AddWithValue("@description", citizen.Description);
-            command.Parameters.AddWithValue("@address", citizen.Address);
+            command.Parameters.AddWithValue("@vehicleType", citizen.VehicleType);
             command.Parameters.AddWithValue("@vehicleColor", citizen.VehicleColor);
+            command.Parameters.AddWithValue("@address", citizen.Address);
             command.Parameters.AddWithValue("@status", citizen.Status);
             command.Parameters.AddWithValue("@lat", citizen.Lat);
             command.Parameters.AddWithValue("@lon", citizen.Lon);
@@ -240,7 +248,7 @@ public class DbConnection
             return "Deleted successfully";
         }
     }
-    public static void UpdateCitizenStatusToP(string licensePlate)
+    public static void UpdateCitizenStatusToParqueadero(string licensePlate)
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -258,7 +266,7 @@ public class DbConnection
             connection.Close();
         }
     }
-    public static void UpdateCitizenStatusToI(string licensePlate)
+    public static void UpdateCitizenStatusToIncautado(string licensePlate)
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -284,7 +292,7 @@ public class DbConnection
             connection.Open();
 
             var cmd = connection.CreateCommand();
-            cmd.CommandText = @"SELECT * FROM Users";
+            cmd.CommandText = @"SELECT * FROM Agents";
 
             List<User> users = new List<User>();
 
@@ -309,7 +317,7 @@ public class DbConnection
         {
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT Password FROM Users WHERE Username = @username";
+            command.CommandText = "SELECT Password FROM Agents WHERE Username = @username";
             command.Parameters.AddWithValue("@username", governmentID);
 
             using (var reader = command.ExecuteReader())
@@ -330,7 +338,7 @@ public class DbConnection
             User? user = null;
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = @"SELECT * FROM Users WHERE GovernmentID = @governmentID";
+            command.CommandText = @"SELECT * FROM Agents WHERE GovernmentID = @governmentID";
             command.Parameters.AddWithValue("@governmentID", governmentID);
 
             var reader = command.ExecuteReader();
@@ -352,7 +360,7 @@ public class DbConnection
 
             var cmd = connection.CreateCommand();
             cmd.CommandText = @"
-            INSERT INTO Users (GovernmentID, Password)
+            INSERT INTO Agents (GovernmentID, Password)
             VALUES (@GovernmentID, @Password)
             ";
 
@@ -373,7 +381,7 @@ public class DbConnection
 
             var command = connection.CreateCommand();
             command.CommandText = @"
-            UPDATE Users
+            UPDATE Agents
             SET Password = @password
             WHERE GovernmentID = @governmentID
             ";
@@ -395,7 +403,7 @@ public class DbConnection
 
             var command = connection.CreateCommand();
             command.CommandText = @"
-            DELETE FROM Users WHERE GovernmentID = @governmentID
+            DELETE FROM Agents WHERE GovernmentID = @governmentID
             ";
             command.Parameters.AddWithValue("@governmentID", governmentID);
             command.ExecuteNonQuery();
