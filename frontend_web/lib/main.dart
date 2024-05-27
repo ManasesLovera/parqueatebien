@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:typed_data';
- import 'package:flutter/widgets.dart';
 import 'dart:io';
 
 void main() {
@@ -40,7 +39,7 @@ var response = await http.get(Uri.parse('http://localhost:8089/ciudadanos/$licen
       if (response.statusCode == 200) {
         setState(() {
           _citizens = parseResponse(response.body);
-          // print(response.body);
+          //  print(response.body);
         });
       } else if (response.statusCode == 404) {
         setState(() {
@@ -49,6 +48,7 @@ var response = await http.get(Uri.parse('http://localhost:8089/ciudadanos/$licen
       } else {
         setState(() {
           _errorMessage = 'invalid plate: ${response.statusCode}';
+          // showErrorDialog(_errorMessage);
         });
       }
     } catch (e) {
@@ -61,7 +61,25 @@ var response = await http.get(Uri.parse('http://localhost:8089/ciudadanos/$licen
       });
     }
   }
-
+// void showErrorDialog(String message) {
+//     showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+//           title: const Text('Error'),
+//           content: Text(message),
+//           actions: [
+//             TextButton(
+//               onPressed: () {
+//                 Navigator.of(context).pop();
+//               },
+//               child: const Text('OK'),
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   }
   List<Citizen> parseResponse(String responseBody) {
     final parsed = json.decode(responseBody);
     if (parsed['LicensePlate'] != null) {
@@ -122,10 +140,10 @@ var response = await http.get(Uri.parse('http://localhost:8089/ciudadanos/$licen
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
 SizedBox(
-  width: 150, 
+  width: 200, 
   height: 150,
   child: ClipRRect(
-    borderRadius: BorderRadius.circular(8.0),
+    borderRadius: BorderRadius.circular(4.0),
     child: Image.memory(
       base64Decode(_citizens[index].photoBase64),
       fit: BoxFit.cover, 
@@ -135,21 +153,29 @@ SizedBox(
                                             Text(
                                             _citizens[index].licensePlate,
                                              style: const TextStyle(fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                            _citizens[index].lat,
-                                            style: const TextStyle(fontWeight: FontWeight.bold),
-                                            ),Text(
-                                            _citizens[index].lon,
-                                             style: const TextStyle(fontWeight: FontWeight.bold),
                                             ),Text(
                                             _citizens[index].description,
+                                             style: const TextStyle(fontWeight: FontWeight.bold),
+                                            ),Text(
+                                            _citizens[index].Address,
+                                            style: const TextStyle(fontWeight: FontWeight.bold),
+                                            ),Text(
+                                            _citizens[index].VehicleColor,
+                                             style: const TextStyle(fontWeight: FontWeight.bold),
+                                            ),Text(
+                                            _citizens[index].Status,
+                                             style: const TextStyle(fontWeight: FontWeight.bold),
+                                            ),Text(
+                                            _citizens[index].lat,
+                                             style: const TextStyle(fontWeight: FontWeight.bold),
+                                            ),Text(
+                                            _citizens[index].lon,
                                              style: const TextStyle(fontWeight: FontWeight.bold),
                                             ),
 
                                           ],
                                         ),
-                                         subtitle: Text(_citizens[index].licensePlate),
+                                        //  subtitle: Text(_citizens[index].licensePlate),
                                       ),
                                     );
                                   },
@@ -169,6 +195,9 @@ SizedBox(
 class Citizen {
   final String licensePlate;
   final String description;
+  final String Address;
+  final String VehicleColor;
+  final String Status;
   final String lat;
   final String lon;
   final String photoBase64;
@@ -177,6 +206,9 @@ class Citizen {
   Citizen({
     required this.licensePlate,
     required this.description,
+    required this.Address,
+    required this.VehicleColor,
+    required this.Status,
     required this.lat,
     required this.lon,
     required this.photoBase64,
@@ -192,6 +224,9 @@ class Citizen {
     return Citizen(
       licensePlate: json['LicensePlate'] as String,
       description: json['Description'] as String,
+      Address: json['Address'] as String,
+      VehicleColor: json ['VehicleColor'] as String,
+      Status: json['Status'] as String,
       lat: json['Lat'] as String,
       lon: json['Lon'] as String,
       photoBase64: json['File'] as String,
@@ -199,22 +234,3 @@ class Citizen {
     );
   }
 }
-void showErrorDialog(String message,BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Error'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
