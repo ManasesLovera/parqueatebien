@@ -248,7 +248,7 @@ public class DbConnection
             return "Deleted successfully";
         }
     }
-    public static void UpdateCitizenStatusToParqueadero(string licensePlate)
+    public static void UpdateCitizenStatus(ChangeStatusDTO changeStatusDTO)
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -258,33 +258,14 @@ public class DbConnection
             cmd.CommandText = @"UPDATE Citizens
                               Set Status = @status
                               WHERE LicensePlate = @licensePlate";
-            cmd.Parameters.AddWithValue("@status", "EN PARQUEADERO");
-            cmd.Parameters.AddWithValue("@licensePlate", licensePlate);
+            cmd.Parameters.AddWithValue("@status", changeStatusDTO.NewStatus);
+            cmd.Parameters.AddWithValue("@licensePlate", changeStatusDTO.LicensePlate);
 
             cmd.ExecuteNonQuery();
 
             connection.Close();
         }
     }
-    public static void UpdateCitizenStatusToIncautado(string licensePlate)
-    {
-        using (var connection = new SqliteConnection(connectionString))
-        {
-            connection.Open();
-
-            var cmd = connection.CreateCommand();
-            cmd.CommandText = @"UPDATE Citizens
-                              Set Status = @status
-                              WHERE LicensePlate = @licensePlate";
-            cmd.Parameters.AddWithValue("@status", "INCAUTADO");
-            cmd.Parameters.AddWithValue("@licensePlate", licensePlate);
-
-            cmd.ExecuteNonQuery();
-
-            connection.Close();
-        }
-    }
-
     public static List<User> GetAllUsers()
     {
         using (var connection = new SqliteConnection(connectionString))

@@ -3,7 +3,9 @@ Demo para la aplicacion que estamos haciendo de incautacion de vehiculos.
 
 ## Backend docs
 
-### This backend contains the following routes:
+### Endpoints for citizen:
+
+> Validation for LicensePlate: It can only contain uppercase letters, numbers and dashes.
 
 1. GET / -> `"/ciudadanos/ciudadanos"`:
     - This will return an array of objects with the whole data with this format:
@@ -11,7 +13,10 @@ Demo para la aplicacion que estamos haciendo de incautacion de vehiculos.
         [
             {
                 "licensePlate": string,
-                "description": string,
+                "vehicleType": string,
+                "vehicleColor": string,
+                "address": string,
+                "status": string,
                 "lat": string,
                 "lon": string,
                 "file": base64 encoded string,
@@ -25,7 +30,10 @@ Demo para la aplicacion que estamos haciendo de incautacion de vehiculos.
     ```json
     {
         "licensePlate": string,
-        "description": string,
+        "vehicleType": string,
+        "vehicleColor": string,
+        "address": string,
+        "status": string,
         "lat": string,
         "lon": string,
         "file": base64 encoded string,
@@ -33,13 +41,17 @@ Demo para la aplicacion que estamos haciendo de incautacion de vehiculos.
     }
     ```
     > If citizen doesn't exist it will return a 404 status code, if the licensePlate data is not valid (it is vaid if it's a number between 5 and 7, it only contains upper case letters and numbers, and it does exists) it will return a Bad Request 400 status code, and if it returns a 500 server error there was an exception (server error, database error, etc).
+
 3. POST / -> `"/ciudadanos"`:
     - This will take an object from the request.body, it must have the following format:
         - Your must send the data this way:
         ```json
             {
                 "licensePlate": string,
-                "description": string,
+                "vehicleType": string,
+                "vehicleColor": string,
+                "address": string,
+                "status": string,
                 "lat": string,
                 "lon": string,
                 "file": base64 encoded string,
@@ -62,3 +74,14 @@ Demo para la aplicacion que estamos haciendo de incautacion de vehiculos.
 5. DELETE / -> `"/ciudadanos/{licensePlate}"`:
     - This will take the licensePlate from the endpoint, and if it exists, it will delete it,
     if not, it will show an error message.
+
+6. PUT / -> `"/ciudadanos/updateStatus"`:
+    - This endpoint is for updating the status of the citizen, you must send a json object with this format:
+    ```json
+    {
+        "LicensePlate": string,
+        "Status": string, // Only: "Reportado", "Incautado por grúa", "Retenido", "Liberado"
+    }
+    ```
+
+### Endpoints for Users:

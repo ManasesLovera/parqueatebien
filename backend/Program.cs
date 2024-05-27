@@ -38,6 +38,8 @@ app.UseCors();
 
 CitizensService citizens = new();
 
+// Endpoints for citizens
+
 app.MapGet("/", async (HttpContext context) =>
 {
     await context.Response.WriteAsync("Nothing available here");
@@ -161,24 +163,23 @@ app.MapDelete("/ciudadanos/{licensePlate}", async (HttpContext httpContext, [Fro
     }
 });
 
-app.MapPut("/ciudadanos/updateStatus/{licensePlate}", async (HttpContext httpContext, [FromRoute] string licensePlate) =>
+app.MapPut("/ciudadanos/updateStatus", async (HttpContext httpContext, [FromBody] ChangeStatusDTO changeStatusDTO) =>
 {
-    try
+    try  
     {
-        var validation = citizens.ValidateCitizenRequest(licensePlate);
-        if (validation.Result == null)
+        if (!changeStatusDTO.Validate())
         {
             httpContext.Response.StatusCode = 400;
-            await httpContext.Response.WriteAsJsonAsync(validation.ErrorMessages);
+            await httpContext.Response.WriteAsJsonAsync("Missing information or invalid data");
         }
-        if (DbConnection.GetByLicensePlate(validation.Result!) == null)
+        if (DbConnection.GetByLicensePlate(changeStatusDTO.LicensePlate) == null)
         {
             httpContext.Response.StatusCode = 404;
             await httpContext.Response.WriteAsync("Citizen was not found");
         }
         else
         {
-            DbConnection.UpdateCitizenStatusToParqueadero(validation.Result!);
+            DbConnection.UpdateCitizenStatus(changeStatusDTO);
             httpContext.Response.StatusCode = 200;
             await httpContext.Response.WriteAsync("Status Updated successfully");
         }
@@ -189,6 +190,8 @@ app.MapPut("/ciudadanos/updateStatus/{licensePlate}", async (HttpContext httpCon
         await httpContext.Response.WriteAsync(ex.Message);
     }
 });
+
+// Endpoints for agents
 
 app.MapGet("/login", async (HttpContext httpContext, [FromBody] User User) =>
 {

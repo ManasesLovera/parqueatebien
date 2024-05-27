@@ -36,13 +36,11 @@ public class CitizensService
     }
   public bool ValidateCitizenBody(Citizen citizen)
   {
-        bool isValid = (!string.IsNullOrEmpty(citizen!.LicensePlate) && citizen.LicensePlate is string) &&
+        return (!string.IsNullOrEmpty(citizen!.LicensePlate) && citizen.LicensePlate is string) &&
         (!string.IsNullOrEmpty(citizen.VehicleType) && citizen.VehicleType is string) &&
         (!string.IsNullOrEmpty(citizen.Lat) && citizen.Lat is string) &&
         (!string.IsNullOrEmpty(citizen.Lon) && citizen.Lon is string) &&
         (!string.IsNullOrEmpty(citizen.File)) && (citizen.FileType is string);
-
-        return isValid;
   }
 
   public Citizen? AddCitizen(Citizen citizen)
