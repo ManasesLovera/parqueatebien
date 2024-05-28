@@ -26,7 +26,7 @@ public class DbConnection
                 Address VARCHAR(100),
                 Status VARCHAR(20),
                 Lat VARCHAR(60),
-                Lon VARCHAR(60),
+                Lon VARCHAR(60)
             )";
             command.ExecuteNonQuery();
 
@@ -77,8 +77,6 @@ public class DbConnection
             {
                 while (reader.Read())
                 {
-                    string photoBase64 = Convert.ToBase64String((byte[])reader["File"]);
-
                     citizens.Add(
                         new Citizen
                         {
@@ -187,7 +185,7 @@ public class DbConnection
         }
     }
 
-    public Citizen? AddCitizen(Citizen citizen)
+    public static Citizen? AddCitizen(CitizenRequest citizen)
     {
 
         using (var connection = new SqliteConnection(connectionString))
@@ -197,7 +195,7 @@ public class DbConnection
             var cmd = connection.CreateCommand();
             cmd.CommandText = @"
             INSERT INTO Citizens (LicensePlate, VehicleType, VehicleColor, Address, Status, Lat, Lon)
-            VALUES (@licensePlate, @vehicleType, @vehicleColor, @address, @status, @lat, @lon, @file)
+            VALUES (@licensePlate, @vehicleType, @vehicleColor, @address, @status, @lat, @lon)
             ";
 
             cmd.Parameters.AddWithValue("@licensePlate", citizen.LicensePlate);
@@ -210,18 +208,18 @@ public class DbConnection
 
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = @"
-            INSERT INTO Pictures (LicensePlate, FileType, File)
-            VALUES (@licensePlate, @fileType, @file)
-            ";
-
             citizen.Photos.ForEach(picture =>
             {
-                cmd.Parameters.AddWithValue("@licensePlate", picture.LicensePlate);
-                cmd.Parameters.AddWithValue("@fileType", picture.FileType);
-                cmd.Parameters.AddWithValue("@file", Convert.FromBase64String(picture.File));
+                var pictureCmd = connection.CreateCommand();
+                pictureCmd.CommandText = @"
+                INSERT INTO Pictures (LicensePlate, FileType, File)
+                VALUES (@licensePlate, @fileType, @file)
+                ";
+                pictureCmd.Parameters.AddWithValue("@licensePlate", citizen.LicensePlate);
+                pictureCmd.Parameters.AddWithValue("@fileType", picture.FileType);
+                pictureCmd.Parameters.AddWithValue("@file", Convert.FromBase64String(picture.File));
 
-                cmd.ExecuteNonQuery();
+                pictureCmd.ExecuteNonQuery();
             });
 
             connection.Close();
@@ -263,14 +261,20 @@ public class DbConnection
         {
             connection.Open();
 
-            var command = connection.CreateCommand();
+            var cmd1 = connection.CreateCommand();
+            var cmd2 = connection.CreateCommand();
 
-            command.CommandText = @"
-            DELETE FROM Citizens WHERE LicensePlate = @licensePlate
+            cmd1.CommandText = @"
             DELETE FROM Pictures WHERE LicensePlate = @licensePlate
             ";
-            command.Parameters.AddWithValue("@licensePlate", licensePlate);
-            command.ExecuteNonQuery();
+            cmd1.Parameters.AddWithValue("@licensePlate", licensePlate);
+            cmd1.ExecuteNonQuery();
+
+            cmd2.CommandText = @"
+            DELETE FROM Citizens WHERE LicensePlate = @licensePlate
+            ";
+            cmd2.Parameters.AddWithValue("@licensePlate", licensePlate);
+            cmd2.ExecuteNonQuery();
 
             connection.Close();
 

@@ -67,7 +67,7 @@ app.MapGet("/ciudadanos/{licensePlate}", async (HttpContext context, [FromRoute]
 
 });
 
-app.MapPost("/ciudadanos", async (HttpContext httpContext, [FromBody] Citizen citizen) =>
+app.MapPost("/ciudadanos", async (HttpContext httpContext, [FromBody] CitizenRequest citizen) =>
 {
     try
     {
@@ -83,7 +83,7 @@ app.MapPost("/ciudadanos", async (HttpContext httpContext, [FromBody] Citizen ci
         }
         else
         {
-            citizens.AddCitizen(citizen);
+            DbConnection.AddCitizen(citizen);
             httpContext.Response.StatusCode = 200;
             await httpContext.Response.WriteAsync("Citizen added successfully!");
         }
@@ -140,7 +140,7 @@ app.MapDelete("/ciudadanos/{licensePlate}", async (HttpContext httpContext, [Fro
         }
         else
         {
-            string responseMessage = DbConnection.DeleteCitizen(validation.Result!);
+            string responseMessage = DbConnection.DeleteCitizen(licensePlate);
             httpContext.Response.StatusCode = 200;
             await httpContext.Response.WriteAsync(responseMessage);
         }

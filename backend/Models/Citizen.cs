@@ -1,6 +1,6 @@
 ﻿namespace Models
 {
-    public class Citizen : ICitizen
+    public class Citizen
     {
         public string LicensePlate { get; set; } = String.Empty;
         public string VehicleType { get; set; } = String.Empty;
