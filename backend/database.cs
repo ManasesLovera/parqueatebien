@@ -266,7 +266,8 @@ public class DbConnection
             connection.Close();
         }
     }
-    public static List<User> GetAllUsers()
+    // Agents
+    public static List<User> GetAllAgents()
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -292,7 +293,7 @@ public class DbConnection
             return users;
         }
     }
-    public static bool IsValidUser(string governmentID, string password)
+    public static bool IsValidAgent(string governmentID, string password)
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -312,7 +313,7 @@ public class DbConnection
         }
         return false;
     }
-    public static User? GetUserByGovernmentID(string governmentID)
+    public static User? GetAgentByGovernmentID(string governmentID)
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -328,12 +329,11 @@ public class DbConnection
             {
                 user = new User(reader["GovernmentID"].ToString()!, reader["Password"].ToString()!);
             }
-
             connection.Close();
             return user;
         }
     }
-    public static User? AddUser(User user)
+    public static User? AddAgent(User user)
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -352,9 +352,9 @@ public class DbConnection
 
             connection.Close();
         }
-        return GetUserByGovernmentID(user.GovernmentID);
+        return GetAgentByGovernmentID(user.GovernmentID);
     }
-    public static User? ChangeUserPassword(User user)
+    public static User? ChangeAgentPassword(User user)
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -374,9 +374,9 @@ public class DbConnection
 
             connection.Close();
         }
-        return GetUserByGovernmentID(user.GovernmentID);
+        return GetAgentByGovernmentID(user.GovernmentID);
     }
-    public static void DeleteUser(string governmentID)
+    public static void DeleteAgent(string governmentID)
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -385,6 +385,91 @@ public class DbConnection
             var command = connection.CreateCommand();
             command.CommandText = @"
             DELETE FROM Agents WHERE GovernmentID = @governmentID
+            ";
+            command.Parameters.AddWithValue("@governmentID", governmentID);
+            command.ExecuteNonQuery();
+
+            connection.Close();
+        }
+    }
+    // Admins
+    public static List<User> GetAllAdmins()
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = @"SELECT * FROM Admin";
+
+            List<User> users = new List<User>();
+
+            using (var reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    users.Add(new User
+                        (
+                            reader["GovernmentID"].ToString()!,
+                            reader["Password"].ToString()!
+                        ));
+                }
+            }
+            connection.Close();
+            return users;
+        }
+    }
+    public static User? GetAdminByGovernmentID(string governmentID)
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            User? user = null;
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = @"SELECT * FROM Admins WHERE GovernmentID = @governmentID";
+            command.Parameters.AddWithValue("@governmentID", governmentID);
+
+            var reader = command.ExecuteReader();
+
+            if (reader.Read())
+            {
+                user = new User(reader["GovernmentID"].ToString()!, reader["Password"].ToString()!);
+            }
+
+            connection.Close();
+            return user;
+        }
+    }
+    public static User? AddAdmin(User user)
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = @"
+            INSERT INTO Admins (GovernmentID, Password)
+            VALUES (@GovernmentID, @Password)
+            ";
+
+            cmd.Parameters.AddWithValue("@GovernmentID", user.GovernmentID);
+            cmd.Parameters.AddWithValue("@Password", user.Password);
+
+            cmd.ExecuteNonQuery();
+
+            connection.Close();
+        }
+        return GetAgentByGovernmentID(user.GovernmentID);
+    }
+    public static void DeleteAdmin(string governmentID)
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = @"
+            DELETE FROM Admins WHERE GovernmentID = @governmentID
             ";
             command.Parameters.AddWithValue("@governmentID", governmentID);
             command.ExecuteNonQuery();
