@@ -8,6 +8,6 @@
         string Address { get; set; }
         string Lat { get; set; }
         string Lon { get; set; }
-        List<Pictures> Pictures { get; set; }
+        List<Pictures> Photos { get; set; }
     }
 }

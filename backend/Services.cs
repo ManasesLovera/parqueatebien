@@ -34,22 +34,21 @@ public class CitizensService
             return new ValidationResult<string>() { Result = null, ErrorMessages = new List<string>() { $"License plate '{licensePlate}' is invalid." } };
         }
     }
-  public bool ValidateCitizenBody(Citizen citizen)
-  {
+    public bool ValidateCitizenBody(Citizen citizen)
+    {
         return (!string.IsNullOrEmpty(citizen!.LicensePlate) && citizen.LicensePlate is string) &&
         (!string.IsNullOrEmpty(citizen.VehicleType) && citizen.VehicleType is string) &&
         (!string.IsNullOrEmpty(citizen.Lat) && citizen.Lat is string) &&
-        (!string.IsNullOrEmpty(citizen.Lon) && citizen.Lon is string) &&
-        (!string.IsNullOrEmpty(citizen.File)) && (citizen.FileType is string);
-  }
+        (!string.IsNullOrEmpty(citizen.Lon) && citizen.Lon is string);
+    }
 
-  public Citizen? AddCitizen(Citizen citizen)
-  {
+    public Citizen? AddCitizen(Citizen citizen)
+    {
         return connectiondb.AddCitizen(citizen);
-  }
+    }
 
-  public Citizen? UpdateCitizen(Citizen citizen)
-  {
+    public Citizen? UpdateCitizen(Citizen citizen)
+    {
         return connectiondb.UpdateCitizen(citizen);
-  }
+    }
 }

@@ -25,6 +25,8 @@ var app = builder.Build();
 app.UseCors();
 
 CitizensService citizens = new();
+UsersCRUD agents = new UsersCRUD("Agents");
+UsersCRUD admins = new UsersCRUD("Admins");
 
 // Endpoints for citizens
 
@@ -180,7 +182,7 @@ app.MapPut("/ciudadanos/updateStatus", async (HttpContext httpContext, [FromBody
 
 // Endpoints for agents
 
-app.MapGet("/login", async (HttpContext httpContext, [FromBody] User User) =>
+app.MapGet("agent/login", async (HttpContext httpContext, [FromBody] User User) =>
 {
     try
     {
@@ -190,7 +192,7 @@ app.MapGet("/login", async (HttpContext httpContext, [FromBody] User User) =>
             await httpContext.Response.WriteAsync("Missing info or Invalid data");
         }
 
-        if (DbConnection.IsValidAgent(User.GovernmentID!, User.Password!))
+        if (agents.IsValid(User.GovernmentID!, User.Password!))
         {
             httpContext.Response.StatusCode = 200;
             await httpContext.Response.WriteAsync("OK");
@@ -209,10 +211,10 @@ app.MapGet("/login", async (HttpContext httpContext, [FromBody] User User) =>
 });
 
 app.MapGet("/agentes", () => 
-    DbConnection.GetAllAgents());
+    agents.GetAll());
 
 app.MapGet("/agente/{governmentID}", ([FromRoute] string governmentID) => 
-    DbConnection.GetAgentByGovernmentID(governmentID));
+    agents.GetByGovernmentID(governmentID));
 
 app.MapPost("/agente", async (HttpContext httpContext, [FromBody] User user) =>
 {
@@ -223,14 +225,14 @@ app.MapPost("/agente", async (HttpContext httpContext, [FromBody] User user) =>
             httpContext.Response.StatusCode = 400;
             await httpContext.Response.WriteAsync("Missing info or Invalid data");
         }
-        if (DbConnection.GetAgentByGovernmentID(user!.GovernmentID!) == null)
+        if (agents.GetByGovernmentID(user!.GovernmentID!) == null)
         {
             httpContext.Response.StatusCode = 409;
             await httpContext.Response.WriteAsync("409 Conflict: The governmentID already exists");
         }
         else
         {
-            DbConnection.AddAgent(user);
+            agents.Add(user);
             httpContext.Response.StatusCode = 200;
             await httpContext.Response.WriteAsync("User added successfully!");
         }
@@ -251,14 +253,14 @@ app.MapPut("/agente/changePassword", async (HttpContext httpContext, [FromBody] 
             httpContext.Response.StatusCode = 400;
             await httpContext.Response.WriteAsync("Missing info or Invalid data");
         }
-        if (DbConnection.GetAgentByGovernmentID(user!.GovernmentID!) == null)
+        if (agents.GetByGovernmentID(user!.GovernmentID!) == null)
         {
             httpContext.Response.StatusCode = 404;
             await httpContext.Response.WriteAsync("Not Found");
         }
         else
         {
-            DbConnection.ChangeAgentPassword(user);
+            agents.ChangePassword(user);
             httpContext.Response.StatusCode = 200;
             await httpContext.Response.WriteAsync("Updated successfully");
         }
@@ -279,14 +281,14 @@ app.MapDelete("/agente/{governmentID}", async (HttpContext httpContext, [FromRou
             httpContext.Response.StatusCode = 400;
             await httpContext.Response.WriteAsync("La cédula debe contener 11 caracteres");
         }
-        if (DbConnection.GetAgentByGovernmentID(governmentID!) == null)
+        if (agents.GetByGovernmentID(governmentID!) == null)
         {
             httpContext.Response.StatusCode = 404;
             await httpContext.Response.WriteAsync("User was not found");
         }
         else
         {
-            DbConnection.DeleteAgent(governmentID!);
+            agents.Delete(governmentID!);
             httpContext.Response.StatusCode = 200;
             await httpContext.Response.WriteAsync("Deleted successfully");
         }
@@ -298,7 +300,37 @@ app.MapDelete("/agente/{governmentID}", async (HttpContext httpContext, [FromRou
     }
 });
 
-app.MapGet("/admins", () => DbConnection.GetAllAdmins());
+// Endpoints for admins
+
+app.MapGet("admin/login", async (HttpContext httpContext, [FromBody] User User) =>
+{
+    try
+    {
+        if (User.GovernmentID == null || User.Password == null)
+        {
+            httpContext.Response.StatusCode = 400;
+            await httpContext.Response.WriteAsync("Missing info or Invalid data");
+        }
+
+        if (admins.IsValid(User.GovernmentID!, User.Password!))
+        {
+            httpContext.Response.StatusCode = 200;
+            await httpContext.Response.WriteAsync("OK");
+        }
+        else
+        {
+            httpContext.Response.StatusCode = 404;
+            await httpContext.Response.WriteAsync("Not Found");
+        }
+    }
+    catch (Exception ex)
+    {
+        httpContext.Response.StatusCode = 500;
+        await httpContext.Response.WriteAsync(ex.Message);
+    }
+});
+
+app.MapGet("/admins", () => admins.GetAll());
 
 app.MapGet("/admin/{governmentID}", async (HttpContext httpContext, [FromRoute] string governmentID) =>
 {
@@ -309,14 +341,14 @@ app.MapGet("/admin/{governmentID}", async (HttpContext httpContext, [FromRoute] 
             httpContext.Response.StatusCode = 400;
             await httpContext.Response.WriteAsync("La cédula debe contener 11 caracteres");
         }
-        if (DbConnection.GetAgentByGovernmentID(governmentID) == null)
+        if (admins.GetByGovernmentID(governmentID) == null)
         {
             httpContext.Response.StatusCode = 404;
             await httpContext.Response.WriteAsync("No se encontro el admin");
         }
         else
         {
-            User user = DbConnection.GetAdminByGovernmentID(governmentID)!;
+            User user = admins.GetByGovernmentID(governmentID)!;
             httpContext.Response.StatusCode = 200;
             await httpContext.Response.WriteAsJsonAsync(user);
         }
@@ -337,14 +369,14 @@ app.MapPost("/admin", async (HttpContext httpContext, [FromBody] User user) =>
             httpContext.Response.StatusCode = 400;
             await httpContext.Response.WriteAsync("Missing info or Invalid data");
         }
-        if (DbConnection.GetAdminByGovernmentID(user!.GovernmentID!) == null)
+        if (admins.GetByGovernmentID(user!.GovernmentID!) == null)
         {
             httpContext.Response.StatusCode = 409;
             await httpContext.Response.WriteAsync("409 Conflict: The governmentID already exists");
         }
         else
         {
-            DbConnection.AddAdmin(user);
+            admins.Add(user);
             httpContext.Response.StatusCode = 200;
             await httpContext.Response.WriteAsync("User added successfully!");
         }
@@ -365,14 +397,14 @@ app.MapDelete("/admin/{governmentID}", async (HttpContext httpContext, [FromRout
             httpContext.Response.StatusCode = 400;
             await httpContext.Response.WriteAsync("La cédula debe contener 11 caracteres");
         }
-        if (DbConnection.GetAdminByGovernmentID(governmentID!) == null)
+        if (admins.GetByGovernmentID(governmentID!) == null)
         {
             httpContext.Response.StatusCode = 404;
             await httpContext.Response.WriteAsync("User was not found");
         }
         else
         {
-            DbConnection.DeleteAdmin(governmentID!);
+            admins.Delete(governmentID!);
             httpContext.Response.StatusCode = 200;
             await httpContext.Response.WriteAsync("Deleted successfully");
         }
