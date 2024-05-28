@@ -17,7 +17,7 @@ class Main extends StatelessWidget {
         initialRoute: '/splash',
         // rutas de acceso
         routes: {
-          '/splash': (context) => const SplashScreen(),
+           '/splash': (context) => const SplashScreen(),
            '/login': (context) => Login(),
           // Solo la muestra si el login es exitoso
           '/camera': (context) => const Camera(),
