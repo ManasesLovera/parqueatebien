@@ -27,8 +27,16 @@ public class DbConnection
                 Status VARCHAR(20),
                 Lat VARCHAR(60),
                 Lon VARCHAR(60),
+            )";
+            command.ExecuteNonQuery();
+
+            command.CommandText = @"
+            CREATE TABLE IF NOT EXISTS Pictures (
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 File BLOB,
-                FileType VARCHAR(40)
+                FileType VARCHAR(40),
+                LicensePlate VARCHAR(30),
+                FOREIGN KEY (LicensePlate) REFERENCES Citizens(LicensePlate)
             )";
             command.ExecuteNonQuery();
 
@@ -45,16 +53,6 @@ public class DbConnection
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 GovernmentID VARCHAR(50) UNIQUE,
                 Password VARCHAR(255)
-            )";
-            command.ExecuteNonQuery();
-
-            command.CommandText = @"
-            CREATE TABLE IF NOT EXISTS Pictures (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                File BLOB,
-                FileType VARCHAR(40),
-                LicensePlate VARCHAR(30),
-                FOREIGN KEY (LicensePlate) REFERENCES Citizens(LicensePlate)
             )";
             command.ExecuteNonQuery();
 
@@ -91,8 +89,7 @@ public class DbConnection
                             Status = reader["Status"].ToString()!,
                             Lat = reader["Lat"].ToString()!,
                             Lon = reader["Lon"].ToString()!,
-                            File = photoBase64,
-                            FileType = reader["FileType"].ToString()!
+                            Photos = GetPhotosByLicensePlate(reader["LicensePlate"].ToString()!),
                         }
                     );
                 }
@@ -121,11 +118,8 @@ public class DbConnection
 
             if (reader.Read())
             {
-                string photoBase64 = Convert.ToBase64String((byte[])reader["File"]);
-
                 citizen = new Citizen
                 {
-
                     LicensePlate = reader["LicensePlate"].ToString()!,
                     VehicleType = reader["VehicleType"].ToString()!,
                     Address = reader["Address"].ToString()!,
@@ -133,20 +127,52 @@ public class DbConnection
                     Status = reader["Status"].ToString()!,
                     Lat = reader["Lat"].ToString()!,
                     Lon = reader["Lon"].ToString()!,
-                    File = photoBase64,
-                    FileType = reader["FileType"].ToString()!
+                    Photos = GetPhotosByLicensePlate(licensePlate),
                 };
             }
-
             connection.Close();
             return citizen;
         }
-        
+    }
+
+    private static List<Pictures> GetPhotosByLicensePlate(string licensePlate)
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = @"
+            SELECT * FROM Pictures
+            WHERE LicensePlate = @licensePlate
+            ";
+            cmd.Parameters.AddWithValue("@licensePlate", licensePlate);
+
+            List<Pictures> pictures = new List<Pictures>();
+
+            using (var reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    string photoBase64 = Convert.ToBase64String((byte[])reader["File"]);
+
+                    pictures.Add(
+                        new Pictures
+                        (
+                            reader["LicensePlate"].ToString()!,
+                            reader["FileType"].ToString()!,
+                            photoBase64
+                        )
+                    );
+                }
+            }
+            connection.Close();
+            return pictures;
+        }
     }
 
     public static bool CitizenExists(string licensePlate)
     {
-
         using (var connection = new SqliteConnection(connectionString))
         {
             connection.Open();
@@ -156,11 +182,7 @@ public class DbConnection
 
             using (var reader = command.ExecuteReader())
             {
-                if (reader.Read())
-                {
-                    return true;
-                }
-                return false;
+                return reader.Read();
             }
         }
     }
@@ -174,11 +196,9 @@ public class DbConnection
 
             var cmd = connection.CreateCommand();
             cmd.CommandText = @"
-            INSERT INTO Citizens (LicensePlate, VehicleType, VehicleColor, Address, Status, Lat, Lon, File, FileType)
-            VALUES (@licensePlate, @vehicleType, @vehicleColor, @address, @status, @lat, @lon, @file, @fileType)
+            INSERT INTO Citizens (LicensePlate, VehicleType, VehicleColor, Address, Status, Lat, Lon)
+            VALUES (@licensePlate, @vehicleType, @vehicleColor, @address, @status, @lat, @lon, @file)
             ";
-
-            byte[] photoBytes = Convert.FromBase64String(citizen.File!);
 
             cmd.Parameters.AddWithValue("@licensePlate", citizen.LicensePlate);
             cmd.Parameters.AddWithValue("@vehicleType", citizen.VehicleType);
@@ -187,11 +207,22 @@ public class DbConnection
             cmd.Parameters.AddWithValue("@status", "Reportado");
             cmd.Parameters.AddWithValue("@lat", citizen.Lat);
             cmd.Parameters.AddWithValue("@lon", citizen.Lon);
-            cmd.Parameters.AddWithValue("@file", photoBytes);
-            cmd.Parameters.AddWithValue("@fileType", citizen.FileType);
-
 
             cmd.ExecuteNonQuery();
+
+            cmd.CommandText = @"
+            INSERT INTO Pictures (LicensePlate, FileType, File)
+            VALUES (@licensePlate, @fileType, @file)
+            ";
+
+            citizen.Photos.ForEach( picture =>
+            {
+                cmd.Parameters.AddWithValue("@licensePlate", picture.LicensePlate);
+                cmd.Parameters.AddWithValue("@fileType", picture.FileType);
+                cmd.Parameters.AddWithValue("@file", Convert.FromBase64String(picture.File));
+
+                cmd.ExecuteNonQuery();
+            });
 
             connection.Close();
         }
@@ -207,11 +238,9 @@ public class DbConnection
             var command = connection.CreateCommand();
             command.CommandText = @"
             UPDATE Citizens
-            SET VehicleType = @vehicleType, VehicleColor = @vehicleColor, Address = @address, Status = @status, Lat = @lat, Lon = @lon, File = @file, FileType = @fileType
+            SET VehicleType = @vehicleType, VehicleColor = @vehicleColor, Address = @address, Status = @status, Lat = @lat, Lon = @lon
             WHERE LicensePlate = @licensePlate
             ";
-
-            byte[] photoBytes = Convert.FromBase64String(citizen.File!);
 
             command.Parameters.AddWithValue("@licensePlate", citizen.LicensePlate);
             command.Parameters.AddWithValue("@vehicleType", citizen.VehicleType);
@@ -220,8 +249,6 @@ public class DbConnection
             command.Parameters.AddWithValue("@status", citizen.Status);
             command.Parameters.AddWithValue("@lat", citizen.Lat);
             command.Parameters.AddWithValue("@lon", citizen.Lon);
-            command.Parameters.AddWithValue("@file", photoBytes);
-            command.Parameters.AddWithValue("fileType", citizen.FileType);
 
             command.ExecuteNonQuery();
 
@@ -237,8 +264,10 @@ public class DbConnection
             connection.Open();
 
             var command = connection.CreateCommand();
+
             command.CommandText = @"
             DELETE FROM Citizens WHERE LicensePlate = @licensePlate
+            DELETE FROM Pictures WHERE LicensePlate = @licensePlate
             ";
             command.Parameters.AddWithValue("@licensePlate", licensePlate);
             command.ExecuteNonQuery();
@@ -266,6 +295,7 @@ public class DbConnection
             connection.Close();
         }
     }
+    
     // Agents
     public static List<User> GetAllAgents()
     {
