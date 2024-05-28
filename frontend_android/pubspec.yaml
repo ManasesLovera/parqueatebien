@@ -1,10 +1,10 @@
 name: frontend_android
 description: "demo_orintek"
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -12,13 +12,19 @@ dependencies:
   geolocator: ^11.0.0
   http: ^1.2.1
   image_picker: ^1.0.7
-  logger: ^2.2.0
+
   permission_handler: ^11.3.1
 
 dev_dependencies:
+  logger: ^2.2.0
   flutter_lints: ^3.0.0
   flutter_test:
     sdk: flutter
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/main.png
+    - assets/back.png
+    - assets/bottom.png
