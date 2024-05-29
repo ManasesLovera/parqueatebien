@@ -19,8 +19,13 @@ Demo para la aplicacion que estamos haciendo de incautacion de vehiculos.
                 "status": string,
                 "lat": string,
                 "lon": string,
-                "file": base64 encoded string,
-                "fileType": string
+                "photos": [
+                    {
+                        "file": base64 encoded string,
+                        "fileType": string
+                    },
+                    ...
+                ]
             },
         ...
         ]
@@ -29,15 +34,20 @@ Demo para la aplicacion que estamos haciendo de incautacion de vehiculos.
     - This will return a citizen that matches with the licensePlate inserted into the route passed.
     ```json
     {
-        "licensePlate": string,
-        "vehicleType": string,
-        "vehicleColor": string,
-        "address": string,
-        "status": string,
-        "lat": string,
-        "lon": string,
-        "file": base64 encoded string,
-        "fileType": string
+        "LicensePlate": string,
+        "VehicleType": string,
+        "VehicleColor": string,
+        "Address": string,
+        "Status": string,
+        "Lat": string,
+        "Lon": string,
+        "Photos": [
+                    {
+                        "File": base64 encoded string,
+                        "FileType": string
+                    },
+                    ...
+                ]
     }
     ```
     > If citizen doesn't exist it will return a 404 status code, if the licensePlate data is not valid (it is vaid if it's a number between 5 and 7, it only contains upper case letters and numbers, and it does exists) it will return a Bad Request 400 status code, and if it returns a 500 server error there was an exception (server error, database error, etc).
@@ -45,19 +55,27 @@ Demo para la aplicacion que estamos haciendo de incautacion de vehiculos.
 3. POST / -> `"/ciudadanos"`:
     - This will take an object from the request.body, it must have the following format:
         - Your must send the data this way:
-        ```json
-            {
-                "licensePlate": string,
-                "vehicleType": string,
-                "vehicleColor": string,
-                "address": string,
-                "status": string,
-                "lat": string,
-                "lon": string,
-                "file": base64 encoded string,
-                "fileType": string
-            }
-        ```
+```json
+{
+    "licensePlate": string,
+    "vehicleType": string,
+    "vehicleColor": string,
+    "address": string,
+    "lat": string,
+    "lon": string,
+    "photos": [
+        {
+            "file": base64 encoded string,
+            "fileType": string
+        },
+        {
+            "file": base64 encoded string,
+            "fileType": string
+        },
+        ...
+    ]
+}
+```
 
     #### CAUTION!
     > When you are sending a base64 encoded string please put all the characters previus the first comma in the `fileType` property.
@@ -85,3 +103,27 @@ Demo para la aplicacion que estamos haciendo de incautacion de vehiculos.
     ```
 
 ### Endpoints for Users:
+
+Format for Agents and Admins:
+```json
+{
+    "GovernmentID": string,
+    "Password": string
+}
+```
+
+#### Agents CRUD:
+
+- GET / -> `"/agentes"`: Returns a list of agents.
+- GET / -> `"/agente/{governmentID}"`: Returns one agent with the following governmentID or 404 if not found.
+- POST / -> `"/agente"`: Receive a user through the request.body and saves it.
+- PUT / -> `"/agente/changePassword"`: Sets the password using the User from the request.body.
+- DELETE / -> `"/agente/{governmentID}"`: Deletes the user using the governmentID from the route.
+
+#### Admins CRUD:
+
+- GET / -> `"/admins"`: Returns a list of agents.
+- GET / -> `"/admin/{governmentID}"`: Returns one agent with the following governmentID or 404 if not found.
+- POST / -> `"/admin"`: Receive a user through the request.body and saves it.
+- PUT / -> `"/admin/changePassword"`: Sets the password using the User from the request.body.
+- DELETE / -> `"/admin/{governmentID}"`: Deletes the user using the governmentID from the route.

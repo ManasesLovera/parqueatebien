@@ -17,7 +17,9 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         policy =>
         {
-            policy.SetIsOriginAllowed(origin => new Uri(origin).IsLoopback);
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
         });
 });
 
@@ -182,7 +184,7 @@ app.MapPut("/ciudadanos/updateStatus", async (HttpContext httpContext, [FromBody
 
 // Endpoints for agents
 
-app.MapGet("agente/login", async (HttpContext httpContext, [FromBody] User User) =>
+app.MapPost("agente/login", async (HttpContext httpContext, [FromBody] User User) =>
 {
     try
     {
@@ -306,7 +308,7 @@ app.MapDelete("/agente/{governmentID}", async (HttpContext httpContext, [FromRou
 
 // Endpoints for admins
 
-app.MapGet("admin/login", async (HttpContext httpContext, [FromBody] User User) =>
+app.MapPost("admin/login", async (HttpContext httpContext, [FromBody] User User) =>
 {
     try
     {
@@ -315,11 +317,15 @@ app.MapGet("admin/login", async (HttpContext httpContext, [FromBody] User User) 
             httpContext.Response.StatusCode = 400;
             await httpContext.Response.WriteAsync("Missing info or Invalid data");
         }
-
         if (admins.IsValid(User.GovernmentID!, User.Password!))
         {
             httpContext.Response.StatusCode = 200;
             await httpContext.Response.WriteAsync("OK");
+        }
+        else if (admins.GetByGovernmentID(User.GovernmentID!) != null)
+        {
+            httpContext.Response.StatusCode = 401;
+            await httpContext.Response.WriteAsync("Unathorized - Wrong Password");
         }
         else
         {
@@ -373,7 +379,7 @@ app.MapPost("/admin", async (HttpContext httpContext, [FromBody] User user) =>
             httpContext.Response.StatusCode = 400;
             await httpContext.Response.WriteAsync("Missing info or Invalid data");
         }
-        if (admins.GetByGovernmentID(user!.GovernmentID!) == null)
+        if (admins.GetByGovernmentID(user!.GovernmentID!) != null)
         {
             httpContext.Response.StatusCode = 409;
             await httpContext.Response.WriteAsync("409 Conflict: The governmentID already exists");
