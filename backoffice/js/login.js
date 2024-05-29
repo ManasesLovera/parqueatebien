@@ -3,36 +3,38 @@ const btnLogin = document.getElementById('btnLogin');
 btnLogin.addEventListener('click', async (e) =>{
     e.preventDefault();
 
-    const user = document.getElementById('user').value;
-    const password = document.getElementById('password').value;
+    const userInput = document.getElementById('user').value;
+    console.log(userInput);
+    const passwordInput = document.getElementById('password').value;
+    console.log(passwordInput);
 
-    if (user.length == 0 || password.length == 0)
+    if (user.trim() == '' || password.trim() == ''){
+        alert("Please enter username and password");
         return;
-
-    const result = await inputFormValidator();
+    }
+    const result = await inputFormValidator(userInput, passwordInput);
 
     console.log(result)
 
-    if(result == "OK") 
+    if(result == "OK") {
+        alert("WELCOME!")
         window.location.href = "../html/consultarplaca.html";
+    }
     else 
         alert(result)
 })
 
-async function inputFormValidator() {
+async function inputFormValidator(user, password) {
     try {
-        const response = await fetch('http://127.0.0.1/:8089/admin/login', {
+        console.log({"governmentID": user, "password": password});
+        const response = await fetch('http://localhost:8089/admin/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
+                //,'Access-Control-Allow-Origin': '*'
             },
-            withCredentials: true,    
-            crossorigin: true,
-            mode: 'no-cors',
-            body: JSON.stringify({"governmentID": user, "Password": password})
+            body: JSON.stringify({governmentID: user, password: password})
         });
-
-        console.log(response)
 
         switch (response.status) {
             case 200:
