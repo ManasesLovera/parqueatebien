@@ -19,8 +19,7 @@ public class UsersCRUD
             connection.Open();
 
             var cmd = connection.CreateCommand();
-            cmd.CommandText = @"SELECT * FROM @IDENTITY";
-            cmd.Parameters.AddWithValue("@IDENTITY", IDENTITY);
+            cmd.CommandText = $"SELECT * FROM {IDENTITY}";
 
             List<User> users = new List<User>();
 
@@ -45,8 +44,7 @@ public class UsersCRUD
         {
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT Password FROM @IDENTITY WHERE GovernmentID = @governmentID";
-            command.Parameters.AddWithValue("@IDENTITY", IDENTITY);
+            command.CommandText = $"SELECT Password FROM {IDENTITY} WHERE GovernmentID = @governmentID";
             command.Parameters.AddWithValue("@governmentID", governmentID);
 
             using (var reader = command.ExecuteReader())
@@ -67,8 +65,7 @@ public class UsersCRUD
             User? user = null;
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = @"SELECT * FROM @IDENTITY WHERE GovernmentID = @governmentID";
-            command.Parameters.AddWithValue("@IDENTITY", IDENTITY);
+            command.CommandText = $"SELECT * FROM {IDENTITY} WHERE GovernmentID = @governmentID";
             command.Parameters.AddWithValue("@governmentID", governmentID);
 
             var reader = command.ExecuteReader();
@@ -88,11 +85,10 @@ public class UsersCRUD
             connection.Open();
 
             var cmd = connection.CreateCommand();
-            cmd.CommandText = @"
-            INSERT INTO @IDENTITY (GovernmentID, Password)
+            cmd.CommandText = @$"
+            INSERT INTO {IDENTITY} (GovernmentID, Password)
             VALUES (@GovernmentID, @Password)
             ";
-            cmd.Parameters.AddWithValue("@IDENTITY", IDENTITY);
             cmd.Parameters.AddWithValue("@GovernmentID", user.GovernmentID);
             cmd.Parameters.AddWithValue("@Password", user.Password);
 
@@ -102,7 +98,6 @@ public class UsersCRUD
         }
         return GetByGovernmentID(user.GovernmentID);
     }
-
     public User? ChangePassword(User user)
     {
         using (var connection = new SqliteConnection(connectionString))
@@ -110,12 +105,11 @@ public class UsersCRUD
             connection.Open();
 
             var command = connection.CreateCommand();
-            command.CommandText = @"
-            UPDATE @IDENTITY
+            command.CommandText = @$"
+            UPDATE {IDENTITY}
             SET Password = @password
             WHERE GovernmentID = @governmentID
             ";
-            command.Parameters.AddWithValue("@IDENTITY", IDENTITY);
             command.Parameters.AddWithValue("@governmentID", user.GovernmentID);
             command.Parameters.AddWithValue("@password", user.Password);
 
@@ -125,7 +119,6 @@ public class UsersCRUD
         }
         return GetByGovernmentID(user.GovernmentID);
     }
-
     public void Delete(string governmentID)
     {
         using (var connection = new SqliteConnection(connectionString))
@@ -133,10 +126,9 @@ public class UsersCRUD
             connection.Open();
 
             var command = connection.CreateCommand();
-            command.CommandText = @"
-            DELETE FROM @IDENTITY WHERE GovernmentID = @governmentID
+            command.CommandText = @$"
+            DELETE FROM {IDENTITY} WHERE GovernmentID = @governmentID
             ";
-            command.Parameters.AddWithValue("@IDENTITY", IDENTITY);
             command.Parameters.AddWithValue("@governmentID", governmentID);
             command.ExecuteNonQuery();
 

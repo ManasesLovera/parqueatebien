@@ -35,7 +35,7 @@ app.MapGet("/", async (HttpContext context) =>
     await context.Response.WriteAsync("Nothing available here");
 });
 
-app.MapGet("/ciudadanos", () => DbConnection.GetAllCitizens());
+app.MapGet("/ciudadanos/ciudadanos", () => DbConnection.GetAllCitizens());
 
 app.MapGet("/ciudadanos/{licensePlate}", async (HttpContext context, [FromRoute] string licensePlate) =>
 {
@@ -182,7 +182,7 @@ app.MapPut("/ciudadanos/updateStatus", async (HttpContext httpContext, [FromBody
 
 // Endpoints for agents
 
-app.MapGet("agent/login", async (HttpContext httpContext, [FromBody] User User) =>
+app.MapGet("agente/login", async (HttpContext httpContext, [FromBody] User User) =>
 {
     try
     {
@@ -191,11 +191,15 @@ app.MapGet("agent/login", async (HttpContext httpContext, [FromBody] User User) 
             httpContext.Response.StatusCode = 400;
             await httpContext.Response.WriteAsync("Missing info or Invalid data");
         }
-
         if (agents.IsValid(User.GovernmentID!, User.Password!))
         {
             httpContext.Response.StatusCode = 200;
             await httpContext.Response.WriteAsync("OK");
+        }
+        else if (agents.GetByGovernmentID(User.GovernmentID!) != null)
+        {
+            httpContext.Response.StatusCode = 401;
+            await httpContext.Response.WriteAsync("Unathorized - Wrong Password");
         }
         else
         {
@@ -225,7 +229,7 @@ app.MapPost("/agente", async (HttpContext httpContext, [FromBody] User user) =>
             httpContext.Response.StatusCode = 400;
             await httpContext.Response.WriteAsync("Missing info or Invalid data");
         }
-        if (agents.GetByGovernmentID(user!.GovernmentID!) == null)
+        if (agents.GetByGovernmentID(user!.GovernmentID!) != null)
         {
             httpContext.Response.StatusCode = 409;
             await httpContext.Response.WriteAsync("409 Conflict: The governmentID already exists");

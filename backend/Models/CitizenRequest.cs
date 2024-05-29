@@ -10,3 +10,19 @@ public class CitizenRequest
     public string Lon { get; set; } = String.Empty;
     public List<PicturesRequest> Photos { get; set; } = new List<PicturesRequest>();
 }
+/*
+ {
+    "licensePlate": string,
+    "vehicleType": string,
+    "vehicleColor": string,
+    "address": string,
+    "lat": string,
+    "lon": string,
+    "photos": [
+        {
+            "fileType": string,
+            "file": base64
+        }
+    ]
+}
+*/

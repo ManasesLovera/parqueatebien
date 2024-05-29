@@ -187,7 +187,6 @@ public class DbConnection
 
     public static Citizen? AddCitizen(CitizenRequest citizen)
     {
-
         using (var connection = new SqliteConnection(connectionString))
         {
             connection.Open();
@@ -226,7 +225,7 @@ public class DbConnection
         }
         return GetByLicensePlate(citizen.LicensePlate);
     }
-
+    
     public Citizen? UpdateCitizen(Citizen citizen)
     {
         using (var connection = new SqliteConnection(connectionString))
@@ -281,6 +280,7 @@ public class DbConnection
             return "Deleted successfully";
         }
     }
+    
     public static void UpdateCitizenStatus(ChangeStatusDTO changeStatusDTO)
     {
         using (var connection = new SqliteConnection(connectionString))
