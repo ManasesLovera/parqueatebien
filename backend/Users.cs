@@ -6,7 +6,7 @@ namespace db;
 public class UsersCRUD
 {
     private static readonly string connectionString = "Data Source=database.db";
-    private static string IDENTITY = String.Empty;
+    private string IDENTITY = String.Empty;
     public UsersCRUD(string identity)
     {
         IDENTITY = identity;
@@ -65,7 +65,7 @@ public class UsersCRUD
             User? user = null;
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = $"SELECT * FROM {IDENTITY} WHERE GovernmentID = @governmentID";
+            command.CommandText = $"SELECT * FROM {this.IDENTITY} WHERE GovernmentID = @governmentID";
             command.Parameters.AddWithValue("@governmentID", governmentID);
 
             var reader = command.ExecuteReader();

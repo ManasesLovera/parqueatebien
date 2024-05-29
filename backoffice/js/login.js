@@ -8,7 +8,7 @@ btnLogin.addEventListener('click', async (e) =>{
     const passwordInput = document.getElementById('password').value;
     console.log(passwordInput);
 
-    if (user.trim() == '' || password.trim() == ''){
+    if (userInput.trim() == '' || passwordInput.trim() == ''){
         alert("Please enter username and password");
         return;
     }
@@ -40,7 +40,7 @@ async function inputFormValidator(user, password) {
             case 200:
                 return "OK";
             case 404:
-                return "User was not found";
+                return "User does not exist";
             case 401:
                 return "Wrong password";
             case 400:
