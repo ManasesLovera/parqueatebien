@@ -1,12 +1,8 @@
 const btnLogin = document.getElementById('btnLogin');
-
 btnLogin.addEventListener('click', async (e) =>{
     e.preventDefault();
-
-    const userInput = document.getElementById('user').value;
-    console.log(userInput);
-    const passwordInput = document.getElementById('password').value;
-    console.log(passwordInput);
+    let userInput = document.getElementById('user').value;
+    let passwordInput = document.getElementById('password').value;
 
     if (userInput.trim() == '' || passwordInput.trim() == ''){
         alert("Please enter username and password");
