@@ -11,12 +11,24 @@ flutter_native_splash:
   fullscreen: true
 
   android_12:
-    background_image_android: "assets/back.png"
-    background_image_dark_android: "assets/back.png"
-    image: "assets/main.png"
+    image: "assets/main_splash.png"
     branding: "assets/bottom.png"
     branding_mode: bottom
+    color: "#099DD2"
     fullscreen: true
+  # From Android 12 onwards, the splash screen is handled differently than in previous versions.
+  # Please visit https://developer.android.com/guide/topics/ui/splash-screen.
+  # Following are specific parameters for Android 12+.
+
+  # android_12:
+  # The image parameter sets the splash screen icon image.  If this parameter is not specified,
+  # the app's launcher icon will be used instead.
+  # Please note that the splash screen will be clipped to a circle on the center of the screen.
+  # App icon with an icon background: This should be 960×960 pixels, and fit within a circle
+  # 640 pixels in diameter.
+  # App icon without an icon background: This should be 1152×1152 pixels, and fit within a circle
+  # 768 pixels in diameter.
+  # image: assets/android12splash.png
 
   # This package generates native code to customize Flutter's default white native splash screen
   # with background color and splash image.
@@ -43,11 +55,6 @@ flutter_native_splash:
   # png file and should be sized for 4x pixel density.
   # image: assets/splash.png
 
-  # The branding property allows you to specify an image used as branding in the splash screen.
-  # It must be a png file. It is supported for Android, iOS and the Web.  For Android 12,
-  # see the Android 12 section below.
-  # branding: assets/dart.png
-
   # To position the branding image at the bottom of the screen you can use bottom, bottomRight,
   # and bottomLeft. The default values is bottom if not specified or specified something else.
   # branding_mode: bottom
@@ -62,18 +69,10 @@ flutter_native_splash:
   # image_dark: assets/splash-invert.png
   # branding_dark: assets/dart_dark.png
 
-  # From Android 12 onwards, the splash screen is handled differently than in previous versions.
-  # Please visit https://developer.android.com/guide/topics/ui/splash-screen.
-  # Following are specific parameters for Android 12+.
-  # android_12:
-  # The image parameter sets the splash screen icon image.  If this parameter is not specified,
-  # the app's launcher icon will be used instead.
-  # Please note that the splash screen will be clipped to a circle on the center of the screen.
-  # App icon with an icon background: This should be 960×960 pixels, and fit within a circle
-  # 640 pixels in diameter.
-  # App icon without an icon background: This should be 1152×1152 pixels, and fit within a circle
-  # 768 pixels in diameter.
-  # image: assets/android12splash.png
+  # The branding property allows you to specify an image used as branding in the splash screen.
+  # It must be a png file. It is supported for Android, iOS and the Web.  For Android 12,
+  # see the Android 12 section below.
+  # branding: assets/dart.png
 
   # Splash screen background color.
   # color: "#42a5f5"
