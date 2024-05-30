@@ -12,7 +12,7 @@ class Main extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: const Size(360, 640),
-      minTextAdapt: true,
+    //  minTextAdapt: true,
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -24,5 +24,5 @@ class Main extends StatelessWidget {
         );
       },
     );
-}
+  }
 }
