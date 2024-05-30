@@ -1,99 +1,171 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_android/componentes_visuales/my_button.dart';
-import 'package:frontend_android/componentes_visuales/my_textfield.dart';
-import 'package:frontend_android/login/login_method/login_method.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Login extends StatelessWidget {
-  Login({super.key});
-  //
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
+  const Login({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // fondo
-      backgroundColor: Colors.grey[300],
-      // retiramos notch
+      backgroundColor: const Color.fromARGB(255, 9, 157, 210),
       body: SafeArea(
-        child: SingleChildScrollView(
-          //centramos
-          child: Center(
-            //en columna
-            child: Column(
-              children: [
-                // separador de espacio
-                const SizedBox(
-                  height: 50,
-                ),
-                // Icono de candado
-                const Icon(
-                  Icons.lock,
-                  size: 100,
-                ),
-                // separador de espacio
-                const SizedBox(
-                  height: 40,
-                ),
-                // Titulo debajo del candado
-                Text(
-                  'Demo OrionTek',
-                  style: TextStyle(color: Colors.grey[700], fontSize: 20),
-                ),
-                // separador de espacio
-                const SizedBox(
-                  height: 10,
-                ),
-                // Controlamos la caja de texto, con 'controller
-                // presentamos el texto en la caja'
-                MyTextField(
-                  controller: usernameController,
-                  hintText: 'Nombre De Usuario',
-                  obscuretext: false,
-                ),
-                // separador de espacio
-                const SizedBox(
-                  height: 10,
-                ),
-                // Controlamos la caja de texto, con 'controller
-                // no presentamos el texto en la caja porque es la contraseña'
-                MyTextField(
-                  controller: passwordController,
-                  hintText: 'Contraseña',
-                  obscuretext: true,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                // relleno, en fila, 25px hacia la izquierda para que sea acrode
-                // a la caja de texto userpassword
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        'Olvido Su Contraseña ?',
-                        style:
-                            TextStyle(color: Colors.grey[600], fontSize: 12.5),
-                      ),
-                    ],
+        child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 2.w),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 50.h),
+                  Image.asset(
+                    'assets/main.png',
+                    height: 100.h,
+                    //  width: double.infinity,
                   ),
-                ),
-                // separador de espacio
-                const SizedBox(
-                  height: 20,
-                ), //Enviamos onTap Tap_Gestures
-                // Como tambien el user y password capturados
-                // context es para el navigator localization y estado del widget etc...
-                MyButton(
-                  onTap: () => signUserIn(
-                      context, usernameController, passwordController),
-                ),
-              ],
-            ),
-          ),
-        ),
+                  SizedBox(height: 50.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 14.w),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Usuario',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10.h,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 0.h),
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 2.h),
+                    child: SizedBox(
+                      height: 30.h,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Ingresar número de cédula',
+                          hintStyle:
+                              TextStyle(color: Colors.grey, fontSize: 10.h),
+                          filled: true,
+                          fillColor: Colors.white,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.r)),
+                            borderSide: const BorderSide(color: Colors.white70),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.r)),
+                            borderSide: const BorderSide(color: Colors.white),
+                          ),
+                        ),
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 2.h),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Contraseña',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10.h,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 2.h),
+                    child: SizedBox(
+                      height: 30.h,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          suffixIcon: const Icon(Icons.remove_red_eye),
+                          hintText: 'Ingresar La Contraseña',
+                          hintStyle:
+                              TextStyle(color: Colors.grey, fontSize: 10.h),
+                          filled: true,
+                          fillColor: Colors.white,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.r)),
+                            borderSide: const BorderSide(color: Colors.white70),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.r)),
+                            borderSide: const BorderSide(color: Colors.white),
+                          ),
+                        ),
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 15.h),
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.grey[400]!, // Start color
+                              Colors.grey[600]!, // End color
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                               horizontal: 2.w,  vertical: 6.h),
+                          ),
+                          child: Text(
+                            'Ingresar',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.h,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                  Text(
+                    'Olvidaste La Contraseña',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12.h,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 120.h),
+                  Image.asset(
+                    'assets/bottom.png',
+                    height: 50.h,
+                  )
+                ],
+              ),
+            )),
       ),
     );
   }

@@ -34,7 +34,7 @@ class SplashScreenState extends State<SplashScreen>
           final screenWidth = constraints.maxWidth;
           final screenHeight = constraints.maxHeight;
 
-          return Stack(
+        return  Stack(
             children: [
               Positioned.fill(
                 child: Image.asset(
@@ -42,6 +42,8 @@ class SplashScreenState extends State<SplashScreen>
                   fit: BoxFit.cover,
                 ),
               ),
+
+              
               Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
