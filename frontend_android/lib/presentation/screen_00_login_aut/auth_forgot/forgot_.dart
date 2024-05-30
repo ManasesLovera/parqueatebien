@@ -32,7 +32,7 @@ class Forgot extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 24.h,
-                      //    fontWeight: FontWeight.bold,
+                          //    fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
