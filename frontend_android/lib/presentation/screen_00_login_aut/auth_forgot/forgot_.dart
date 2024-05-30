@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class Login extends StatelessWidget {
-  const Login({super.key});
+class Forgot extends StatelessWidget {
+  const Forgot({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,39 @@ class Login extends StatelessWidget {
                     height: 100.h,
                     //  width: double.infinity,
                   ),
-                  SizedBox(height: 50.h),
+                  SizedBox(height: 30.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 14.w),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Text(
+                        'Olvidaste tu\n'
+                        'contraseña?',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24.h,
+                      //    fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 14.w),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Text(
+                        'ingresa tu Usuario para recibir instrucciones\n'
+                        ' de como recuperar tu contraseña.',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.h,
+                          // fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 14.w),
                     child: Align(
@@ -30,13 +62,12 @@ class Login extends StatelessWidget {
                         'Usuario',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 10.h,
+                          fontSize: 14.h,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 0.h),
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 14.w, vertical: 2.h),
@@ -45,8 +76,10 @@ class Login extends StatelessWidget {
                       child: TextField(
                         decoration: InputDecoration(
                           hintText: 'Ingresar número de cédula',
-                          hintStyle:
-                              TextStyle(color: Colors.grey, fontSize: 10.h),
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 13.h,
+                          ),
                           filled: true,
                           fillColor: Colors.white,
                           enabledBorder: OutlineInputBorder(
@@ -65,6 +98,7 @@ class Login extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 20.h),
+                  /*
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 14.w, vertical: 2.h),
@@ -80,6 +114,8 @@ class Login extends StatelessWidget {
                       ),
                     ),
                   ),
+                  */
+                  /*
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 14.w, vertical: 2.h),
@@ -88,7 +124,7 @@ class Login extends StatelessWidget {
                       child: TextField(
                         decoration: InputDecoration(
                           suffixIcon: const Icon(Icons.remove_red_eye),
-                          hintText: 'Ingresar La Contraseña',
+                          hintText: 'Ingresar la contraseña',
                           hintStyle:
                               TextStyle(color: Colors.grey, fontSize: 10.h),
                           filled: true,
@@ -108,6 +144,7 @@ class Login extends StatelessWidget {
                       ),
                     ),
                   ),
+                  */
                   SizedBox(height: 15.h),
                   Padding(
                     padding:
@@ -138,7 +175,7 @@ class Login extends StatelessWidget {
                                 horizontal: 2.w, vertical: 6.h),
                           ),
                           child: Text(
-                            'Ingresar',
+                            'Recuperar',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16.h,
@@ -149,7 +186,8 @@ class Login extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20.h),
+
+                  /*
                   Text(
                     'Olvidaste La Contraseña',
                     style: TextStyle(
@@ -158,7 +196,8 @@ class Login extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 120.h),
+                  */
+                  SizedBox(height: 100.h),
                   Image.asset(
                     'assets/bottom.png',
                     height: 50.h,
