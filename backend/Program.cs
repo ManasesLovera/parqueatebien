@@ -17,7 +17,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         policy =>
         {
-            policy//.WithOrigins("http://127.0.0.1:5501")
+            policy.WithOrigins("http://127.0.0.1:5501", "http://127.0.0.1:50775")
                   .AllowAnyOrigin()
                   .AllowAnyMethod()
                   .AllowAnyHeader();
@@ -182,6 +182,8 @@ app.MapPut("/ciudadanos/updateStatus", async (HttpContext httpContext, [FromBody
         await httpContext.Response.WriteAsync(ex.Message);
     }
 });
+
+app.MapGet("/ciudadanos/estadisticas", () => citizens.VehicleStatus());
 
 // Endpoints for agents
 

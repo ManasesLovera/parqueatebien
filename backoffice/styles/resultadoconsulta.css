@@ -1,0 +1,89 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+    color: #444;
+}
+:root {
+    --first: #031154;
+    --second: #0da1d8;
+    --third: #f9f9f9;
+}
+nav {
+    padding: 20px;
+}
+nav img {
+    height: 50px;
+}
+.title {
+    background-color: var(--third);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+}
+.title h1 {
+    color: var(--first);
+    font-size: 25px;
+    text-align: center;
+    align-self: center;
+}
+.title button {
+    color: #fff;
+    background-color: var(--first);
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.title button img {
+    height: 20px;
+}
+.resultado-consulta {
+    padding: 30px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+.resultado-consulta .datos {
+    padding: 20px 0;
+    width: 70%;
+
+}
+.resultado-consulta .informacion {
+    width: 40%;
+    padding: 20px;
+    background-color: var(--third);
+    border-radius: 10px;
+}
+h3 {
+    font-size: 20px;
+    color: var(--second);
+}
+h4 {
+    margin-top: 20px;
+    margin-bottom: 7px;
+}
+.dato {
+    display: flex;
+    gap: 40px;
+    padding: 20px 0;
+}
+.dato p {
+    font-size: 16px;
+}
+.fotos-vehiculo {
+    margin-top: 10px;
+    padding-top: 30px;
+    border-top: 1px solid #ddd;
+}
+.informacion .status {
+    background-color: #ccc;
+    padding: 5px 10px;
+    border-radius: 20px;
+}

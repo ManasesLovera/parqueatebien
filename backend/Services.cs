@@ -45,4 +45,15 @@ public class CitizensService
     {
         return connectiondb.UpdateCitizen(citizen);
     }
+
+    public List<string> VehicleStatus()
+    {
+        var vehicleStatus = new List<string>();
+        DbConnection.GetAllCitizens().ForEach(citizen =>
+        {
+            vehicleStatus.Add(citizen.Status!);
+        });
+
+        return vehicleStatus;
+    }
 }

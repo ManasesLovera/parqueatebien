@@ -12,16 +12,15 @@ async function displayData() {
     const retenidos = document.getElementById('retenidos');
     let data = await fetchData();
 
-    reportados.innerHTML = data.filter(vehiculo => vehiculo.status === 'Reportado').length;
-    recogidos.innerHTML = data.filter(vehiculo => vehiculo.status === 'Incautado por grúa').length;
-    retenidos.innerHTML = data.filter(vehiculo => vehiculo.status === 'Retenido').length;
+    reportados.innerHTML = data.filter(status => status === 'Reportado').length;
+    recogidos.innerHTML = data.filter(status => status === 'Incautado por grúa').length;
+    retenidos.innerHTML = data.filter(status => status === 'Retenido').length;
 }
 async function fetchData() {
-    let response = await fetch("http://localhost:8089/ciudadanos/ciudadanos");
+    let response = await fetch("http://localhost:8089/ciudadanos/estadisticas");
     let body = await response.json();
     return body;
 }
-
 
 const btnConsultarPlaca = document.getElementById('btn-consultarplaca');
 
@@ -39,8 +38,5 @@ btnConsultarPlaca.addEventListener('click', async () => {
 
 async function fetchSingleData(placa) {
     const response = await fetch(`http://localhost:8089/ciudadanos/${placa}`);
-    switch (response.status) {
-        case 200:
-
-    }
+    return response.json();
 }

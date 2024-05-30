@@ -22,48 +22,48 @@
 
             </span>
         </nav>
-        <article class="consultar_placa">
-            <h1>Consultar placa</h1>
-            <section class="busqueda">
-                <input id="textbox-consultarplaca" type="text" placeholder="Ingresar digitos de placa">
-                <button id="btn-consultarplaca">Buscar</button>
-            </section>
-        </article>
-        <article>
-            <section class="ver-reportes">
-                <div class="ver-reportes-grafico">
-
-                </div>
-                <div class="ver-reportes-texto">
-                    <h4>Ver reportes</h4>
-                    <p>Visualiza todos los vehículos reportados e incautados</p>
-                </div>
-                <div class="ver-reportes-flecha">
-
-                </div>
-                
-            </section>
-            
-            <section class="estadisticas">
-                <h3 id="h3"></h3>
-                <section class="reportes">
-                    <span class="reportados vehiculos">
-                        <p class="cantidad-vehiculos" id="reportados"></p>
-                        <p class="descripcion-vehiculos">Vehículos reportados</p>
-                    </span>
-                    <span class="recogidos vehiculos">
-                        <p class="cantidad-vehiculos" id="recogidos"></p>
-                        <p class="descripcion-vehiculos">Vehículos recogidos por Grúa</p>
-                    </span>
-                    <span class="retenido vehiculos">
-                        <p class="cantidad-vehiculos" id="retenidos"></p>
-                        <p class="descripcion-vehiculos">Vehículos en centros de retención</p>
-                    </span>
+        <main>
+            <article class="consultar_placa">
+                <h1>Consultar placa</h1>
+                <section class="busqueda">
+                    <input id="textbox-consultarplaca" type="text" placeholder="Ingresar digitos de placa">
+                    <button id="btn-consultarplaca">Buscar</button>
                 </section>
-            </section>
-        </article>
-
-        
+            </article>
+            <article>
+                <section class="ver-reportes">
+                    <div class="ver-reportes-grafico">
+                        <img src="../src/img/REPORT.svg" alt="Back">
+                    </div>
+                    <div class="ver-reportes-texto">
+                        <h4>Ver reportes</h4>
+                        <p>Visualiza todos los vehículos reportados e incautados</p>
+                    </div>
+                    <div class="ver-reportes-flecha">
+                        <img src="../src/img/pngwing.com.png">
+                    </div>
+                    
+                </section>
+                
+                <section class="estadisticas">
+                    <h3 id="h3"></h3>
+                    <section class="reportes">
+                        <span class="reportados vehiculos">
+                            <p class="cantidad-vehiculos" id="reportados"></p>
+                            <p class="descripcion-vehiculos">Vehículos reportados</p>
+                        </span>
+                        <span class="recogidos vehiculos">
+                            <p class="cantidad-vehiculos" id="recogidos"></p>
+                            <p class="descripcion-vehiculos">Vehículos recogidos por Grúa</p>
+                        </span>
+                        <span class="retenido vehiculos">
+                            <p class="cantidad-vehiculos" id="retenidos"></p>
+                            <p class="descripcion-vehiculos">Vehículos en centros de retención</p>
+                        </span>
+                    </section>
+                </section>
+            </article>
+        </main>
     </div>
 
     <script src="../js/consultarplaca.js"></script>
