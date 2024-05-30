@@ -135,7 +135,7 @@ class Login extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10.r),
                             ),
                             padding: EdgeInsets.symmetric(
-                               horizontal: 2.w,  vertical: 6.h),
+                                horizontal: 2.w, vertical: 6.h),
                           ),
                           child: Text(
                             'Ingresar',
