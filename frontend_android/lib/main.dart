@@ -1,24 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_android/presentation/screen_00_login/login_screen_p0.dart';
-import 'package:frontend_android/presentation/screen_01_camera/camera_screen_p1.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:frontend_android/presentation/New_Report_Flow/_00_reporte.dart';
+import 'package:frontend_android/presentation/New_Report_Flow/_01_nuevo_reporte.dart';
+import 'package:frontend_android/presentation/New_Report_Flow/_02_foto_nuevo_reporte.dart';
+import 'package:frontend_android/presentation/camera/camera_screen_p1.dart';
+import 'package:frontend_android/presentation/login/login.dart';
 
-void main() async => runApp(const MyApp());
+void main() => runApp(const Main());
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Main extends StatelessWidget {
+  const Main({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        // Retiramos el debug icon
-        debugShowCheckedModeBanner: false,
-        // Ruta por defecto
-        initialRoute: '/login',
-        // rutas de acceso
-        routes: {
-          '/login': (context) => Login(),
-          // Solo la muestra si el login es exitoso
-          '/camera': (context) => const Camera(),
-        });
+    return ScreenUtilInit(
+      designSize: const Size(360, 640),
+      builder: (context, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          initialRoute: '/newreportfoto',
+          routes: {
+            '/login': (context) => const Login(),
+            '/report': (context) => const WelcomeNewReport(),
+            '/newreport': (context) => const NewReportScreen(),
+            '/newreportfoto': (context) => const NewReportPhotoScreen(),
+            '/camera': (context) => const Camera(),
+          },
+        );
+      },
+    );
   }
 }

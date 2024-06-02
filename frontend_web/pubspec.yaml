@@ -19,3 +19,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/image/fondo_splash.png
+    - assets/image/LOGO_INTRANT.png
+    - assets/image/LOGO_PARQUEATE.png
