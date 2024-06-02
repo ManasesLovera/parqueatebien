@@ -145,7 +145,7 @@ class Forgot extends StatelessWidget {
                     ),
                   ),
                   */
-                  SizedBox(height: 15.h),
+                  SizedBox(height: 8.h),
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 14.w, vertical: 0),

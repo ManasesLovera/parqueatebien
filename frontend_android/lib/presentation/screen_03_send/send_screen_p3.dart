@@ -1,4 +1,4 @@
-import 'package:frontend_android/send_data/get_to_submit_data.dart';
+import 'package:frontend_android/presentation/send_data/get_to_submit_data.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:frontend_android/location/location_service/location_service.dart';
