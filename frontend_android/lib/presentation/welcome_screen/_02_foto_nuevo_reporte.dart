@@ -1,7 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:frontend_android/presentation/welcome_screen/_03_confirmation_screen.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 
 class NewReportPhotoScreen extends StatefulWidget {
   const NewReportPhotoScreen({super.key});
@@ -28,6 +29,17 @@ class _NewReportPhotoScreenState extends State<NewReportPhotoScreen> {
         });
       }
     }
+  }
+
+  void _navigateToConfirmation() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ConfirmationScreen(
+          imageFileList: _imageFileList,
+        ),
+      ),
+    );
   }
 
   @override
@@ -108,43 +120,25 @@ class _NewReportPhotoScreenState extends State<NewReportPhotoScreen> {
                         ),
                       ),
               ),
-              SizedBox(height: 20.h),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 14.h),
                 child: SizedBox(
                   width: double.infinity,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.grey[400]!,
-                          Colors.grey[600]!,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                  child: ElevatedButton(
+                    onPressed: _navigateToConfirmation,
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 12.h),
+                      backgroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.h),
                       ),
-                      borderRadius: BorderRadius.circular(10.r),
                     ),
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.h),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 2.h,
-                          vertical: 6.h,
-                        ),
-                      ),
-                      child: Text(
-                        'Finalizar',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.h,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    child: Text(
+                      'Continuar',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.h,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
