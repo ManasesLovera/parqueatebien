@@ -9,47 +9,47 @@ Demo para la aplicacion que estamos haciendo de incautacion de vehiculos.
 
 1. GET / -> `"/ciudadanos/ciudadanos"`:
     - This will return an array of objects with the whole data with this format:
-    ```json
-        [
+```json
+[
+    {
+        "licensePlate": string,
+        "vehicleType": string,
+        "vehicleColor": string,
+        "address": string,
+        "status": string,
+        "lat": string,
+        "lon": string,
+        "photos": [
             {
-                "licensePlate": string,
-                "vehicleType": string,
-                "vehicleColor": string,
-                "address": string,
-                "status": string,
-                "lat": string,
-                "lon": string,
-                "photos": [
-                    {
-                        "file": base64 encoded string,
-                        "fileType": string
-                    },
-                    ...
-                ]
+                "file": base64 encoded string,
+                "fileType": string
             },
-        ...
+            ...
         ]
-    ```
+    },
+...
+]
+```
 2. GET / -> `"/ciudadanos/{licensePlate}"`:
     - This will return a citizen that matches with the licensePlate inserted into the route passed.
-    ```json
-    {
-        "LicensePlate": string,
-        "VehicleType": string,
-        "VehicleColor": string,
-        "Address": string,
-        "Status": string,
-        "Lat": string,
-        "Lon": string,
-        "Photos": [
-                    {
-                        "File": base64 encoded string,
-                        "FileType": string
-                    },
-                    ...
-                ]
-    }
-    ```
+```json
+{
+    "LicensePlate": string,
+    "VehicleType": string,
+    "VehicleColor": string,
+    "Address": string,
+    "Status": string,
+    "Lat": string,
+    "Lon": string,
+    "Photos": [
+                {
+                    "File": base64 encoded string,
+                    "FileType": string
+                },
+                ...
+            ]
+}
+```
     > If citizen doesn't exist it will return a 404 status code, if the licensePlate data is not valid (it is vaid if it's a number between 5 and 7, it only contains upper case letters and numbers, and it does exists) it will return a Bad Request 400 status code, and if it returns a 500 server error there was an exception (server error, database error, etc).
 
 3. POST / -> `"/ciudadanos"`:
