@@ -1,10 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:frontend_android/camera/camera_method/get_camera.dart';
-import 'package:frontend_android/presentation/screen_03_send/send_screen_p3.dart';
+import 'package:frontend_android/presentation/camera/send_screen_p3.dart';
 import 'package:image_picker/image_picker.dart';
 
-//
 class Camera extends StatefulWidget {
   const Camera({super.key});
 
