@@ -1,21 +1,16 @@
-* {
+:root {
+    --first: #031154;
+    --second: #0da1d8;
+    --third: #f9f9f9;
+}
+body {
     margin: 0;
     padding: 0;
     font-size: 16px;
     font-family: 'Open Sans', sans-serif;
     color: #444;
 }
-:root {
-    --first: #031154;
-    --second: #0da1d8;
-    --third: #f9f9f9;
-}
-nav {
-    padding: 20px;
-}
-nav img {
-    height: 50px;
-}
+
 .title {
     background-color: var(--third);
     padding: 20px 40px;
@@ -61,21 +56,23 @@ nav img {
     background-color: var(--third);
     border-radius: 10px;
 }
-h3 {
+.subtitleh3 {
     font-size: 20px;
     color: var(--second);
 }
-h4 {
-    margin-top: 20px;
-    margin-bottom: 7px;
+h5 {
+    font-size: 16px;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    color: var(--first);
 }
 .dato {
     display: flex;
     gap: 40px;
     padding: 20px 0;
 }
-.dato p {
-    font-size: 16px;
+.dato p, .informacion span {
+    font-size: 15px;
 }
 .fotos-vehiculo {
     margin-top: 10px;
@@ -83,7 +80,21 @@ h4 {
     border-top: 1px solid #ddd;
 }
 .informacion .status {
-    background-color: #ccc;
     padding: 5px 10px;
     border-radius: 20px;
+}
+.reportado {
+    background-color: #ccc;
+}
+.incautado {
+    color: #fefefe;
+    background-color: #ffad0a;
+}
+.retenido {
+    color: #fefefe;
+    background-color: #ff1a1a;
+}
+.liberado {
+    color: #fefefe;
+    background-color: #20ad0a;
 }

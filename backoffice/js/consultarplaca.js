@@ -1,3 +1,4 @@
+import {displayResult} from './resultadoconsulta.js'
 document.addEventListener("DOMContentLoaded", () => {
     const h3 = document.getElementById('h3');
     let today = new Date(Date.now()).toLocaleDateString();
@@ -31,12 +32,28 @@ btnConsultarPlaca.addEventListener('click', async () => {
         alert('Ingresa digitos de la placa');
         return;
     }
-    let placa = await fetchSingleData(textboxConsultarPlaca);
-    console.log(placa);
+    document.getElementById('root').innerHTML = await displayResult(textboxConsultarPlaca);
+
+    let status = document.getElementById('status');
+    switch (status.innerHTML.toLowerCase()) {
+        case 'reportado': 
+            status.classList.add('reportado');
+            break;
+        case 'incautado por grúa':
+            status.classList.add('incautado');
+            break;
+        case 'retenido':
+            status.classList.add('retenido');
+            break;
+        case 'liberado':
+            status.classList.add('liberado');
+            break;
+    }
+
+    const btnRealizarOtraConsulta = document.getElementById('btnRealizarOtraConsulta');
+
+    btnRealizarOtraConsulta.addEventListener('click', () => {
+        window.location.href = '../html/consultarplaca.html';
+    });
 
 });
-
-async function fetchSingleData(placa) {
-    const response = await fetch(`http://localhost:8089/ciudadanos/${placa}`);
-    return response.json();
-}

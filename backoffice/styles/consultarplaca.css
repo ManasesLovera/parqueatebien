@@ -11,6 +11,10 @@
 nav {
     padding: 20px;
 }
+a {
+    text-decoration: none;
+    color: white;
+}
 img {
     height: 50px;
 }
@@ -35,7 +39,7 @@ input {
     border: 1px solid #ddd;
     width: 500px;
 }
-button {
+.btn-consultarplaca {
     background-color: var(--first);
     color: white;
     cursor: pointer;
@@ -56,11 +60,11 @@ input, button {
     cursor: pointer;
     display: flex;
     gap: 10px;
-    display: flex;
     justify-content: space-between;
 }
 h4 {
     color: var(--first);
+    margin-bottom: 7px;
 }
 h4::selection {
     color: var(--first);
