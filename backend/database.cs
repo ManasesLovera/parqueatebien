@@ -41,25 +41,33 @@ public class DbConnection
             command.ExecuteNonQuery();
 
             command.CommandText = @"
-            CREATE TABLE IF NOT EXISTS Agents (
+            CREATE TABLE IF NOT EXISTS Users (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 GovernmentID VARCHAR(50) UNIQUE,
-                Password VARCHAR(255)
-            )";
+                Password VARCHAR(255),
+                Role VARCHAR(20) 
+            )"; // Role could be (Admin, Supervisor, Agente, Grua)
             command.ExecuteNonQuery();
 
             command.CommandText = @"
-            CREATE TABLE IF NOT EXISTS Admins (
+            CREATE TABLE IF NOT EXISTS Permisos (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                GovernmentID VARCHAR(50) UNIQUE,
-                Password VARCHAR(255)
-            )";
+                Id_User INTEGER,
+                Visualizar INTEGER,
+                Filtrar INTEGER,
+                Crear_user INTEGER,
+                Eliminar_user INTEGER,
+                Enviar INTEGER,
+                Crear_rol INTEGER,
+                Eliminar_rol INTEGER,
+                Exportar INTEGER,
+            )
+            ";
             command.ExecuteNonQuery();
 
             connection.Close();
         }
     }
-
     public static List<Citizen> GetAllCitizens()
     {
         using (var connection = new SqliteConnection(connectionString))

@@ -19,7 +19,8 @@ public class UsersCRUD
             connection.Open();
 
             var cmd = connection.CreateCommand();
-            cmd.CommandText = $"SELECT * FROM {IDENTITY}";
+            cmd.CommandText = $"SELECT * FROM Users WHERE Role = @identity";
+            cmd.Parameters.AddWithValue("@identity", IDENTITY);
 
             List<User> users = new List<User>();
 
@@ -44,8 +45,9 @@ public class UsersCRUD
         {
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = $"SELECT Password FROM {IDENTITY} WHERE GovernmentID = @governmentID";
+            command.CommandText = $"SELECT Password FROM Users WHERE Role = @identity AND WHERE GovernmentID = @governmentID";
             command.Parameters.AddWithValue("@governmentID", governmentID);
+            command.Parameters.AddWithValue("@identity", IDENTITY);
 
             using (var reader = command.ExecuteReader())
             {
@@ -65,14 +67,18 @@ public class UsersCRUD
             User? user = null;
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = $"SELECT * FROM {this.IDENTITY} WHERE GovernmentID = @governmentID";
+            command.CommandText = $"SELECT * FROM Users WHERE GovernmentID = @governmentID";
             command.Parameters.AddWithValue("@governmentID", governmentID);
+            command.Parameters.AddWithValue("@identity", IDENTITY);
 
             var reader = command.ExecuteReader();
 
             if (reader.Read())
             {
-                user = new User(reader["GovernmentID"].ToString()!, reader["Password"].ToString()!);
+                user = new User(
+                    reader["GovernmentID"].ToString()!
+                    ,reader["Password"].ToString()!
+                    );
             }
             connection.Close();
             return user;
@@ -86,11 +92,12 @@ public class UsersCRUD
 
             var cmd = connection.CreateCommand();
             cmd.CommandText = @$"
-            INSERT INTO {IDENTITY} (GovernmentID, Password)
-            VALUES (@GovernmentID, @Password)
+            INSERT INTO Users (GovernmentID, Password, Role)
+            VALUES (@GovernmentID, @Password, @role)
             ";
             cmd.Parameters.AddWithValue("@GovernmentID", user.GovernmentID);
             cmd.Parameters.AddWithValue("@Password", user.Password);
+            cmd.Parameters.AddWithValue("@role", IDENTITY);
 
             cmd.ExecuteNonQuery();
 
@@ -106,7 +113,7 @@ public class UsersCRUD
 
             var command = connection.CreateCommand();
             command.CommandText = @$"
-            UPDATE {IDENTITY}
+            UPDATE Users
             SET Password = @password
             WHERE GovernmentID = @governmentID
             ";
@@ -127,7 +134,7 @@ public class UsersCRUD
 
             var command = connection.CreateCommand();
             command.CommandText = @$"
-            DELETE FROM {IDENTITY} WHERE GovernmentID = @governmentID
+            DELETE FROM Users WHERE GovernmentID = @governmentID
             ";
             command.Parameters.AddWithValue("@governmentID", governmentID);
             command.ExecuteNonQuery();

@@ -1,3 +1,3 @@
 ﻿namespace Models;
 
-public record Pictures(string LicensePlate,string FileType, string File);
+public record Pictures(string FileType, string File);

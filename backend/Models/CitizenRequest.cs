@@ -8,7 +8,7 @@ public class CitizenRequest
     public string Address { get; set; } = String.Empty;
     public string Lat { get; set; } = String.Empty;
     public string Lon { get; set; } = String.Empty;
-    public List<PicturesRequest> Photos { get; set; } = new List<PicturesRequest>();
+    public List<Pictures> Photos { get; set; } = new List<Pictures>();
 }
 /*
  {

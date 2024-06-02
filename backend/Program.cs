@@ -67,7 +67,6 @@ app.MapGet("/ciudadanos/{licensePlate}", async (HttpContext context, [FromRoute]
         context.Response.StatusCode = 500;
         await context.Response.WriteAsync(ex.Message);
     }
-
 });
 
 app.MapPost("/ciudadanos", async (HttpContext httpContext, [FromBody] CitizenRequest citizen) =>
