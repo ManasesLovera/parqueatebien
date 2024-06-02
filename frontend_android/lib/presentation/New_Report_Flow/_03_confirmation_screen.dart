@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/presentation/welcome_screen/_04_success_screen.dart';
+import 'package:frontend_android/presentation/New_Report_Flow/_04_success_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:frontend_android/presentation/New_Report_Flow/_00_reporte.dart';
+import 'package:frontend_android/presentation/New_Report_Flow/_01_nuevo_reporte.dart';
+import 'package:frontend_android/presentation/New_Report_Flow/_02_foto_nuevo_reporte.dart';
 import 'package:frontend_android/presentation/camera/camera_screen_p1.dart';
 import 'package:frontend_android/presentation/login/login.dart';
-import 'package:frontend_android/presentation/welcome_screen/_00_reporte.dart';
-import 'package:frontend_android/presentation/welcome_screen/_01_nuevo_reporte.dart';
-import 'package:frontend_android/presentation/welcome_screen/_02_foto_nuevo_reporte.dart';
 
 void main() => runApp(const Main());
 
