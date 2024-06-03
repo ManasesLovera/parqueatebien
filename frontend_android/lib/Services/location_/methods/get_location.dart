@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_android/location/location_service/location_service.dart';
+import 'package:frontend_android/Services/location_/service/location_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
 

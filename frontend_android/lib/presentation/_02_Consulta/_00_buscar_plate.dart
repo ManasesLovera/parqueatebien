@@ -5,10 +5,10 @@ class EnterPlateNumberScreen extends StatefulWidget {
   const EnterPlateNumberScreen({super.key});
 
   @override
-  _EnterPlateNumberScreenState createState() => _EnterPlateNumberScreenState();
+  EnterPlateNumberScreenState createState() => EnterPlateNumberScreenState();
 }
 
-class _EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
+class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
   final TextEditingController _plateController = TextEditingController();
   bool _isButtonEnabled = false;
 
@@ -42,14 +42,14 @@ class _EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
               SizedBox(height: 30.h),
               Center(
                 child: Image.asset(
-                  'assets/logo.png', // Replace with your logo asset path
+                  'assets/main_w.png',
                   height: 100.h,
                 ),
               ),
               SizedBox(height: 30.h),
               Center(
                 child: Text(
-                  'Introduzca el número de\nplaca de su vehículo',
+                  'Introduzca el número de placa de su vehículo',
                   style: TextStyle(
                     fontSize: 18.h,
                     fontWeight: FontWeight.bold,
@@ -84,11 +84,7 @@ class _EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _isButtonEnabled
-                      ? () {
-                          // Implement your consultar functionality here
-                        }
-                      : null,
+                  onPressed: _isButtonEnabled ? () {} : null,
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 12.h),
                     backgroundColor:

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/presentation/New_Report_Flow/_00_reporte.dart';
-import 'package:frontend_android/presentation/New_Report_Flow/_01_nuevo_reporte.dart';
-import 'package:frontend_android/presentation/New_Report_Flow/_02_foto_nuevo_reporte.dart';
-import 'package:frontend_android/presentation/camera/camera_screen_p1.dart';
-import 'package:frontend_android/presentation/login/login.dart';
+import 'package:frontend_android/presentation/_01_Reporte/_00_reporte.dart';
+import 'package:frontend_android/presentation/_01_Reporte/_01_nuevo_reporte.dart';
+import 'package:frontend_android/presentation/_01_Reporte/_02_foto_nuevo_reporte.dart';
+import 'package:frontend_android/presentation/_00_login/forgot_.dart';
+import 'package:frontend_android/presentation/_00_login/login.dart';
+import 'package:frontend_android/presentation/_01_Reporte/_03_confirmation_screen.dart';
+import 'package:frontend_android/presentation/_01_Reporte/_04_success_screen.dart';
+import 'package:frontend_android/presentation/_01_Reporte/_05_error_screen.dart';
+import 'package:frontend_android/presentation/_02_Consulta/_00_buscar_plate.dart';
 
 void main() => runApp(const Main());
 
@@ -18,13 +22,18 @@ class Main extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          initialRoute: '/newreportfoto',
+          initialRoute: '/login',
           routes: {
             '/login': (context) => const Login(),
-            '/report': (context) => const WelcomeNewReport(),
-            '/newreport': (context) => const NewReportScreen(),
+            '/WelcomeNewReport': (context) => const WelcomeNewReport(),
+            '/NewReport': (context) => const NewReportScreen(),
             '/newreportfoto': (context) => const NewReportPhotoScreen(),
-            '/camera': (context) => const Camera(),
+            '/Forgot': (context) => const Forgot(),
+            '/confirmation': (context) =>
+                const ConfirmationScreen(imageFileList: []),
+            '/success': (context) => const SuccessScreen(),
+            '/error': (context) => const ErrorScreen(),
+            '/consult': (context) => const EnterPlateNumberScreen(),
           },
         );
       },

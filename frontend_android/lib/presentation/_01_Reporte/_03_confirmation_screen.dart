@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/presentation/New_Report_Flow/_04_success_screen.dart';
+import 'package:frontend_android/presentation/_01_Reporte/_04_success_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
@@ -14,7 +14,7 @@ class ConfirmationScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 14.h),
+          padding: EdgeInsets.symmetric(horizontal: 14.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -23,7 +23,7 @@ class ConfirmationScreen extends StatelessWidget {
                 child: Text(
                   'Confirmación',
                   style: TextStyle(
-                    fontSize: 24.h,
+                    fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.blue,
                   ),
@@ -34,7 +34,7 @@ class ConfirmationScreen extends StatelessWidget {
                 child: Text(
                   'Datos del vehículo',
                   style: TextStyle(
-                    fontSize: 16.h,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.grey,
                   ),
@@ -61,13 +61,13 @@ class ConfirmationScreen extends StatelessWidget {
               Text(
                 'Fotos del vehículo',
                 style: TextStyle(
-                  fontSize: 16.h,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.bold,
                   color: Colors.grey,
                 ),
               ),
               SizedBox(height: 10.h),
-              Container(
+              SizedBox(
                 height: 100.h,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
@@ -86,7 +86,7 @@ class ConfirmationScreen extends StatelessWidget {
               ),
               const Spacer(),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 14.h),
+                padding: EdgeInsets.symmetric(horizontal: 14.w),
                 child: Column(
                   children: [
                     SizedBox(
@@ -107,14 +107,14 @@ class ConfirmationScreen extends StatelessWidget {
                           padding: EdgeInsets.symmetric(vertical: 12.h),
                           backgroundColor: Colors.blue,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.h),
+                            borderRadius: BorderRadius.circular(10.r),
                           ),
                         ),
                         child: Text(
                           'Crear reporte',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 16.h,
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -132,14 +132,14 @@ class ConfirmationScreen extends StatelessWidget {
                           backgroundColor: Colors.white,
                           side: const BorderSide(color: Colors.blue),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.h),
+                            borderRadius: BorderRadius.circular(10.r),
                           ),
                         ),
                         child: Text(
                           'Cancelar',
                           style: TextStyle(
                             color: Colors.blue,
-                            fontSize: 16.h,
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -172,7 +172,7 @@ class DetailItem extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: Colors.grey[300]!),
-          borderRadius: BorderRadius.circular(10.h),
+          borderRadius: BorderRadius.circular(10.r),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -180,16 +180,20 @@ class DetailItem extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                fontSize: 14.h,
+                fontSize: 14.sp,
                 color: Colors.grey,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              content,
-              style: TextStyle(
-                fontSize: 14.h,
-                color: Colors.black,
+            Expanded(
+              child: Text(
+                content,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.right,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
