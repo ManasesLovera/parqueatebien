@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/config/visuals_components/Report_Buttons/report_button.dart';
+import 'package:frontend_android/config/Report_Buttons/report_button.dart';
 
 class WelcomeNewReport extends StatelessWidget {
   const WelcomeNewReport({super.key});
