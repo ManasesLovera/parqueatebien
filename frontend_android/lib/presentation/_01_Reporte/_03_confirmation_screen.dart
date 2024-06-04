@@ -33,7 +33,6 @@ class ConfirmationScreen extends StatefulWidget {
 
 class ConfirmationScreenState extends State<ConfirmationScreen> {
   Future<void> _createReport() async {
-    // Prepara los datos
     Map<String, dynamic> reportData = {
       'licensePlate': widget.plateNumber,
       'vehicleType': widget.vehicleType,
@@ -46,13 +45,10 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
     List<File> images =
         widget.imageFileList.map((xfile) => File(xfile.path)).toList();
 
-    // Print the JSON payload for debugging
-    String jsonPayload = jsonEncode(reportData);
-    print('JSON Payload: $jsonPayload');
-
     try {
       var response = await ApiService.createReport(reportData, images)
           .timeout(const Duration(seconds: 30));
+      print('Response: ${response.body}'); // Debugging line
       if (!mounted) return;
       if (response.statusCode == 200) {
         Navigator.push(
@@ -60,7 +56,6 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
           MaterialPageRoute(builder: (context) => const SuccessScreen()),
         );
       } else {
-        // Maneja el error
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -92,7 +87,6 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
       );
     } catch (e) {
       if (!mounted) return;
-      // Maneja otros errores
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
