@@ -38,8 +38,8 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
       'vehicleType': widget.vehicleType,
       'color': widget.color,
       'address': widget.address,
-      'latitude': widget.latitude,
-      'longitude': widget.longitude,
+      'lat': widget.latitude,
+      'lon': widget.longitude,
     };
 
     List<File> images =
