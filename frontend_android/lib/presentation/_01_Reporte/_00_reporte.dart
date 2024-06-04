@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/componentes_visuales/report_buttons/report_button.dart';
+import 'package:frontend_android/config/Report_Buttons/report_button.dart';
 
 class WelcomeNewReport extends StatelessWidget {
   const WelcomeNewReport({super.key});
@@ -30,7 +30,7 @@ class WelcomeNewReport extends StatelessWidget {
                         'Bienvenido',
                         style: TextStyle(
                           color: Colors.blue,
-                          fontSize: 24.h,
+                          fontSize: 24.sp,
                         ),
                       ),
                     ),
@@ -44,7 +44,7 @@ class WelcomeNewReport extends StatelessWidget {
                         'Que deseas realizar hoy ',
                         style: TextStyle(
                           color: Colors.grey,
-                          fontSize: 16.h,
+                          fontSize: 16.sp,
                         ),
                       ),
                     ),
@@ -56,8 +56,8 @@ class WelcomeNewReport extends StatelessWidget {
                     subtitle:
                         'Crea un nuevo reporte de un vehículo mal estacionado.',
                     onTap: () {
-                      // Handle button tap here
-                      //   print('Crear reporte tapped');
+                      Navigator.of(context).pop();
+                      Navigator.pushNamed(context, '/NewReport');
                     },
                   ),
                   SizedBox(height: 10.h),
@@ -67,8 +67,8 @@ class WelcomeNewReport extends StatelessWidget {
                     subtitle:
                         'Consulta el estatus y ubicación de un vehículo incautado.',
                     onTap: () {
-                      // Handle button tap here
-                      //   print('Consultar placa tapped');
+                      Navigator.of(context).pop();
+                      Navigator.pushNamed(context, '/consult');
                     },
                   )
                 ],
