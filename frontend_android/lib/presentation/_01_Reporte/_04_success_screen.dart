@@ -24,7 +24,7 @@ class SuccessScreen extends StatelessWidget {
               Text(
                 'Reporte creado exitosamente',
                 style: TextStyle(
-                  fontSize: 18.h,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
@@ -48,7 +48,7 @@ class SuccessScreen extends StatelessWidget {
                     'Aceptar',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16.h,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

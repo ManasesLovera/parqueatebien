@@ -30,7 +30,7 @@ class WelcomeNewReport extends StatelessWidget {
                         'Bienvenido',
                         style: TextStyle(
                           color: Colors.blue,
-                          fontSize: 24.h,
+                          fontSize: 24.sp,
                         ),
                       ),
                     ),
@@ -44,7 +44,7 @@ class WelcomeNewReport extends StatelessWidget {
                         'Que deseas realizar hoy ',
                         style: TextStyle(
                           color: Colors.grey,
-                          fontSize: 16.h,
+                          fontSize: 16.sp,
                         ),
                       ),
                     ),

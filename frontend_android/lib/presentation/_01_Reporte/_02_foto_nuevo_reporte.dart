@@ -1,11 +1,26 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/presentation/_01_Reporte/_03_confirmation_screen.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:frontend_android/presentation/_01_Reporte/_03_confirmation_screen.dart';
 
 class NewReportPhotoScreen extends StatefulWidget {
-  const NewReportPhotoScreen({super.key});
+  final String plateNumber;
+  final String vehicleType;
+  final String color;
+  final String address;
+  final String? latitude;
+  final String? longitude;
+
+  const NewReportPhotoScreen({
+    super.key,
+    required this.plateNumber,
+    required this.vehicleType,
+    required this.color,
+    required this.address,
+    required this.latitude,
+    required this.longitude,
+  });
 
   @override
   NewReportPhotoScreenState createState() => NewReportPhotoScreenState();
@@ -37,13 +52,19 @@ class NewReportPhotoScreenState extends State<NewReportPhotoScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => ConfirmationScreen(
+            plateNumber: widget.plateNumber,
+            vehicleType: widget.vehicleType,
+            color: widget.color,
+            address: widget.address,
+            latitude: widget.latitude,
+            longitude: widget.longitude,
             imageFileList: _imageFileList,
           ),
         ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: const Text('Debe agregar al menos 3 fotos')),
+        const SnackBar(content: Text('Debe agregar al menos 3 fotos')),
       );
     }
   }

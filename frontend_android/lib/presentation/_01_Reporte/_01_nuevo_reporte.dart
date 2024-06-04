@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:frontend_android/Services/location_Serv/service/location_service.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:logger/logger.dart';
 
 class NewReportScreen extends StatefulWidget {
   const NewReportScreen({super.key});
@@ -16,12 +19,16 @@ class NewReportScreenState extends State<NewReportScreen> {
   String? _selectedVehicleType;
   String? _selectedColor;
   bool _isFormValid = false;
+  String? _latitude;
+  String? _longitude;
+  final Logger _logger = Logger();
 
   @override
   void initState() {
     super.initState();
     _plateController.addListener(_validateForm);
     _addressController.addListener(_validateForm);
+    _getLocation();
   }
 
   @override
@@ -38,6 +45,63 @@ class NewReportScreenState extends State<NewReportScreen> {
     });
   }
 
+  Future<void> _getLocation() async {
+    try {
+      final locationService = LocationService();
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        _showDialog(
+            'Location Service Disabled', 'Please enable location services.');
+        return;
+      }
+      Position? position = await locationService.getCurrentLocation();
+      if (position != null) {
+        setState(() {
+          _latitude = position.latitude.toString();
+          _longitude = position.longitude.toString();
+        });
+      } else {
+        _logger.e('Error Fatal! Localization');
+        _showDialog('Error', 'Could not retrieve current location.');
+      }
+    } catch (e) {
+      _logger.e('Error Fatal! Current Locations');
+      _showDialog('Error', 'Fatal Error: Could not retrieve current location.');
+    }
+  }
+
+  void _showDialog(String title, String content) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+void _navigateToPhotoScreen() {
+    if (_isFormValid) {
+      Navigator.pushNamed(
+        context,
+        '/newreportfoto',
+        arguments: {
+          'plateNumber': _plateController.text,
+          'vehicleType': _selectedVehicleType,
+          'color': _selectedColor,
+          'address': _addressController.text,
+          'latitude': _latitude,
+          'longitude': _longitude,
+        },
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +128,7 @@ class NewReportScreenState extends State<NewReportScreen> {
                   SizedBox(height: 10.h),
                   Center(
                     child: Text(
-                      'Datos del vehiculo',
+                      'Datos del vehículo',
                       style: TextStyle(
                         fontSize: 16.h,
                         fontWeight: FontWeight.bold,
@@ -194,6 +258,38 @@ class NewReportScreenState extends State<NewReportScreen> {
                       color: Colors.grey,
                     ),
                   ),
+                  SizedBox(height: 20.h),
+                  Text(
+                    'Datos Geográficos',
+                    style: TextStyle(
+                      fontSize: 16.h,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  if (_latitude != null && _longitude != null)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Latitud: $_latitude',
+                          style: TextStyle(
+                            fontSize: 12.h,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: 5.h),
+                        Text(
+                          'Longitud: $_longitude',
+                          style: TextStyle(
+                            fontSize: 12.h,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
                   SizedBox(height: 30.h),
                   Padding(
                     padding:
@@ -219,8 +315,7 @@ class NewReportScreenState extends State<NewReportScreen> {
                               ? () {
                                   if (_formKey.currentState?.validate() ??
                                       false) {
-                                    Navigator.pushNamed(
-                                        context, '/newreportfoto');
+                                    _navigateToPhotoScreen();
                                   }
                                 }
                               : null,
