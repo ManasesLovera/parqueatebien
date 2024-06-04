@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android/Services/Api_Serv/api_service.dart';
 import 'package:frontend_android/presentation/_01_Reporte/_04_success_screen.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:logger/logger.dart';
 
 class ConfirmationScreen extends StatefulWidget {
   final String plateNumber;
@@ -30,25 +31,26 @@ class ConfirmationScreen extends StatefulWidget {
   ConfirmationScreenState createState() => ConfirmationScreenState();
 }
 
+var logger = Logger();
+
 class ConfirmationScreenState extends State<ConfirmationScreen> {
   Future<void> _createReport() async {
-    // Prepara los datos
     Map<String, dynamic> reportData = {
       'licensePlate': widget.plateNumber,
       'vehicleType': widget.vehicleType,
-      'color': widget.color,
+      'vehicleColor': widget.color,
       'address': widget.address,
-      'latitude': widget.latitude,
-      'longitude': widget.longitude,
+      'lat': widget.latitude,
+      'lon': widget.longitude,
     };
 
     List<File> images =
         widget.imageFileList.map((xfile) => File(xfile.path)).toList();
 
-    // Envía los datos al backend
     try {
       var response = await ApiService.createReport(reportData, images)
           .timeout(const Duration(seconds: 30));
+      logger.i('Response: ${response.body}'); // Info level log
       if (!mounted) return;
       if (response.statusCode == 200) {
         Navigator.push(
@@ -56,7 +58,8 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
           MaterialPageRoute(builder: (context) => const SuccessScreen()),
         );
       } else {
-        // Maneja el error
+        logger
+            .e('Failed to create report: ${response.body}'); // Error level log
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -72,6 +75,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
         );
       }
     } on TimeoutException catch (e) {
+      logger.e('Request timed out: $e'); // Error level log
       if (!mounted) return;
       showDialog(
         context: context,
@@ -87,8 +91,8 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
         ),
       );
     } catch (e) {
+      logger.e('Failed to create report: $e'); // Error level log
       if (!mounted) return;
-      // Maneja otros errores
       showDialog(
         context: context,
         builder: (context) => AlertDialog(

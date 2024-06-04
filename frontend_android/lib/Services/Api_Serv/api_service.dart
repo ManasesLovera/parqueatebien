@@ -1,19 +1,24 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
+var logger = Logger();
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.0.236:8089/ciudadanos';
+  static const String baseUrl = 'http://localhost:8089/ciudadanos';
 
   static Future<http.Response> createReport(
       Map<String, dynamic> reportData, List<File> images) async {
-    List<String> base64Images = [];
+    List<Map<String, String>> photos = [];
     for (var image in images) {
       List<int> imageBytes = await image.readAsBytes();
       String base64Image = base64Encode(imageBytes);
-      base64Images.add(base64Image);
+      photos.add({
+        "fileType": "image/jpeg",
+        "file": base64Image,
+      });
     }
-    reportData['images'] = base64Images;
+    reportData['photos'] = photos;
 
     var uri = Uri.parse(baseUrl);
     var response = await http.post(
@@ -21,6 +26,10 @@ class ApiService {
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(reportData),
     );
+
+    logger.i('Request Body: ${jsonEncode(reportData)}'); // Info level log
+    logger.i('Response Status: ${response.statusCode}'); // Info level log
+    logger.i('Response Body: ${response.body}'); // Info level log
 
     return response;
   }
