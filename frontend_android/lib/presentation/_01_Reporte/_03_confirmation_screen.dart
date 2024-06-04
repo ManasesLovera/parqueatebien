@@ -36,7 +36,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
     Map<String, dynamic> reportData = {
       'licensePlate': widget.plateNumber,
       'vehicleType': widget.vehicleType,
-      'color': widget.color,
+      'vehicleColor': widget.color,
       'address': widget.address,
       'lat': widget.latitude,
       'lon': widget.longitude,
