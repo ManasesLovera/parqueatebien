@@ -112,11 +112,13 @@ app.MapPut("/ciudadanos", async (HttpContext httpContext, [FromBody] Citizen cit
         {
             httpContext.Response.StatusCode = 404;
             await httpContext.Response.WriteAsync("Not Found");
-
         }
-        citizens.UpdateCitizen(citizen);
-        httpContext.Response.StatusCode = 200;
-        await httpContext.Response.WriteAsync("Updated successfully");
+        else
+        {
+            citizens.UpdateCitizen(citizen);
+            httpContext.Response.StatusCode = 200;
+            await httpContext.Response.WriteAsync("Updated successfully");
+        }
     }
     catch (Exception ex)
     {
