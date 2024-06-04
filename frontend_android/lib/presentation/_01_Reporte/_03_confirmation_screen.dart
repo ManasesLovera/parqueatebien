@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -45,7 +46,10 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
     List<File> images =
         widget.imageFileList.map((xfile) => File(xfile.path)).toList();
 
-    // Envía los datos al backend
+    // Print the JSON payload for debugging
+    String jsonPayload = jsonEncode(reportData);
+    print('JSON Payload: $jsonPayload');
+
     try {
       var response = await ApiService.createReport(reportData, images)
           .timeout(const Duration(seconds: 30));

@@ -7,13 +7,16 @@ class ApiService {
 
   static Future<http.Response> createReport(
       Map<String, dynamic> reportData, List<File> images) async {
-    List<String> base64Images = [];
+    List<Map<String, String>> photos = [];
     for (var image in images) {
       List<int> imageBytes = await image.readAsBytes();
       String base64Image = base64Encode(imageBytes);
-      base64Images.add(base64Image);
+      photos.add({
+        "fileType": "image/jpeg",
+        "file": base64Image,
+      });
     }
-    reportData['images'] = base64Images;
+    reportData['photos'] = photos;
 
     var uri = Uri.parse(baseUrl);
     var response = await http.post(
@@ -22,6 +25,7 @@ class ApiService {
       body: jsonEncode(reportData),
     );
 
+    print('Request Body: ${jsonEncode(reportData)}'); // Debugging line
     return response;
   }
 }
