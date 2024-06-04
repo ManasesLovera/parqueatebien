@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,7 +6,7 @@ import 'package:frontend_android/Services/Api_Serv/api_service.dart';
 import 'package:frontend_android/presentation/_01_Reporte/_04_success_screen.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ConfirmationScreen extends StatelessWidget {
+class ConfirmationScreen extends StatefulWidget {
   final String plateNumber;
   final String vehicleType;
   final String color;
@@ -25,22 +26,30 @@ class ConfirmationScreen extends StatelessWidget {
     required this.imageFileList,
   });
 
-  Future<void> _createReport(BuildContext context) async {
+  @override
+  ConfirmationScreenState createState() => ConfirmationScreenState();
+}
+
+class ConfirmationScreenState extends State<ConfirmationScreen> {
+  Future<void> _createReport() async {
     // Prepara los datos
     Map<String, dynamic> reportData = {
-      'licensePlate': plateNumber,
-      'vehicleType': vehicleType,
-      'color': color,
-      'address': address,
-      'latitude': latitude,
-      'longitude': longitude,
+      'licensePlate': widget.plateNumber,
+      'vehicleType': widget.vehicleType,
+      'color': widget.color,
+      'address': widget.address,
+      'latitude': widget.latitude,
+      'longitude': widget.longitude,
     };
 
-    List<File> images = imageFileList.map((xfile) => File(xfile.path)).toList();
+    List<File> images =
+        widget.imageFileList.map((xfile) => File(xfile.path)).toList();
 
     // Envía los datos al backend
     try {
-      var response = await ApiService.createReport(reportData, images);
+      var response = await ApiService.createReport(reportData, images)
+          .timeout(const Duration(seconds: 30));
+      if (!mounted) return;
       if (response.statusCode == 200) {
         Navigator.push(
           context,
@@ -62,8 +71,24 @@ class ConfirmationScreen extends StatelessWidget {
           ),
         );
       }
+    } on TimeoutException catch (e) {
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text('Request timed out: $e'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      );
     } catch (e) {
-      // Maneja el error
+      if (!mounted) return;
+      // Maneja otros errores
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -115,22 +140,22 @@ class ConfirmationScreen extends StatelessWidget {
                 SizedBox(height: 20.h),
                 DetailItem(
                   title: 'Número de placa',
-                  content: plateNumber,
+                  content: widget.plateNumber,
                 ),
                 DetailItem(
                   title: 'Tipo de vehículo',
-                  content: vehicleType,
+                  content: widget.vehicleType,
                 ),
                 DetailItem(
                   title: 'Color',
-                  content: color,
+                  content: widget.color,
                 ),
                 DetailItem(
                   title: 'Dirección',
-                  content: address,
+                  content: widget.address,
                 ),
                 SizedBox(height: 20.h),
-                if (latitude != null && longitude != null)
+                if (widget.latitude != null && widget.longitude != null)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -145,11 +170,11 @@ class ConfirmationScreen extends StatelessWidget {
                       SizedBox(height: 10.h),
                       DetailItem(
                         title: 'Latitud',
-                        content: latitude!,
+                        content: widget.latitude!,
                       ),
                       DetailItem(
                         title: 'Longitud',
-                        content: longitude!,
+                        content: widget.longitude!,
                       ),
                     ],
                   ),
@@ -167,12 +192,12 @@ class ConfirmationScreen extends StatelessWidget {
                   height: 100.h,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: imageFileList.length,
+                    itemCount: widget.imageFileList.length,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: EdgeInsets.symmetric(horizontal: 5.w),
                         child: Image.file(
-                          File(imageFileList[index].path),
+                          File(widget.imageFileList[index].path),
                           width: 100.w,
                           fit: BoxFit.cover,
                         ),
@@ -188,7 +213,7 @@ class ConfirmationScreen extends StatelessWidget {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () => _createReport(context),
+                          onPressed: _createReport,
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(vertical: 12.h),
                             backgroundColor: Colors.blue,
@@ -211,8 +236,7 @@ class ConfirmationScreen extends StatelessWidget {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pop(
-                                context); // Implementa la funcionalidad de cancelar aquí
+                            Navigator.pop(context);
                           },
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(vertical: 12.h),

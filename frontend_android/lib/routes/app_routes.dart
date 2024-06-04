@@ -8,7 +8,7 @@ import 'package:frontend_android/presentation/_01_Reporte/_03_confirmation_scree
 import 'package:frontend_android/presentation/_01_Reporte/_04_success_screen.dart';
 import 'package:frontend_android/presentation/_01_Reporte/_05_error_screen.dart';
 import 'package:frontend_android/presentation/_02_Consulta/_00_buscar_plate.dart';
-import 'package:image_picker/image_picker.dart';
+
 
 class AppRoutes {
   static Map<String, WidgetBuilder> routes = {

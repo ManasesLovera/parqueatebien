@@ -40,8 +40,9 @@ class NewReportScreenState extends State<NewReportScreen> {
 
   void _validateForm() {
     setState(() {
-      _isFormValid = _formKey.currentState?.validate() ??
-          false && _selectedVehicleType != null && _selectedColor != null;
+      _isFormValid = (_formKey.currentState?.validate() ?? false) &&
+          _selectedVehicleType != null &&
+          _selectedColor != null;
     });
   }
 
@@ -86,7 +87,7 @@ class NewReportScreenState extends State<NewReportScreen> {
     );
   }
 
-void _navigateToPhotoScreen() {
+  void _navigateToPhotoScreen() {
     if (_isFormValid) {
       Navigator.pushNamed(
         context,
@@ -102,6 +103,7 @@ void _navigateToPhotoScreen() {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
