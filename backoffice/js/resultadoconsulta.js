@@ -1,5 +1,7 @@
 export async function displayResult(licensePlate) {
     const data = await retrieveData(licensePlate);
+    if([404,400,500].includes(data))
+        return data;
     let towedByCraneDate = data.TowedByCraneDate === '' ? 'N/A' : data.TowedByCraneDate;
     let currentAddress = data.CurrentAddress === '' ? 'N/A' : data.CurrentAddress;
     let arrivalAtParkinglot = data.ArrivalAtParkinglot === '' ? 'N/A' : data.ArrivalAtParkinglot;
@@ -22,7 +24,7 @@ export async function displayResult(licensePlate) {
                 <div class="dato">
                     <div>
                         <h4 class="subtitleh4">No. de Registro y placa:</h4>
-                        <p>${data.LicensePlate}</p>
+                        <p id="placa">${data.LicensePlate}</p>
                     </div>
                     <div>
                         <h4 class="subtitleh4">Tipo de vehiculo:</h4>
@@ -49,6 +51,8 @@ export async function displayResult(licensePlate) {
                 </div>
                 
             </article>
+            <div id="setStatus">
+            </div>
             <article class="fotos-vehiculo">
                 <h3>Fotos del vehículo</h3>
                 <div id="imagenes" class="imagenes">
@@ -80,7 +84,8 @@ export async function displayResult(licensePlate) {
 
 export async function retrieveData(licensePlate) {
     let response = await fetch(`http://localhost:8089/ciudadanos/${licensePlate}`);
+    if(!response.ok)
+        return response.status;
     let body = await response.json();
-    console.log(body);
     return body;
 }

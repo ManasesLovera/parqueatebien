@@ -16,7 +16,7 @@
     text-align: center;
     align-self: center;
 }
-.title button {
+.title button, .setStatus button {
     color: #fff;
     background-color: var(--first);
     padding: 10px;
@@ -38,9 +38,7 @@
     gap: 20px;
 }
 .resultado-consulta .datos {
-
     width: 70%;
-
 }
 .resultado-consulta .informacion {
     width: 350px;
@@ -50,14 +48,14 @@
 }
 .dato {
     display: flex;
-    gap: 40px;
+    gap: 20%;
     padding: 20px 0;
 }
 .dato p, .informacion span {
     font-size: 15px;
 }
 .fotos-vehiculo {
-    margin-top: 10px;
+    margin-top: 30px;
     padding-top: 30px;
     border-top: 1px solid #ddd;
 }
