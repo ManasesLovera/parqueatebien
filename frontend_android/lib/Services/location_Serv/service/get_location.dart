@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_android/location/location_service/location_service.dart';
+import 'package:frontend_android/Services/location_Serv/service/location_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
 
@@ -15,8 +15,7 @@ class GetLocationMethod {
       } else {
         _logger.e('Error Fatal !, Localization');
         // Using Future
-        return Future.error(
-            "Location service is disabled or permission denied");
+        return Future.error("Debe de tener la localizacion Activada !");
       }
     } catch (e) {
       //print('Error: $e');

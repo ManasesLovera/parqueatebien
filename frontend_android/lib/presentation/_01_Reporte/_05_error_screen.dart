@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ErrorScreen extends StatelessWidget {
-  const ErrorScreen({super.key});
+  final String errorMessage;
+
+  const ErrorScreen({super.key, required this.errorMessage});
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +26,17 @@ class ErrorScreen extends StatelessWidget {
               Text(
                 'Error al crear reporte',
                 style: TextStyle(
-                  fontSize: 18.h,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 10.h),
+              Text(
+                errorMessage,
+                style: TextStyle(
+                  fontSize: 14.sp,
                   color: Colors.black,
                 ),
                 textAlign: TextAlign.center,
@@ -48,7 +59,7 @@ class ErrorScreen extends StatelessWidget {
                     'Reintentar',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16.h,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

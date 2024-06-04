@@ -1,18 +1,32 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/presentation/New_Report_Flow/_03_confirmation_screen.dart';
-
 import 'package:image_picker/image_picker.dart';
+import 'package:frontend_android/presentation/_01_Reporte/_03_confirmation_screen.dart';
 
 class NewReportPhotoScreen extends StatefulWidget {
-  const NewReportPhotoScreen({super.key});
+  final String plateNumber;
+  final String vehicleType;
+  final String color;
+  final String address;
+  final String? latitude;
+  final String? longitude;
+
+  const NewReportPhotoScreen({
+    super.key,
+    required this.plateNumber,
+    required this.vehicleType,
+    required this.color,
+    required this.address,
+    required this.latitude,
+    required this.longitude,
+  });
 
   @override
-  _NewReportPhotoScreenState createState() => _NewReportPhotoScreenState();
+  NewReportPhotoScreenState createState() => NewReportPhotoScreenState();
 }
 
-class _NewReportPhotoScreenState extends State<NewReportPhotoScreen> {
+class NewReportPhotoScreenState extends State<NewReportPhotoScreen> {
   final ImagePicker _picker = ImagePicker();
   final List<XFile> _imageFileList = [];
 
@@ -33,14 +47,26 @@ class _NewReportPhotoScreenState extends State<NewReportPhotoScreen> {
   }
 
   void _navigateToConfirmation() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ConfirmationScreen(
-          imageFileList: _imageFileList,
+    if (_imageFileList.length >= 3) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ConfirmationScreen(
+            plateNumber: widget.plateNumber,
+            vehicleType: widget.vehicleType,
+            color: widget.color,
+            address: widget.address,
+            latitude: widget.latitude,
+            longitude: widget.longitude,
+            imageFileList: _imageFileList,
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Debe agregar al menos 3 fotos')),
+      );
+    }
   }
 
   @override
@@ -89,14 +115,39 @@ class _NewReportPhotoScreenState extends State<NewReportPhotoScreen> {
                         itemCount: _imageFileList.length,
                         itemBuilder: (context, index) {
                           return Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 14.h, vertical: 10.h),
-                            child: Image.file(
-                              File(_imageFileList[index].path),
-                              width: double.infinity,
-                              height: 200
-                                  .h, // Ajusta la altura según tus necesidades
-                              fit: BoxFit.cover,
+                            padding: EdgeInsets.symmetric(vertical: 10.h),
+                            child: Stack(
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.blue),
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    child: Image.file(
+                                      File(_imageFileList[index].path),
+                                      width: double.infinity,
+                                      height: 200.h,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 5,
+                                  right: 5,
+                                  child: IconButton(
+                                    icon: const Icon(Icons.delete,
+                                        color: Colors.red),
+                                    onPressed: () {
+                                      setState(() {
+                                        _imageFileList.removeAt(index);
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           );
                         },
