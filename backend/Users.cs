@@ -6,12 +6,6 @@ namespace db;
 public class UsersCRUD
 {
     private static readonly string connectionString = "Data Source=database.db";
-    private string IDENTITY = String.Empty;
-    public UsersCRUD(string identity)
-    {
-        IDENTITY = identity;
-    }
-
     public List<User> GetAll()
     {
         using (var connection = new SqliteConnection(connectionString))
@@ -19,8 +13,7 @@ public class UsersCRUD
             connection.Open();
 
             var cmd = connection.CreateCommand();
-            cmd.CommandText = $"SELECT * FROM Users WHERE Role = @identity";
-            cmd.Parameters.AddWithValue("@identity", IDENTITY);
+            cmd.CommandText = $"SELECT * FROM Users";
 
             List<User> users = new List<User>();
 
@@ -29,6 +22,34 @@ public class UsersCRUD
                 while (reader.Read())
                 {
                     users.Add(new User
+                        (
+                            reader["GovernmentID"].ToString()!,
+                            reader["Password"].ToString()!,
+                            reader["Role"].ToString()!
+                        ));
+                }
+            }
+            connection.Close();
+            return users;
+        }
+    }
+    public List<UserResponse> GetAllByRole(string role)
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = $"SELECT * FROM Users WHERE Role = @role";
+            cmd.Parameters.AddWithValue("@role", role);
+
+            List<UserResponse> users = new List<UserResponse>();
+
+            using (var reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    users.Add(new UserResponse
                         (
                             reader["GovernmentID"].ToString()!,
                             reader["Password"].ToString()!
@@ -45,9 +66,28 @@ public class UsersCRUD
         {
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = $"SELECT Password FROM Users WHERE Role = @identity AND WHERE GovernmentID = @governmentID";
+            command.CommandText = $"SELECT Password FROM Users WHERE GovernmentID = @governmentID";
             command.Parameters.AddWithValue("@governmentID", governmentID);
-            command.Parameters.AddWithValue("@identity", IDENTITY);
+
+            using (var reader = command.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    string? passwordFromDb = reader["Password"].ToString();
+                    return password == passwordFromDb;
+                }
+            }
+        }
+        return false;
+    }
+    public bool IsValidAdmin(string governmentID, string password)
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = $"SELECT Password FROM Users WHERE Role = 'Admin' AND GovernmentID = @governmentID";
+            command.Parameters.AddWithValue("@governmentID", governmentID);
 
             using (var reader = command.ExecuteReader())
             {
@@ -69,7 +109,6 @@ public class UsersCRUD
             var command = connection.CreateCommand();
             command.CommandText = $"SELECT * FROM Users WHERE GovernmentID = @governmentID";
             command.Parameters.AddWithValue("@governmentID", governmentID);
-            command.Parameters.AddWithValue("@identity", IDENTITY);
 
             var reader = command.ExecuteReader();
 
@@ -78,6 +117,32 @@ public class UsersCRUD
                 user = new User(
                     reader["GovernmentID"].ToString()!
                     ,reader["Password"].ToString()!
+                    ,reader["Role"].ToString()!
+                    );
+            }
+            connection.Close();
+            return user;
+        }
+    }
+    public User? GetByGovernmentIDWithRole(string governmentID, string role)
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            User? user = null;
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = $"SELECT * FROM Users WHERE Role = @role AND GovernmentID = @governmentID";
+            command.Parameters.AddWithValue("@governmentID", governmentID);
+            command.Parameters.AddWithValue("@role", role);
+
+            var reader = command.ExecuteReader();
+
+            if (reader.Read())
+            {
+                user = new User(
+                    reader["GovernmentID"].ToString()!
+                    , reader["Password"].ToString()!
+                    , reader["Role"].ToString()!
                     );
             }
             connection.Close();
@@ -91,13 +156,13 @@ public class UsersCRUD
             connection.Open();
 
             var cmd = connection.CreateCommand();
-            cmd.CommandText = @$"
+            cmd.CommandText = @"
             INSERT INTO Users (GovernmentID, Password, Role)
             VALUES (@GovernmentID, @Password, @role)
             ";
             cmd.Parameters.AddWithValue("@GovernmentID", user.GovernmentID);
             cmd.Parameters.AddWithValue("@Password", user.Password);
-            cmd.Parameters.AddWithValue("@role", IDENTITY);
+            cmd.Parameters.AddWithValue("@role", user.Role);
 
             cmd.ExecuteNonQuery();
 

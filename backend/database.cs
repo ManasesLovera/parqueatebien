@@ -25,9 +25,14 @@ public class DbConnection
                 VehicleColor VARCHAR(20),
                 Address VARCHAR(100),
                 Status VARCHAR(20),
+                CurrentAddress VARCHAR(100),
+                ReportedDate VARCHAR(100),
+                TowedByCraneDate VARCHAR(100),
+                ArrivalAtParkinglot VARCHAR(100),
+                ReleaseDate VARCHAR(100),
                 Lat VARCHAR(60),
                 Lon VARCHAR(60)
-            )";
+            )"; // Status: Reportado, Incautado por grua, Retenido, Liberado
             command.ExecuteNonQuery();
 
             command.CommandText = @"
@@ -50,6 +55,15 @@ public class DbConnection
             command.ExecuteNonQuery();
 
             command.CommandText = @"
+            CREATE TABLE IF NOT EXISTS Roles (
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Rol VARCHAR(100),
+                IdPermiso INTEGER
+            )
+            ";
+            command.ExecuteNonQuery();
+
+            command.CommandText = @"
             CREATE TABLE IF NOT EXISTS Permisos (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 Id_User INTEGER,
@@ -60,7 +74,7 @@ public class DbConnection
                 Enviar INTEGER,
                 Crear_rol INTEGER,
                 Eliminar_rol INTEGER,
-                Exportar INTEGER,
+                Exportar INTEGER
             )
             ";
             command.ExecuteNonQuery();
@@ -93,6 +107,11 @@ public class DbConnection
                             Address = reader["Address"].ToString()!,
                             VehicleColor = reader["VehicleColor"].ToString()!,
                             Status = reader["Status"].ToString()!,
+                            CurrentAddress = reader["CurrentAddress"].ToString()!,
+                            ReportedDate = reader["ReportedDate"].ToString()!,
+                            TowedByCraneDate = reader["TowedByCraneDate"].ToString()!,
+                            ArrivalAtParkinglot = reader["ArrivalAtParkinglot"].ToString()!,
+                            ReleaseDate = reader["ReleaseDate"].ToString()!,
                             Lat = reader["Lat"].ToString()!,
                             Lon = reader["Lon"].ToString()!,
                             Photos = GetPhotosByLicensePlate(reader["LicensePlate"].ToString()!),
@@ -131,9 +150,14 @@ public class DbConnection
                     Address = reader["Address"].ToString()!,
                     VehicleColor = reader["VehicleColor"].ToString()!,
                     Status = reader["Status"].ToString()!,
+                    CurrentAddress = reader["CurrentAddress"].ToString()!,
+                    ReportedDate = reader["ReportedDate"].ToString()!,
+                    TowedByCraneDate = reader["TowedByCraneDate"].ToString()!,
+                    ArrivalAtParkinglot = reader["ArrivalAtParkinglot"].ToString()!,
+                    ReleaseDate = reader["ReleaseDate"].ToString()!,
                     Lat = reader["Lat"].ToString()!,
                     Lon = reader["Lon"].ToString()!,
-                    Photos = GetPhotosByLicensePlate(licensePlate),
+                    Photos = GetPhotosByLicensePlate(licensePlate)
                 };
             }
             connection.Close();
@@ -165,7 +189,6 @@ public class DbConnection
                     pictures.Add(
                         new Pictures
                         (
-                            reader["LicensePlate"].ToString()!,
                             reader["FileType"].ToString()!,
                             photoBase64
                         )
@@ -201,8 +224,12 @@ public class DbConnection
 
             var cmd = connection.CreateCommand();
             cmd.CommandText = @"
-            INSERT INTO Citizens (LicensePlate, VehicleType, VehicleColor, Address, Status, Lat, Lon)
-            VALUES (@licensePlate, @vehicleType, @vehicleColor, @address, @status, @lat, @lon)
+            INSERT INTO Citizens 
+            (LicensePlate, VehicleType, VehicleColor, Address, Status, CurrentAddress, 
+            ReportedDate, TowedByCraneDate, ArrivalAtParkinglot, ReleaseDate, Lat, Lon)
+            VALUES 
+            (@licensePlate, @vehicleType, @vehicleColor, @address, @status, @currentAddress,
+            @reportedDate, @towedByCraneDate, @arrivalAtParkinglot, @releaseDate, @lat, @lon)
             ";
 
             cmd.Parameters.AddWithValue("@licensePlate", citizen.LicensePlate);
@@ -210,6 +237,11 @@ public class DbConnection
             cmd.Parameters.AddWithValue("@vehicleColor", citizen.VehicleColor);
             cmd.Parameters.AddWithValue("@address", citizen.Address);
             cmd.Parameters.AddWithValue("@status", "Reportado");
+            cmd.Parameters.AddWithValue("@currentAddress", citizen.Address);
+            cmd.Parameters.AddWithValue("@reportedDate", DateTime.Now.ToString("g"));
+            cmd.Parameters.AddWithValue("@towedByCraneDate", "");
+            cmd.Parameters.AddWithValue("@arrivalAtParkinglot", "");
+            cmd.Parameters.AddWithValue("@releaseDate", "");
             cmd.Parameters.AddWithValue("@lat", citizen.Lat);
             cmd.Parameters.AddWithValue("@lon", citizen.Lon);
 
@@ -243,7 +275,7 @@ public class DbConnection
             var command = connection.CreateCommand();
             command.CommandText = @"
             UPDATE Citizens
-            SET VehicleType = @vehicleType, VehicleColor = @vehicleColor, Address = @address, Status = @status, Lat = @lat, Lon = @lon
+            SET VehicleType = @vehicleType, VehicleColor = @vehicleColor, Address = @address, Lat = @lat, Lon = @lon
             WHERE LicensePlate = @licensePlate
             ";
 
@@ -251,7 +283,6 @@ public class DbConnection
             command.Parameters.AddWithValue("@vehicleType", citizen.VehicleType);
             command.Parameters.AddWithValue("@vehicleColor", citizen.VehicleColor);
             command.Parameters.AddWithValue("@address", citizen.Address);
-            command.Parameters.AddWithValue("@status", citizen.Status);
             command.Parameters.AddWithValue("@lat", citizen.Lat);
             command.Parameters.AddWithValue("@lon", citizen.Lon);
 
@@ -288,7 +319,6 @@ public class DbConnection
             return "Deleted successfully";
         }
     }
-    
     public static void UpdateCitizenStatus(ChangeStatusDTO changeStatusDTO)
     {
         using (var connection = new SqliteConnection(connectionString))
@@ -307,5 +337,26 @@ public class DbConnection
             connection.Close();
         }
     }
+    public static void SetDateTime(string licensePlate, string attribute, string newAddress)
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
 
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = @$"UPDATE Citizens
+                              SET 
+                              {attribute} = @value,
+                              CurrentAddress = @currentAddress
+                              WHERE 
+                              LicensePlate = @licensePlate";
+            cmd.Parameters.AddWithValue("@value", DateTime.Now.ToString("g"));
+            cmd.Parameters.AddWithValue("@currentAddress", newAddress);
+            cmd.Parameters.AddWithValue("@licensePlate", licensePlate);
+
+            cmd.ExecuteNonQuery();
+
+            connection.Close();
+        }
+    }
 }

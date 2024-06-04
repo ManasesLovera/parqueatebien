@@ -1,7 +1,7 @@
 ﻿namespace Models;
-
 public record User
 (
     string GovernmentID,
-    string Password
+    string Password,
+    string Role
 );

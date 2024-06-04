@@ -1,8 +1,9 @@
 * {
     margin: 0;
     padding: 0;
-    font-size: 16px;
+    font-size: 14px;
     font-family: 'Open Sans', sans-serif;
+    color: #444;
 }
 :root {
     --first: #031154;
@@ -66,14 +67,8 @@ h4 {
     color: var(--first);
     margin-bottom: 7px;
 }
-h4::selection {
-    color: var(--first);
-}
 .ver-reportes p {
     font-size: 12px;
-}
-.ver-reportes p::selection {
-    color: #000;
 }
 .ver-reportes-grafico {
     align-content: center;
@@ -88,9 +83,22 @@ h4::selection {
 .ver-reportes-flecha img {
     height: 20px;
 }
-h3 {
-    text-align: center;
+h2 {
     color: var(--second);
+    text-align: center;
+    font-size: 20px;
+}
+h3 {
+    color: var(--second);
+}
+.subtitleh3 {
+    font-weight: bold;
+    font-size: 16px;
+    color: var(--first);
+}
+h5 {
+    margin-top: 15px;
+    margin-bottom: 5px;
 }
 .reportes {
     display:flex;
@@ -113,4 +121,12 @@ h3 {
 }
 .descripcion-vehiculos {
     font-size: 15px;
+}
+.imagenes {
+    padding-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+}
+.imagenes img {
+    height: 100px;
 }

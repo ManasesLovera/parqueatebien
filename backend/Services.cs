@@ -34,26 +34,25 @@ public class CitizensService
             return new ValidationResult<string>() { Result = null, ErrorMessages = new List<string>() { $"License plate '{licensePlate}' is invalid." } };
         }
     }
-    public bool ValidateCitizenBody(CitizenRequest citizen)
-    {
-        return (!string.IsNullOrEmpty(citizen!.LicensePlate) && citizen.LicensePlate is string) &&
+    public bool ValidateCitizenBody(CitizenRequest citizen) =>
+        (!string.IsNullOrEmpty(citizen!.LicensePlate) && citizen.LicensePlate is string) &&
         (!string.IsNullOrEmpty(citizen.VehicleType) && citizen.VehicleType is string) &&
+        (!string.IsNullOrEmpty(citizen.VehicleColor) && citizen.VehicleColor is string) &&
         (!string.IsNullOrEmpty(citizen.Lat) && citizen.Lat is string) &&
         (!string.IsNullOrEmpty(citizen.Lon) && citizen.Lon is string);
-    }
-    public Citizen? UpdateCitizen(Citizen citizen)
+    
+    
+    public bool ValidateRole(string? role)
     {
-        return connectiondb.UpdateCitizen(citizen);
+        if (role == null)
+            return false;
+        
+        return (new[] { "Admin", "Supervisor", "Grua", "Agente" }.Any(r => r == role));
     }
+    public List<string> VehicleStatus() =>
+        DbConnection.GetAllCitizens().Select(citizen => citizen.Status!).ToList();
 
-    public List<string> VehicleStatus()
-    {
-        var vehicleStatus = new List<string>();
-        DbConnection.GetAllCitizens().ForEach(citizen =>
-        {
-            vehicleStatus.Add(citizen.Status!);
-        });
+    public Citizen? UpdateCitizen(Citizen citizen) =>
+        connectiondb.UpdateCitizen(citizen);
 
-        return vehicleStatus;
-    }
 }

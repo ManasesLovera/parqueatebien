@@ -1,6 +1,9 @@
-async function displayResult(licensePlate) {
+export async function displayResult(licensePlate) {
     const data = await retrieveData(licensePlate);
-    console.log(data);
+    let towedByCraneDate = data.TowedByCraneDate === '' ? 'N/A' : data.TowedByCraneDate;
+    let currentAddress = data.CurrentAddress === '' ? 'N/A' : data.CurrentAddress;
+    let arrivalAtParkinglot = data.ArrivalAtParkinglot === '' ? 'N/A' : data.ArrivalAtParkinglot;
+    let releaseDate = data.ReleaseDate === '' ? 'N/A' : data.ReleaseDate;
     return `
     <article class="title">
     <h1>RESULTADO DE CONSULTA</h1>
@@ -41,14 +44,14 @@ async function displayResult(licensePlate) {
                     </div>
                     <div>
                         <h4 class="subtitleh4">Fecha y hora del reporte:</h4>
-                        <p>22/05/2024 - 1:30PM</p>
+                        <p>${data.ReportedDate}</p>
                     </div>
                 </div>
                 
             </article>
             <article class="fotos-vehiculo">
                 <h3>Fotos del vehículo</h3>
-                <div class="imagenes">
+                <div id="imagenes" class="imagenes">
 
                 </div>
             </article>
@@ -60,13 +63,13 @@ async function displayResult(licensePlate) {
             <h5>Ubicación de reporte / recogida:</h5>
             <span>${data.Address}</span>
             <h5>Fecha y hora de incautación por grúa:</h5>
-            <span>N/A</span>
+            <span>${towedByCraneDate}</span>
             <h5>Ubicación actual:</h5>
-            <span>N/A</span>
+            <span>${currentAddress}</span>
             <h5>Fecha y hora de llegada al centro:</h5>
-            <span>N/A</span>
+            <span>${arrivalAtParkinglot}</span>
             <h5>Fecha y hora de liberación:</h5>
-            <span>N/A</span>
+            <span>${releaseDate}</span>
             <h5>Liberado por:</h5>
             <span>N/A</span>
         </section>
@@ -75,9 +78,9 @@ async function displayResult(licensePlate) {
     
 }
 
-async function retrieveData(licensePlate) {
+export async function retrieveData(licensePlate) {
     let response = await fetch(`http://localhost:8089/ciudadanos/${licensePlate}`);
     let body = await response.json();
+    console.log(body);
     return body;
 }
-export {displayResult};

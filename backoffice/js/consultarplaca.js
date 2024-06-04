@@ -1,8 +1,9 @@
-import {displayResult} from './resultadoconsulta.js'
+import {displayResult, retrieveData} from './resultadoconsulta.js'
+
 document.addEventListener("DOMContentLoaded", () => {
-    const h3 = document.getElementById('h3');
+    const h2 = document.getElementById('h2');
     let today = new Date(Date.now()).toLocaleDateString();
-    h3.textContent = `ESTADÍSTICAS AL DÍA ${today}`;
+    h2.textContent = `ESTADÍSTICAS AL DÍA ${today}`;
 
     displayData();
 });
@@ -14,7 +15,7 @@ async function displayData() {
     let data = await fetchData();
 
     reportados.innerHTML = data.filter(status => status === 'Reportado').length;
-    recogidos.innerHTML = data.filter(status => status === 'Incautado por grúa').length;
+    recogidos.innerHTML = data.filter(status => status === 'Incautado por grua').length;
     retenidos.innerHTML = data.filter(status => status === 'Retenido').length;
 }
 async function fetchData() {
@@ -26,29 +27,13 @@ async function fetchData() {
 const btnConsultarPlaca = document.getElementById('btn-consultarplaca');
 
 btnConsultarPlaca.addEventListener('click', async () => {
-    const textboxConsultarPlaca = document.getElementById('textbox-consultarplaca').value;
+    const textboxConsultarPlaca = document.getElementById('textbox-consultarplaca').value.trim();
 
-    if (textboxConsultarPlaca.trim() == '') {
+    if (textboxConsultarPlaca == '') {
         alert('Ingresa digitos de la placa');
         return;
     }
     document.getElementById('root').innerHTML = await displayResult(textboxConsultarPlaca);
-
-    let status = document.getElementById('status');
-    switch (status.innerHTML.toLowerCase()) {
-        case 'reportado': 
-            status.classList.add('reportado');
-            break;
-        case 'incautado por grúa':
-            status.classList.add('incautado');
-            break;
-        case 'retenido':
-            status.classList.add('retenido');
-            break;
-        case 'liberado':
-            status.classList.add('liberado');
-            break;
-    }
 
     const btnRealizarOtraConsulta = document.getElementById('btnRealizarOtraConsulta');
 
@@ -56,4 +41,31 @@ btnConsultarPlaca.addEventListener('click', async () => {
         window.location.href = '../html/consultarplaca.html';
     });
 
+    let status = document.getElementById('status');
+    switch (status.innerHTML) {
+        case 'Reportado': 
+            status.classList.add('reportado');
+            break;
+        case 'Incautado por grua':
+            status.classList.add('incautado');
+            break;
+        case 'Retenido':
+            status.classList.add('retenido');
+            break;
+        case 'Liberado':
+            status.classList.add('liberado');
+            break;
+    }
+
+    let imgContainer = document.getElementById('imagenes');
+
+    retrieveData(textboxConsultarPlaca)
+    .then(data => {
+        data.Photos.forEach( photo => {
+            let img = document.createElement('img');
+            let picture = photo.FileType + photo.File;
+            img.src = picture;
+            imgContainer.appendChild(img);
+        })
+    })
 });
