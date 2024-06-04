@@ -17,7 +17,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         policy =>
         {
-            policy.WithOrigins("http://127.0.0.1:5501", "http://127.0.0.1:50775", "http://192.168.0.236:8089")
+            policy.WithOrigins("http://127.0.0.1:5501", "http://127.0.0.1:50775")
                   .AllowAnyOrigin()
                   .AllowAnyMethod()
                   .AllowAnyHeader();
@@ -106,13 +106,13 @@ app.MapPut("/ciudadanos", async (HttpContext httpContext, [FromBody] Citizen cit
         {
             httpContext.Response.StatusCode = 400;
             await httpContext.Response.WriteAsync("Missing info or Invalid data");
-            return;
+
         }
         if (DbConnection.GetByLicensePlate(citizen!.LicensePlate) == null)
         {
             httpContext.Response.StatusCode = 404;
             await httpContext.Response.WriteAsync("Not Found");
-            return;
+
         }
         citizens.UpdateCitizen(citizen);
         httpContext.Response.StatusCode = 200;

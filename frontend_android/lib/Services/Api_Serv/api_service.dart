@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
+var logger = Logger();
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.0.236:8089/ciudadanos';
+  static const String baseUrl = 'http://localhost:8089/ciudadanos';
 
   static Future<http.Response> createReport(
       Map<String, dynamic> reportData, List<File> images) async {
@@ -25,7 +27,10 @@ class ApiService {
       body: jsonEncode(reportData),
     );
 
-    print('Request Body: ${jsonEncode(reportData)}'); // Debugging line
+    logger.i('Request Body: ${jsonEncode(reportData)}'); // Info level log
+    logger.i('Response Status: ${response.statusCode}'); // Info level log
+    logger.i('Response Body: ${response.body}'); // Info level log
+
     return response;
   }
 }
