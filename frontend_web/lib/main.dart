@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
-import 'package:web/SplashScreen.dart';
 import 'dart:convert';
 import 'PlacaScreen.dart';
-
+import 'ReportScreen.dart';
+import 'SplashScreen.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,10 +18,11 @@ class MyApp extends StatelessWidget {
       title: 'Parqueate Bien',
       theme: ThemeData(
         primaryColor: Color.fromARGB(255, 6, 67, 117),
-        colorScheme: ColorScheme.light(primary: Color.fromARGB(255, 229, 235, 240)),
-        scaffoldBackgroundColor: Colors.white,
+        colorScheme:
+            ColorScheme.light(primary: Color.fromARGB(255, 203, 225, 243)),
+        scaffoldBackgroundColor: Color.fromARGB(255, 203, 225, 243),
       ),
-      home:SplashScreen(),
+      home: SplashScreen(),
     );
   }
 }
@@ -51,10 +53,10 @@ class _MainAppState extends State<MainApp> {
 
     String licensePlate = _licensePlateController.text;
     try {
-      var response = await http.get(Uri.parse('http://localhost:8089/ciudadanos/$licensePlate'));
+      var response = await http
+          .get(Uri.parse('http://localhost:8089/ciudadanos/$licensePlate'));
       if (response.statusCode == 200) {
         var citizen = parseResponse(response.body);
-        print(response);
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -64,6 +66,11 @@ class _MainAppState extends State<MainApp> {
               address: citizen.address,
               vehicleColor: citizen.vehicleColor,
               status: citizen.status,
+              currentAddress: citizen.currentAddress,
+              reportedDate: citizen.reportedDate,
+              towedByCraneDate: citizen.towedByCraneDate,
+              arrivalAtParkinglot: citizen.arrivalAtParkinglot,
+              releaseDate: citizen.releaseDate ,
               lat: citizen.lat,
               lon: citizen.lon,
               photos: citizen.photos,
@@ -99,63 +106,103 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 150.0,
+        toolbarHeight: 200.0,
         flexibleSpace: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/image/LOGO_PARQUEATE.png',
-              height: 100,
+            Image.asset(
+              'assets/image/LOGO_PARQUEATE.png',
+              height: 100, // Reduce the logo height slightly
               fit: BoxFit.cover,
             ),
-            const SizedBox(height: 10),
-            const Text('Introdusca el Numero de Placa De su Vehiculo'),
-            Container(height: 20,)
+            const SizedBox(height: 50),
+            Center(
+              child: Text(
+                'INTRODUZCA EL NÚMERO DE PLACA DE SU VEHÍCULO',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                 color: Color(0xFF010F56)
+                ),
+              ),
+            ),
           ],
         ),
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(14.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
             Spacer(),
-            TextField(
-              controller: _licensePlateController,
-              decoration: const InputDecoration(
-                labelText: 'Ingresar Digitos De Placa',
-                border: OutlineInputBorder(),
+            SizedBox(
+              width: 800, // Ajusta el ancho del campo de entrada aquí
+              child: TextField(
+                controller: _licensePlateController,
+                decoration: const InputDecoration(
+                  labelText: 'Ingresar Dígitos De Placa',
+                  border: OutlineInputBorder(),
+                ),
+                maxLength: 7, // Limitar la entrada a 7 caracteres
+                onChanged: (value) {
+                  setState(
+                      () {}); // Actualizar el estado para habilitar/deshabilitar el botón
+                },
               ),
-              onChanged: (value) {
-                setState(() {}); // Actualizar el estado para habilitar/deshabilitar el botón
-              },
             ),
-            const SizedBox(height: 38.0),
-            Spacer(),
+            const SizedBox(height: 500),
             _isLoading
                 ? CircularProgressIndicator()
                 : _errorMessage.isNotEmpty
-                    ? Text(_errorMessage)
-                    : SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: _licensePlateController.text.isEmpty ? null : _getCitizen,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: _licensePlateController.text.isEmpty ? Colors.grey : Color.fromARGB(255, 0, 18, 153),
-                            padding: const EdgeInsets.symmetric(vertical: 16.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                          ),
-                          child: _isLoading ? CircularProgressIndicator() : const Text('consultar'),
-                        ),
-                      ),
+                    ? Column(
+                        children: [
+                          Text(_errorMessage),
+                          const SizedBox(height: 16.0),
+                          _buildConsultButton(),
+                        ],
+                      )
+                    : _buildConsultButton(),
+            Spacer(),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildConsultButton() {
+    return Align(
+      alignment: Alignment.center, // Centrar el botón horizontalmente
+      child: SizedBox(
+        width: 300, // Ajusta el ancho del botón aquí
+        child: ElevatedButton(
+          onPressed:
+              _licensePlateController.text.length == 7 ? _getCitizen : null,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: _licensePlateController.text.length == 7
+                ? Color.fromARGB(255, 0, 18, 153)
+                : Colors.grey,
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
+          child: _isLoading
+              ? CircularProgressIndicator()
+              : const Text(
+                  'consultar',
+                  style: TextStyle(
+                      color:
+                          Colors.white), // Cambiar el color del texto a blanco
+                ),
         ),
       ),
     );
   }
 }
 
+// To parse this JSON data, do
+
+//     final citizen = citizenFromJson(jsonString);
 
 
 Citizen citizenFromJson(String str) => Citizen.fromJson(json.decode(str));
@@ -168,6 +215,11 @@ class Citizen {
     String vehicleColor;
     String address;
     String status;
+    String currentAddress;
+    String reportedDate;
+    String towedByCraneDate;
+    String arrivalAtParkinglot;
+    String releaseDate;
     String lat;
     String lon;
     List<Photo> photos;
@@ -178,6 +230,11 @@ class Citizen {
         required this.vehicleColor,
         required this.address,
         required this.status,
+        required this.currentAddress,
+        required this.reportedDate,
+        required this.towedByCraneDate,
+        required this.arrivalAtParkinglot,
+        required this.releaseDate,
         required this.lat,
         required this.lon,
         required this.photos,
@@ -189,6 +246,11 @@ class Citizen {
         vehicleColor: json["VehicleColor"],
         address: json["Address"],
         status: json["Status"],
+        currentAddress: json["CurrentAddress"],
+        reportedDate: json["ReportedDate"],
+        towedByCraneDate: json["TowedByCraneDate"],
+        arrivalAtParkinglot: json["ArrivalAtParkinglot"],
+        releaseDate: json["ReleaseDate"],
         lat: json["Lat"],
         lon: json["Lon"],
         photos: List<Photo>.from(json["Photos"].map((x) => Photo.fromJson(x))),
@@ -200,6 +262,11 @@ class Citizen {
         "VehicleColor": vehicleColor,
         "Address": address,
         "Status": status,
+        "CurrentAddress": currentAddress,
+        "ReportedDate": reportedDate,
+        "TowedByCraneDate": towedByCraneDate,
+        "ArrivalAtParkinglot": arrivalAtParkinglot,
+        "ReleaseDate": releaseDate,
         "Lat": lat,
         "Lon": lon,
         "Photos": List<dynamic>.from(photos.map((x) => x.toJson())),
@@ -207,25 +274,22 @@ class Citizen {
 }
 
 class Photo {
-    String licensePlate;
     String fileType;
     String file;
 
     Photo({
-        required this.licensePlate,
         required this.fileType,
         required this.file,
     });
 
     factory Photo.fromJson(Map<String, dynamic> json) => Photo(
-        licensePlate: json["LicensePlate"],
         fileType: json["FileType"],
         file: json["File"],
     );
 
     Map<String, dynamic> toJson() => {
-        "LicensePlate": licensePlate,
         "FileType": fileType,
         "File": file,
     };
 }
+

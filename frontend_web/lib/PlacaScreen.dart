@@ -1,37 +1,88 @@
 import 'package:flutter/material.dart';
-import 'package:web/main.dart';
 import 'dart:convert';
-// import 'photo.dart' as Photos; // Importa la clase Photo
+import 'ReportScreen.dart';
 
 class PlacaScreen extends StatelessWidget {
-  final String licensePlate;
-  final String vehicleType;
-  final String address;
-  final String vehicleColor;
-  final String status;
-  final String lat;
-  final String lon;
-  final List<Photo> photos;
+  String licensePlate;
+  String vehicleType;
+  String vehicleColor;
+  String address;
+  String status;
+  String currentAddress;
+  String reportedDate;
+  String towedByCraneDate;
+  String arrivalAtParkinglot;
+  String releaseDate;
+  String lat;
+  String lon;
+  List photos;
 
   PlacaScreen({
     required this.licensePlate,
     required this.vehicleType,
-    required this.address,
     required this.vehicleColor,
+    required this.address,
     required this.status,
+    required this.currentAddress,
+    required this.reportedDate,
+    required this.towedByCraneDate,
+    required this.arrivalAtParkinglot,
+    required this.releaseDate,
     required this.lat,
     required this.lon,
     required this.photos,
   });
 
+  Color _getButtonColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'reportado':
+        return Colors.grey;
+      case 'retenido':
+        return Colors.red;
+      case 'liberado':
+        return Colors.green;
+      case 'incautado por grua':
+        return Colors.orange;
+      default:
+        return Colors.grey;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Información de la Placa'),
+        title: Text(''),
+        actions: [
+          Row(
+            children: [
+              Text('INFO'),
+              IconButton(
+                icon: Icon(Icons.info),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReportScreen(
+                        licensePlate: licensePlate,
+                        address: address,
+                        status: status,
+                        reportedDate: reportedDate,
+                        towedByCraneDate: towedByCraneDate,
+                        currentAddress: currentAddress,
+                        arrivalAtParkinglot: arrivalAtParkinglot,
+                        releaseDate: releaseDate,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -52,108 +103,97 @@ class PlacaScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 16.0),
-            Text(
-              'Número de Placa:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF010F56),
-              ),
-            ),
-            Text(licensePlate, style: TextStyle(fontSize: 18)),
-            const SizedBox(height: 8.0),
-            Text(
-              'Tipo de Vehículo:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF010F56),
-              ),
-            ),
-            Text(vehicleType, style: TextStyle(fontSize: 18)),
-            const SizedBox(height: 8.0),
-            Text(
-              'Color del Vehículo:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF010F56),
-              ),
-            ),
-            Text(vehicleColor, style: TextStyle(fontSize: 18)),
-            const SizedBox(height: 8.0),
-            Text(
-              'Ubicación de la Retención:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF010F56),
-              ),
-            ),
-            Text(address, style: TextStyle(fontSize: 18)),
-            const SizedBox(height: 8.0),
-            if (photos.isNotEmpty) ...[
-              Text(
-                'Fotos del Vehículo:',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF010F56),
+            const SizedBox(height: 5),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  // Acción del botón
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _getButtonColor(
+                      status), // Color del botón según el estado
+                ),
+                child: Text(
+                  '$status',
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
-              const SizedBox(height: 8.0),
-              Wrap(
-                spacing: 8.0,
-                runSpacing: 8.0,
-                children: photos.map((photo) {
-                  return SizedBox(
-                    width: 100,
-                    height: 100,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(4.0),
-                      child: Image.memory(
-                        base64Decode(photo.file),
-                        fit: BoxFit.cover,
+            ),
+            const SizedBox(
+              height: 60,
+            ),
+            Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _buildInfoRow('Número de Placa', licensePlate),
+                  Divider(
+                    height: 50,
+                  ),
+                  _buildInfoRow('Tipo de Vehículo', vehicleType),
+                  Divider(
+                    height: 50,
+                  ),
+                  _buildInfoRow('Color', vehicleColor),
+                  Divider(
+                    height: 50,
+                  ),
+                  _buildInfoRow('Ubicación de la Retención', address),
+                  Divider(
+                    height: 50,
+                  ),
+                  if (photos.isNotEmpty) ...[
+                    Text(
+                      'Fotos del Vehículo',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF010F56),
                       ),
                     ),
-                  );
-                }).toList(),
-              ),
-            ],
-            const SizedBox(height: 8.0),
-            Text(
-              'Estado del Vehículo:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF010F56),
-              ),
-            ),
-            Text(status, style: TextStyle(fontSize: 18)),
-            const SizedBox(height: 8.0),
-            Text(
-              'Latitud:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF010F56),
-              ),
-            ),
-            Text(lat, style: TextStyle(fontSize: 18)),
-            const SizedBox(height: 8.0),
-            Text(
-              'Longitud:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF010F56),
+                    const SizedBox(height: 8.0),
+                    Wrap(
+                      spacing: 8.0,
+                      runSpacing: 8.0,
+                      children: photos.map((photo) {
+                        return SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(4.0),
+                            child: Image.memory(
+                              base64Decode(photo.file),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ],
               ),
             ),
-            Text(lon, style: TextStyle(fontSize: 18)),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF010F56),
+          ),
+        ),
+        Text(value, style: TextStyle(fontSize: 18)),
+        const SizedBox(height: 8.0),
+      ],
     );
   }
 }
