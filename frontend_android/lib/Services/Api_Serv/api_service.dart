@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
+
 var logger = Logger();
 
 class ApiService {
-  static const String baseUrl = 'http://localhost:8089/ciudadanos';
+  static const String baseUrl =
+      'https://parqueatebien.azurewebsites.net/ciudadanos';
 
   static Future<http.Response> createReport(
       Map<String, dynamic> reportData, List<File> images) async {
