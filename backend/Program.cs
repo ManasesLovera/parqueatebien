@@ -78,7 +78,7 @@ app.MapPost("/ciudadanos", async (HttpContext httpContext, [FromBody] CitizenReq
             httpContext.Response.StatusCode = 400;
             await httpContext.Response.WriteAsync("Missing info or Invalid data");
         }
-        if (DbConnection.GetByLicensePlate(citizen!.LicensePlate) != null)
+        else if (DbConnection.GetByLicensePlate(citizen!.LicensePlate) != null)
         {
             httpContext.Response.StatusCode = 409;
             await httpContext.Response.WriteAsync("409 Conflict: This licensePlate already exists");
@@ -89,7 +89,6 @@ app.MapPost("/ciudadanos", async (HttpContext httpContext, [FromBody] CitizenReq
             httpContext.Response.StatusCode = 200;
             await httpContext.Response.WriteAsync("Citizen added successfully!");
         }
-
     }
     catch (Exception ex)
     {
@@ -137,7 +136,7 @@ app.MapDelete("/ciudadanos/{licensePlate}", async (HttpContext httpContext, [Fro
             httpContext.Response.StatusCode = 400;
             await httpContext.Response.WriteAsJsonAsync(validation.ErrorMessages);
         }
-        if (DbConnection.GetByLicensePlate(validation.Result!) == null)
+        else if (DbConnection.GetByLicensePlate(validation.Result!) == null)
         {
             httpContext.Response.StatusCode = 404;
             await httpContext.Response.WriteAsync("Citizen was not found");

@@ -72,9 +72,6 @@ btnConsultarPlaca.addEventListener('click', async () => {
             status.classList.add('liberado');
             break;
     }
-
-    
-
     let imgContainer = document.getElementById('imagenes');
 
     retrieveData(textboxConsultarPlaca)
