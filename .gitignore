@@ -4,3 +4,4 @@ backend/obj/
 backend/obj/Debug/
 .vs/
 .vscode/
+frontend_android/pubspec.lock
