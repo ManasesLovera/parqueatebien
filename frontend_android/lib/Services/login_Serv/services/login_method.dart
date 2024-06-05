@@ -1,22 +1,19 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:frontend_android/login/login_service/login_send_data.dart';
+import 'package:frontend_android/Services/login_Serv/services/login_service.dart';
 
 Future<void> signUserIn(
   context,
-  TextEditingController usernameController,
+  TextEditingController governmentIDController,
   TextEditingController passwordController,
 ) async {
-  final String username = usernameController.text;
+  final String governmentID = governmentIDController.text;
   final String password = passwordController.text;
   try {
-    // validamos si no estan vacios
-    if (username.isNotEmpty && password.isNotEmpty) {
-      // enviamos
-      final success = await LoginSendData.signIn(username, password);
-      // si el bool es true 1
+    if (governmentID.isNotEmpty && password.isNotEmpty) {
+      final success = await LoginSendData.signIn(governmentID, password);
+
       if (success) {
-        /* Exito y mostramos con una alerta grafica y vamos a la pantalla tomar foto*/
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -26,9 +23,9 @@ Future<void> signUserIn(
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop(); // Close the dialog
-                    // Navigate to the next screen (replace 'NextScreen' with your screen)
-                    Navigator.pushReplacementNamed(context, '/camera');
+                    Navigator.of(context).pop();
+                    Navigator.pushReplacementNamed(
+                        context, '/WelcomeNewReport');
                   },
                   child: const Text('OK'),
                 ),
@@ -37,7 +34,6 @@ Future<void> signUserIn(
           },
         );
       } else {
-        // si el bool es false !, mostramos de igual manera el mensaje
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -48,7 +44,7 @@ Future<void> signUserIn(
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop(); // Close the dialog
+                    Navigator.of(context).pop();
                   },
                   child: const Text('OK'),
                 ),
@@ -58,7 +54,6 @@ Future<void> signUserIn(
         );
       }
     } else {
-      // Mostramos mensaje en caso de que los campos user y password esten vacios
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -69,7 +64,7 @@ Future<void> signUserIn(
             actions: <Widget>[
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); // cerramos dialogo
+                  Navigator.of(context).pop();
                 },
                 child: const Text('OK'),
               ),
@@ -78,7 +73,6 @@ Future<void> signUserIn(
         },
       );
     }
-    // Cualquier otra cosa, exeption.
   } catch (e) {
     showDialog(
       context: context,
@@ -90,7 +84,7 @@ Future<void> signUserIn(
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: const Text('OK'),
             ),

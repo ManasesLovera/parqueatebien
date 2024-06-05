@@ -97,7 +97,7 @@ class VehicleDetailsScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 10.h),
-                Container(
+                SizedBox(
                   height: 100.h,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,

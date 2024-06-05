@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/presentation/New_Report_Flow/_00_reporte.dart';
-import 'package:frontend_android/presentation/New_Report_Flow/_01_nuevo_reporte.dart';
-import 'package:frontend_android/presentation/New_Report_Flow/_02_foto_nuevo_reporte.dart';
-import 'package:frontend_android/presentation/camera/camera_screen_p1.dart';
-import 'package:frontend_android/presentation/login/login.dart';
+import 'package:frontend_android/routes/app_routes.dart';
 
 void main() => runApp(const Main());
 
@@ -18,14 +14,8 @@ class Main extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          initialRoute: '/newreportfoto',
-          routes: {
-            '/login': (context) => const Login(),
-            '/report': (context) => const WelcomeNewReport(),
-            '/newreport': (context) => const NewReportScreen(),
-            '/newreportfoto': (context) => const NewReportPhotoScreen(),
-            '/camera': (context) => const Camera(),
-          },
+          initialRoute: '/login',
+          routes: AppRoutes.routes,
         );
       },
     );

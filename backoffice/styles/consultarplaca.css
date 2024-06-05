@@ -1,7 +1,10 @@
 * {
     margin: 0;
     padding: 0;
-    font-size: 14px;
+    font-size: 13px;
+}
+body {
+    
     font-family: 'Open Sans', sans-serif;
     color: #444;
 }
@@ -10,7 +13,7 @@
     --second: #0da1d8;
 }
 nav {
-    padding: 20px;
+    padding: 15px 30px;
 }
 a {
     text-decoration: none;
@@ -94,7 +97,7 @@ h3 {
 .subtitleh3 {
     font-weight: bold;
     font-size: 16px;
-    color: var(--first);
+    color: var(--second);
 }
 h5 {
     margin-top: 15px;

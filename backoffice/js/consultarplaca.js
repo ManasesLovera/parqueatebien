@@ -1,4 +1,6 @@
 import {displayResult, retrieveData} from './resultadoconsulta.js'
+import {setStatus} from './setStatus.js'
+import {setStatusButton} from './setStatusButton.js'
 
 document.addEventListener("DOMContentLoaded", () => {
     const h2 = document.getElementById('h2');
@@ -33,7 +35,21 @@ btnConsultarPlaca.addEventListener('click', async () => {
         alert('Ingresa digitos de la placa');
         return;
     }
-    document.getElementById('root').innerHTML = await displayResult(textboxConsultarPlaca);
+    const response = await displayResult(textboxConsultarPlaca);
+
+    if(response == 404){
+        alert('La placa no existe');
+        return;
+    }
+    if(response == 500){
+        alert("SERVER ERROR");
+        return;
+    }
+    if(response == 400){
+        alert("Bad Request");
+        return;
+    }
+    document.getElementById('root').innerHTML = response;
 
     const btnRealizarOtraConsulta = document.getElementById('btnRealizarOtraConsulta');
 
@@ -43,7 +59,7 @@ btnConsultarPlaca.addEventListener('click', async () => {
 
     let status = document.getElementById('status');
     switch (status.innerHTML) {
-        case 'Reportado': 
+        case 'Reportado':
             status.classList.add('reportado');
             break;
         case 'Incautado por grua':
@@ -57,6 +73,8 @@ btnConsultarPlaca.addEventListener('click', async () => {
             break;
     }
 
+    
+
     let imgContainer = document.getElementById('imagenes');
 
     retrieveData(textboxConsultarPlaca)
@@ -68,4 +86,14 @@ btnConsultarPlaca.addEventListener('click', async () => {
             imgContainer.appendChild(img);
         })
     })
+
+    let resultadoConsulta = document.getElementById('setStatus');
+    let statusHTML = setStatus(status.innerHTML);
+    resultadoConsulta.appendChild(statusHTML);
+
+    let placa = document.getElementById('placa').innerHTML;
+
+    document.getElementById('setStatusButton').addEventListener('click', async () => {
+        await setStatusButton(placa,status.innerHTML);
+    });
 });
