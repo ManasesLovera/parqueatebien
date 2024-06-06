@@ -6,8 +6,7 @@ import 'package:logger/logger.dart';
 var logger = Logger();
 
 class ApiService {
-  static const String baseUrl =
-      'https://parqueatebien.azurewebsites.net/ciudadanos';
+  static const String baseUrl = 'http://192.168.0.236:8089/ciudadanos';
 
   static Future<http.Response> createReport(
       Map<String, dynamic> reportData, List<File> images) async {
