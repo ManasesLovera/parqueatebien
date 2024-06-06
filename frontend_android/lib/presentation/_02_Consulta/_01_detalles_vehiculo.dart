@@ -4,6 +4,151 @@ import 'dart:convert';
 
 class VehicleDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> vehicleData;
+  const VehicleDetailsScreen({super.key, required this.vehicleData});
+
+  @override
+  Widget build(BuildContext context) {
+    debugPrint('VehicleDetailsScreen: Received data: $vehicleData');
+
+    List<Map<String, String>> photos = [];
+    if (vehicleData['Photos'] is List) {
+      photos = List<Map<String, String>>.from(
+          vehicleData['Photos'].map((item) => Map<String, String>.from(item)));
+    }
+
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 14.h),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 20.h),
+                Center(
+                  child: Image.asset(
+                    'assets/main_w.png',
+                    height: 50.h,
+                  ),
+                ),
+                SizedBox(height: 30.h),
+                Center(
+                  child: Text(
+                    'Datos del vehículo',
+                    style: TextStyle(
+                      fontSize: 20.h,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                Center(
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Text(
+                      vehicleData['Status'] ?? 'Desconocido',
+                      style: TextStyle(
+                        fontSize: 16.h,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.h),
+                _buildDetailItem(
+                  title: 'Número de placa',
+                  content: vehicleData['LicensePlate'] ?? 'Desconocido',
+                ),
+                _buildDetailItem(
+                  title: 'Tipo de vehículo',
+                  content: vehicleData['VehicleType'] ?? 'Desconocido',
+                ),
+                _buildDetailItem(
+                  title: 'Color',
+                  content: vehicleData['VehicleColor'] ?? 'Desconocido',
+                ),
+                _buildDetailItem(
+                  title: 'Ubicación de la retención',
+                  content: vehicleData['CurrentAddress'] ?? 'Desconocido',
+                ),
+                SizedBox(height: 20.h),
+                Text(
+                  'Fotos del vehículo',
+                  style: TextStyle(
+                    fontSize: 16.h,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                SizedBox(
+                  height: 100.h,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: photos.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 5.h),
+                        child: Image.memory(
+                          base64Decode(photos[index]['File']!),
+                          width: 100.w,
+                          fit: BoxFit.cover,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDetailItem({required String title, required String content}) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 2.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 16.h,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue,
+            ),
+          ),
+          SizedBox(height: 5.h),
+          Text(
+            content,
+            style: TextStyle(
+              fontSize: 14.h,
+              color: Colors.black,
+            ),
+          ),
+          const Divider(color: Colors.grey),
+        ],
+      ),
+    );
+  }
+}
+
+/*
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:convert';
+
+class VehicleDetailsScreen extends StatelessWidget {
+  final Map<String, dynamic> vehicleData;
 
   const VehicleDetailsScreen({super.key, required this.vehicleData});
 
@@ -160,3 +305,7 @@ class VehicleDetailsScreen extends StatelessWidget {
     );
   }
 }
+
+
+
+*/
