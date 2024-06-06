@@ -24,3 +24,15 @@ flutter:
     - assets/image/fondo_splash.png
     - assets/image/LOGO_INTRANT.png
     - assets/image/LOGO_PARQUEATE.png
+
+flutter_native_splash:
+  android: true
+  web: false
+  ios: false
+  color: 
+  image: assets/image/LOGO_INTRANT.png
+  background_image: assets/image/fondo_splash.png
+  branding: "assets/image/LOGO_INTRANT.png"
+  branding_mode: bottom
+ 
+
