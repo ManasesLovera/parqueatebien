@@ -1,40 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'PlacaScreen.dart';
-import 'ReportScreen.dart';
-import 'SplashScreen.dart';
+import 'placascreen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Parqueate Bien',
       theme: ThemeData(
-        primaryColor: Color.fromARGB(255, 6, 67, 117),
-        colorScheme:
-            ColorScheme.light(primary: Color.fromARGB(255, 203, 225, 243)),
-        scaffoldBackgroundColor: Color.fromARGB(255, 203, 225, 243),
+        primaryColor: const Color.fromARGB(255, 6, 67, 117),
+        colorScheme: const ColorScheme.light(
+            primary: Color.fromARGB(255, 203, 225, 243)),
+        scaffoldBackgroundColor: const Color.fromARGB(255, 203, 225, 243),
       ),
-      home: SplashScreen(),
+      home: const MainApp(), // Set the home screen
     );
   }
 }
 
 class MainApp extends StatefulWidget {
-  const MainApp({Key? key}) : super(key: key);
+  const MainApp({super.key});
 
   @override
-  _MainAppState createState() => _MainAppState();
+  MainAppState createState() => MainAppState();
 }
 
-class _MainAppState extends State<MainApp> {
+class MainAppState extends State<MainApp> {
   final TextEditingController _licensePlateController = TextEditingController();
   bool _isLoading = false;
   String _errorMessage = '';
@@ -54,9 +53,10 @@ class _MainAppState extends State<MainApp> {
     String licensePlate = _licensePlateController.text;
     try {
       var response = await http
-          .get(Uri.parse('http://localhost:8089/ciudadanos/$licensePlate'));
+          .get(Uri.parse('http://192.168.0.236:8089/ciudadanos/$licensePlate'));
       if (response.statusCode == 200) {
         var citizen = parseResponse(response.body);
+        if (!mounted) return; // Check if the widget is still mounted
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -70,7 +70,7 @@ class _MainAppState extends State<MainApp> {
               reportedDate: citizen.reportedDate,
               towedByCraneDate: citizen.towedByCraneDate,
               arrivalAtParkinglot: citizen.arrivalAtParkinglot,
-              releaseDate: citizen.releaseDate ,
+              releaseDate: citizen.releaseDate,
               lat: citizen.lat,
               lon: citizen.lon,
               photos: citizen.photos,
@@ -91,9 +91,11 @@ class _MainAppState extends State<MainApp> {
         _errorMessage = 'Error: $e';
       });
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      if (!mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -116,14 +118,13 @@ class _MainAppState extends State<MainApp> {
               fit: BoxFit.cover,
             ),
             const SizedBox(height: 50),
-            Center(
+            const Center(
               child: Text(
                 'INTRODUZCA EL NÚMERO DE PLACA DE SU VEHÍCULO',
                 style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                 color: Color(0xFF010F56)
-                ),
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF010F56)),
               ),
             ),
           ],
@@ -134,7 +135,7 @@ class _MainAppState extends State<MainApp> {
         padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
-            Spacer(),
+            const Spacer(),
             SizedBox(
               width: 800, // Ajusta el ancho del campo de entrada aquí
               child: TextField(
@@ -152,7 +153,7 @@ class _MainAppState extends State<MainApp> {
             ),
             const SizedBox(height: 500),
             _isLoading
-                ? CircularProgressIndicator()
+                ? const CircularProgressIndicator()
                 : _errorMessage.isNotEmpty
                     ? Column(
                         children: [
@@ -162,7 +163,7 @@ class _MainAppState extends State<MainApp> {
                         ],
                       )
                     : _buildConsultButton(),
-            Spacer(),
+            const Spacer(),
           ],
         ),
       ),
@@ -179,7 +180,7 @@ class _MainAppState extends State<MainApp> {
               _licensePlateController.text.length == 7 ? _getCitizen : null,
           style: ElevatedButton.styleFrom(
             backgroundColor: _licensePlateController.text.length == 7
-                ? Color.fromARGB(255, 0, 18, 153)
+                ? const Color.fromARGB(255, 0, 18, 153)
                 : Colors.grey,
             padding: const EdgeInsets.symmetric(vertical: 20),
             shape: RoundedRectangleBorder(
@@ -187,7 +188,7 @@ class _MainAppState extends State<MainApp> {
             ),
           ),
           child: _isLoading
-              ? CircularProgressIndicator()
+              ? const CircularProgressIndicator()
               : const Text(
                   'consultar',
                   style: TextStyle(
@@ -200,43 +201,42 @@ class _MainAppState extends State<MainApp> {
   }
 }
 
-
 Citizen citizenFromJson(String str) => Citizen.fromJson(json.decode(str));
 
 String citizenToJson(Citizen data) => json.encode(data.toJson());
 
 class Citizen {
-    String licensePlate;
-    String vehicleType;
-    String vehicleColor;
-    String address;
-    String status;
-    String currentAddress;
-    String reportedDate;
-    String towedByCraneDate;
-    String arrivalAtParkinglot;
-    String releaseDate;
-    String lat;
-    String lon;
-    List<Photo> photos;
+  String licensePlate;
+  String vehicleType;
+  String vehicleColor;
+  String address;
+  String status;
+  String currentAddress;
+  String reportedDate;
+  String towedByCraneDate;
+  String arrivalAtParkinglot;
+  String releaseDate;
+  String lat;
+  String lon;
+  List<Photo> photos;
 
-    Citizen({
-        required this.licensePlate,
-        required this.vehicleType,
-        required this.vehicleColor,
-        required this.address,
-        required this.status,
-        required this.currentAddress,
-        required this.reportedDate,
-        required this.towedByCraneDate,
-        required this.arrivalAtParkinglot,
-        required this.releaseDate,
-        required this.lat,
-        required this.lon,
-        required this.photos,
-    });
+  Citizen({
+    required this.licensePlate,
+    required this.vehicleType,
+    required this.vehicleColor,
+    required this.address,
+    required this.status,
+    required this.currentAddress,
+    required this.reportedDate,
+    required this.towedByCraneDate,
+    required this.arrivalAtParkinglot,
+    required this.releaseDate,
+    required this.lat,
+    required this.lon,
+    required this.photos,
+  });
 
-    factory Citizen.fromJson(Map<String, dynamic> json) => Citizen(
+  factory Citizen.fromJson(Map<String, dynamic> json) => Citizen(
         licensePlate: json["LicensePlate"],
         vehicleType: json["VehicleType"],
         vehicleColor: json["VehicleColor"],
@@ -250,9 +250,9 @@ class Citizen {
         lat: json["Lat"],
         lon: json["Lon"],
         photos: List<Photo>.from(json["Photos"].map((x) => Photo.fromJson(x))),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "LicensePlate": licensePlate,
         "VehicleType": vehicleType,
         "VehicleColor": vehicleColor,
@@ -266,26 +266,25 @@ class Citizen {
         "Lat": lat,
         "Lon": lon,
         "Photos": List<dynamic>.from(photos.map((x) => x.toJson())),
-    };
+      };
 }
 
 class Photo {
-    String fileType;
-    String file;
+  String fileType;
+  String file;
 
-    Photo({
-        required this.fileType,
-        required this.file,
-    });
+  Photo({
+    required this.fileType,
+    required this.file,
+  });
 
-    factory Photo.fromJson(Map<String, dynamic> json) => Photo(
+  factory Photo.fromJson(Map<String, dynamic> json) => Photo(
         fileType: json["FileType"],
         file: json["File"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "FileType": fileType,
         "File": file,
-    };
+      };
 }
-
