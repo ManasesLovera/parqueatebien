@@ -3,22 +3,21 @@ import 'dart:convert';
 import 'ReportScreen.dart';
 
 class PlacaScreen extends StatelessWidget {
-  final String licensePlate;
-  final String vehicleType;
-  final String vehicleColor;
-  final String address;
-  final String status;
-  final String currentAddress;
-  final String reportedDate;
-  final String towedByCraneDate;
-  final String arrivalAtParkinglot;
-  final String releaseDate;
-  final String lat;
-  final String lon;
-  final List photos;
+ final String licensePlate;
+ final String vehicleType;
+ final String vehicleColor;
+ final String address;
+ final String status;
+ final String currentAddress;
+ final String reportedDate;
+ final String towedByCraneDate;
+ final String arrivalAtParkinglot;
+ final String releaseDate;
+ final String lat;
+ final String lon;
+ final List photos;
 
-  const PlacaScreen({
-    super.key,
+  PlacaScreen({
     required this.licensePlate,
     required this.vehicleType,
     required this.vehicleColor,
@@ -53,13 +52,13 @@ class PlacaScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(''),
+        title: Text(''),
         actions: [
           Row(
             children: [
-              const Text('INFO'),
+              Text('INFO'),
               IconButton(
-                icon: const Icon(Icons.info),
+                icon: Icon(Icons.info),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -95,7 +94,7 @@ class PlacaScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16.0),
-            const Center(
+            Center(
               child: Text(
                 'Datos del Vehículo',
                 style: TextStyle(
@@ -115,8 +114,8 @@ class PlacaScreen extends StatelessWidget {
                       status), // Color del botón según el estado
                 ),
                 child: Text(
-                  status,
-                  style: const TextStyle(color: Colors.white),
+                  '$status',
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),
@@ -128,23 +127,23 @@ class PlacaScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _buildInfoRow('Número de Placa', licensePlate),
-                  const Divider(
+                  Divider(
                     height: 50,
                   ),
                   _buildInfoRow('Tipo de Vehículo', vehicleType),
-                  const Divider(
+                  Divider(
                     height: 50,
                   ),
                   _buildInfoRow('Color', vehicleColor),
-                  const Divider(
+                  Divider(
                     height: 50,
                   ),
                   _buildInfoRow('Ubicación de la Retención', address),
-                  const Divider(
+                  Divider(
                     height: 50,
                   ),
                   if (photos.isNotEmpty) ...[
-                    const Text(
+                    Text(
                       'Fotos del Vehículo',
                       style: TextStyle(
                         fontSize: 18,
@@ -186,13 +185,13 @@ class PlacaScreen extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Color(0xFF010F56),
           ),
         ),
-        Text(value, style: const TextStyle(fontSize: 18)),
+        Text(value, style: TextStyle(fontSize: 18)),
         const SizedBox(height: 8.0),
       ],
     );
