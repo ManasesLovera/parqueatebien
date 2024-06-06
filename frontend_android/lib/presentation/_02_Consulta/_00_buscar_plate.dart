@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:frontend_android/presentation/_02_Consulta/_01_detalles_vehiculo.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:logger/logger.dart';
 
 class EnterPlateNumberScreen extends StatefulWidget {
   const EnterPlateNumberScreen({super.key});
@@ -11,6 +16,7 @@ class EnterPlateNumberScreen extends StatefulWidget {
 class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
   final TextEditingController _plateController = TextEditingController();
   bool _isButtonEnabled = false;
+  final Logger _logger = Logger();
 
   @override
   void initState() {
@@ -20,8 +26,72 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
 
   void _checkInput() {
     setState(() {
-      _isButtonEnabled = _plateController.text.isNotEmpty;
+      _isButtonEnabled = _plateController.text.length == 7;
     });
+  }
+
+  Future<void> _searchVehicle() async {
+    const String baseUrl =
+        'http://192.168.0.236:8089'; // Correct your base URL here
+    final String endpoint = '/ciudadanos/${_plateController.text}';
+    final Uri url = Uri.parse('$baseUrl$endpoint');
+
+    try {
+      _logger.i('Attempting to fetch vehicle details...');
+      final response = await http.get(url);
+
+      _logger.i('HTTP response status: ${response.statusCode}');
+      if (!mounted) return;
+
+      if (response.statusCode == 200) {
+        final vehicleData = jsonDecode(response.body);
+        _logger.i('Vehicle details fetched successfully: $vehicleData');
+        if (mounted) {
+          _logger.i('Navigating to VehicleDetailsScreen...');
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) =>
+                  VehicleDetailsScreen(vehicleData: vehicleData),
+            ),
+          );
+        }
+      } else {
+        _logger.e(
+            'Failed to fetch vehicle details. Status code: ${response.statusCode}');
+        if (mounted) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Error'),
+              content: const Text('Vehicle not found or server error.'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      _logger.e('Failed to connect to the server: $e');
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: Text('Failed to connect to the server: $e'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -34,7 +104,7 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 14.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -70,27 +140,32 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 10.h),
+              SizedBox(height: 4.h),
               TextField(
                 controller: _plateController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.h),
+                    borderRadius: BorderRadius.circular(10.r),
                   ),
                   hintText: 'Ingresar dígitos de la placa',
                 ),
+                maxLength: 7,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[A-Z0-9]')),
+                  LengthLimitingTextInputFormatter(7),
+                ],
               ),
-              const Spacer(),
+              SizedBox(height: 200.h),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _isButtonEnabled ? () {} : null,
+                  onPressed: _isButtonEnabled ? _searchVehicle : null,
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 12.h),
                     backgroundColor:
                         _isButtonEnabled ? Colors.blue : Colors.grey,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.h),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
                   child: Text(

@@ -14,7 +14,7 @@ class Main extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          initialRoute: '/login',
+          initialRoute: '/consult',
           routes: AppRoutes.routes,
         );
       },
