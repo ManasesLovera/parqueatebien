@@ -200,10 +200,6 @@ class _MainAppState extends State<MainApp> {
   }
 }
 
-// To parse this JSON data, do
-
-//     final citizen = citizenFromJson(jsonString);
-
 
 Citizen citizenFromJson(String str) => Citizen.fromJson(json.decode(str));
 
