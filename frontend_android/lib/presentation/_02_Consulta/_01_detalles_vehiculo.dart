@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
+import 'dart:convert';
 
 class VehicleDetailsScreen extends StatelessWidget {
-  final List<XFile> imageFileList;
+  final Map<String, dynamic> vehicleData;
 
-  const VehicleDetailsScreen({super.key, required this.imageFileList});
+  const VehicleDetailsScreen({super.key, required this.vehicleData});
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('VehicleDetailsScreen: Received data: $vehicleData');
+
+    List<Map<String, String>> photos = [];
+    if (vehicleData['Photos'] is List) {
+      photos = List<Map<String, String>>.from(
+          vehicleData['Photos'].map((item) => Map<String, String>.from(item)));
+    }
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -18,23 +25,12 @@ class VehicleDetailsScreen extends StatelessWidget {
             Navigator.of(context).pop();
           },
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              // Implement refresh functionality here
-            },
-          ),
-        ],
         centerTitle: true,
-        title: Image.asset(
-          'assets/logo.png', // Replace with your logo asset path
-          height: 40.h,
-        ),
+        title: const Text('Vehicle Details'), // Simple title for now
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 14.h),
+          padding: EdgeInsets.symmetric(horizontal: 14.w),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,44 +44,48 @@ class VehicleDetailsScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       color: Colors.blue,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                Center(
-                  child: Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 20.h, vertical: 10.h),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(20.h),
-                    ),
-                    child: Text(
-                      'Vehículo retenido',
-                      style: TextStyle(
-                        fontSize: 16.h,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
                   ),
                 ),
                 SizedBox(height: 20.h),
                 _buildDetailItem(
                   title: 'Número de placa',
-                  content: 'A8034464',
+                  content: vehicleData['LicensePlate'] ?? 'Desconocido',
                 ),
                 _buildDetailItem(
                   title: 'Tipo de vehículo',
-                  content: 'Automóvil',
+                  content: vehicleData['VehicleType'] ?? 'Desconocido',
                 ),
                 _buildDetailItem(
                   title: 'Color',
-                  content: 'Negro',
+                  content: vehicleData['VehicleColor'] ?? 'Desconocido',
                 ),
                 _buildDetailItem(
                   title: 'Ubicación de la retención',
-                  content: 'C/Ricardo Soto #16, Naco, Santo Domingo',
+                  content: vehicleData['CurrentAddress'] ?? 'Desconocido',
+                ),
+                _buildDetailItem(
+                  title: 'Fecha de reporte',
+                  content: vehicleData['ReportedDate'] ?? 'Desconocido',
+                ),
+                _buildDetailItem(
+                  title: 'Fecha de remolque por grúa',
+                  content: vehicleData['TowedByCraneDate'] ?? 'Desconocido',
+                ),
+                _buildDetailItem(
+                  title: 'Fecha de llegada al estacionamiento',
+                  content: vehicleData['ArrivalAtParkinglot'] ?? 'Desconocido',
+                ),
+                _buildDetailItem(
+                  title: 'Fecha de liberación',
+                  content: vehicleData['ReleaseDate'] ?? 'Desconocido',
+                ),
+                _buildDetailItem(
+                  title: 'Latitud',
+                  content: vehicleData['Lat'] ?? 'Desconocido',
+                ),
+                _buildDetailItem(
+                  title: 'Longitud',
+                  content: vehicleData['Lon'] ?? 'Desconocido',
                 ),
                 SizedBox(height: 20.h),
                 Text(
@@ -101,12 +101,12 @@ class VehicleDetailsScreen extends StatelessWidget {
                   height: 100.h,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: imageFileList.length,
+                    itemCount: photos.length,
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 5.w),
-                        child: Image.file(
-                          File(imageFileList[index].path),
+                        padding: EdgeInsets.symmetric(horizontal: 5.h),
+                        child: Image.memory(
+                          base64Decode(photos[index]['File']!),
                           width: 100.w,
                           fit: BoxFit.cover,
                         ),
@@ -131,7 +131,7 @@ class VehicleDetailsScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: Colors.grey[300]!),
-          borderRadius: BorderRadius.circular(10.h),
+          borderRadius: BorderRadius.circular(10.r),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -144,11 +144,14 @@ class VehicleDetailsScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              content,
-              style: TextStyle(
-                fontSize: 14.h,
-                color: Colors.black,
+            Expanded(
+              child: Text(
+                content,
+                style: TextStyle(
+                  fontSize: 14.h,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.right,
               ),
             ),
           ],
