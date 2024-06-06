@@ -12,6 +12,7 @@ dependencies:
   http: ^1.1.0
   convert: ^3.1.1
   flutter_native_splash: ^2.4.0
+  flutter_screenutil: ^5.9.1
 
 dev_dependencies:
   flutter_test:
@@ -26,11 +27,11 @@ flutter:
     - assets/image/LOGO_PARQUEATE.png
 
 flutter_native_splash:
-  android: true
-  web: false
+  android: false
+  web: true
   ios: false
   color: 
-  image: assets/image/LOGO_INTRANT.png
+  image: assets/image/LOGO_PARQUEATE.png
   background_image: assets/image/fondo_splash.png
   branding: "assets/image/LOGO_INTRANT.png"
   branding_mode: bottom
