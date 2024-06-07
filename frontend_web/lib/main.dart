@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'PlacaScreen.dart';
@@ -16,10 +15,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Parqueate Bien',
       theme: ThemeData(
-        primaryColor: Color.fromARGB(255, 6, 67, 117),
-        colorScheme:
-            ColorScheme.light(primary: Color.fromARGB(255, 203, 225, 243)),
-        scaffoldBackgroundColor: Color.fromARGB(255, 203, 225, 243),
+        primaryColor: Color.fromARGB(255, 1, 15, 117),
+        colorScheme: ColorScheme.light(primary: Color.fromARGB(255, 1, 15, 86)),
+        scaffoldBackgroundColor: Color.fromARGB(255, 0, 157, 212),
       ),
       home: SplashScreen(),
     );
@@ -69,7 +67,7 @@ class _MainAppState extends State<MainApp> {
               reportedDate: citizen.reportedDate,
               towedByCraneDate: citizen.towedByCraneDate,
               arrivalAtParkinglot: citizen.arrivalAtParkinglot,
-              releaseDate: citizen.releaseDate ,
+              releaseDate: citizen.releaseDate,
               lat: citizen.lat,
               lon: citizen.lon,
               photos: citizen.photos,
@@ -105,81 +103,81 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 200.0,
-        flexibleSpace: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/image/LOGO_PARQUEATE.png',
-              height: 100, // Reduce the logo height slightly
-              fit: BoxFit.cover,
-            ),
-            const SizedBox(height: 50),
-            Center(
-              child: Text(
-                'INTRODUZCA EL NÚMERO DE PLACA DE SU VEHÍCULO',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                 color: Color(0xFF010F56)
-                ),
-              ),
-            ),
-          ],
-        ),
-        centerTitle: true,
+        toolbarHeight: 100.0,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            Spacer(),
-            SizedBox(
-              width: 800, // Ajusta el ancho del campo de entrada aquí
-              child: TextField(
-                controller: _licensePlateController,
-                decoration: const InputDecoration(
-                  labelText: 'Ingresar Dígitos De Placa',
-                  border: OutlineInputBorder(),
+      body:LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(0.1),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Center(
+                child:Image.asset(
+                  'assets/image/LOGO_PARQUEATE.png',
+                  height: 100,
+                  fit: BoxFit.cover,
                 ),
-                maxLength: 7, // Limitar la entrada a 7 caracteres
-                onChanged: (value) {
-                  setState(
-                      () {}); // Actualizar el estado para habilitar/deshabilitar el botón
-                },
-              ),
+                ),
+                const SizedBox(height:16.0),
+                Center(
+                  child: Text(
+                    'Introduzca el Numero de Placa de su Vehiculo',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF010F56),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 100),
+                SizedBox(
+                  width: constraints.maxWidth * 0.8,
+                  child: TextField(
+                    controller: _licensePlateController,
+                    decoration: const InputDecoration(
+                      labelText: 'Ingresar Dígitos De Placa',
+                      border: OutlineInputBorder(),
+                    ),
+                    maxLength: 7,
+                    onChanged: (value) {
+                      setState(() {});
+                    },
+                  ),
+                ),
+                const SizedBox(height: 60), // Adjusted spacing
+                if (_isLoading) ...[
+                  CircularProgressIndicator(),
+                  const SizedBox(height: 50),
+                ],
+                if (_errorMessage.isNotEmpty) ...[
+                  Text(_errorMessage),
+                  const SizedBox(height: 10),
+                ],
+                _buildConsultButton(),
+              ],
             ),
-            const SizedBox(height: 500),
-            _isLoading
-                ? CircularProgressIndicator()
-                : _errorMessage.isNotEmpty
-                    ? Column(
-                        children: [
-                          Text(_errorMessage),
-                          const SizedBox(height: 16.0),
-                          _buildConsultButton(),
-                        ],
-                      )
-                    : _buildConsultButton(),
-            Spacer(),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
   Widget _buildConsultButton() {
     return Align(
-      alignment: Alignment.center, // Centrar el botón horizontalmente
+      alignment: Alignment.center,
       child: SizedBox(
-        width: 300, // Ajusta el ancho del botón aquí
+        width: 300,
+        height: 50,
         child: ElevatedButton(
           onPressed:
               _licensePlateController.text.length == 7 ? _getCitizen : null,
           style: ElevatedButton.styleFrom(
             backgroundColor: _licensePlateController.text.length == 7
                 ? Color.fromARGB(255, 0, 18, 153)
-                : Colors.grey,
+                : Color.fromARGB(255, 63, 62, 62),
             padding: const EdgeInsets.symmetric(vertical: 20),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
@@ -190,8 +188,8 @@ class _MainAppState extends State<MainApp> {
               : const Text(
                   'consultar',
                   style: TextStyle(
-                      color:
-                          Colors.white), // Cambiar el color del texto a blanco
+                    color: Colors.white,
+                  ),
                 ),
         ),
       ),
@@ -199,47 +197,42 @@ class _MainAppState extends State<MainApp> {
   }
 }
 
-// To parse this JSON data, do
-
-//     final citizen = citizenFromJson(jsonString);
-
-
 Citizen citizenFromJson(String str) => Citizen.fromJson(json.decode(str));
 
 String citizenToJson(Citizen data) => json.encode(data.toJson());
 
 class Citizen {
-    String licensePlate;
-    String vehicleType;
-    String vehicleColor;
-    String address;
-    String status;
-    String currentAddress;
-    String reportedDate;
-    String towedByCraneDate;
-    String arrivalAtParkinglot;
-    String releaseDate;
-    String lat;
-    String lon;
-    List<Photo> photos;
+  String licensePlate;
+  String vehicleType;
+  String vehicleColor;
+  String address;
+  String status;
+  String currentAddress;
+  String reportedDate;
+  String towedByCraneDate;
+  String arrivalAtParkinglot;
+  String releaseDate;
+  String lat;
+  String lon;
+  List<Photo> photos;
 
-    Citizen({
-        required this.licensePlate,
-        required this.vehicleType,
-        required this.vehicleColor,
-        required this.address,
-        required this.status,
-        required this.currentAddress,
-        required this.reportedDate,
-        required this.towedByCraneDate,
-        required this.arrivalAtParkinglot,
-        required this.releaseDate,
-        required this.lat,
-        required this.lon,
-        required this.photos,
-    });
+  Citizen({
+    required this.licensePlate,
+    required this.vehicleType,
+    required this.vehicleColor,
+    required this.address,
+    required this.status,
+    required this.currentAddress,
+    required this.reportedDate,
+    required this.towedByCraneDate,
+    required this.arrivalAtParkinglot,
+    required this.releaseDate,
+    required this.lat,
+    required this.lon,
+    required this.photos,
+  });
 
-    factory Citizen.fromJson(Map<String, dynamic> json) => Citizen(
+  factory Citizen.fromJson(Map<String, dynamic> json) => Citizen(
         licensePlate: json["LicensePlate"],
         vehicleType: json["VehicleType"],
         vehicleColor: json["VehicleColor"],
@@ -253,9 +246,9 @@ class Citizen {
         lat: json["Lat"],
         lon: json["Lon"],
         photos: List<Photo>.from(json["Photos"].map((x) => Photo.fromJson(x))),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "LicensePlate": licensePlate,
         "VehicleType": vehicleType,
         "VehicleColor": vehicleColor,
@@ -269,25 +262,25 @@ class Citizen {
         "Lat": lat,
         "Lon": lon,
         "Photos": List<dynamic>.from(photos.map((x) => x.toJson())),
-    };
+      };
 }
 
 class Photo {
-    String fileType;
-    String file;
+  String fileType;
+  String file;
 
-    Photo({
-        required this.fileType,
-        required this.file,
-    });
+  Photo({
+    required this.fileType,
+    required this.file,
+  });
 
-    factory Photo.fromJson(Map<String, dynamic> json) => Photo(
+  factory Photo.fromJson(Map<String, dynamic> json) => Photo(
         fileType: json["FileType"],
         file: json["File"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "FileType": fileType,
         "File": file,
-    };
+      };
 }
