@@ -1,16 +1,14 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 
 class ReportScreen extends StatelessWidget {
-  String licensePlate;
-  String address;
-  String status;
-  String currentAddress;
-  String reportedDate;
-  String towedByCraneDate;
-  String arrivalAtParkinglot;
-  String releaseDate;
+ final String licensePlate;
+ final String address;
+ final String status;
+ final String currentAddress;
+ final String reportedDate;
+ final String towedByCraneDate;
+ final String arrivalAtParkinglot;
+ final String releaseDate;
 
   ReportScreen({
     required this.licensePlate,

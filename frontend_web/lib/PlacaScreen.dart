@@ -3,19 +3,19 @@ import 'dart:convert';
 import 'ReportScreen.dart';
 
 class PlacaScreen extends StatelessWidget {
-  String licensePlate;
-  String vehicleType;
-  String vehicleColor;
-  String address;
-  String status;
-  String currentAddress;
-  String reportedDate;
-  String towedByCraneDate;
-  String arrivalAtParkinglot;
-  String releaseDate;
-  String lat;
-  String lon;
-  List photos;
+ final String licensePlate;
+ final String vehicleType;
+ final String vehicleColor;
+ final String address;
+ final String status;
+ final String currentAddress;
+ final String reportedDate;
+ final String towedByCraneDate;
+ final String arrivalAtParkinglot;
+ final String releaseDate;
+ final String lat;
+ final String lon;
+ final List photos;
 
   PlacaScreen({
     required this.licensePlate,
