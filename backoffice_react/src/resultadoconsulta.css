@@ -110,3 +110,8 @@
 .setStatus p {
     align-self: center;
 }
+.setStatus.hidden {
+    margin: 0px;
+    padding: 0px;
+    visibility: hidden;
+}

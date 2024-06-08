@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import imgBusqueda from './img/BUSQUEDA.svg'
 import { Nav } from './nav'
@@ -25,7 +25,7 @@ export function ResultadoConsulta() {
     const licensePlate = location?.state?.licensePlate;
     const username = location?.state?.username;
 
-    useEffect(() => {
+    useLayoutEffect(() => {
 
         const fetchData = async () => {
 
@@ -46,19 +46,44 @@ export function ResultadoConsulta() {
             else {
                 navigate('/resultadoError');
             }
+            
         }
         fetchData()
-
     }, [])
+
+    
+
+    if(licensePlate == null) {
+        navigate('/backoffice', {
+            state: {
+                username: username
+            }
+        });
+        return;
+    }
 
     const statusClassName = status == 'Reportado' ? 'reportado' :
                             status == 'Incautado por grua' ? 'incautado' :
                             status == 'Retenido' ? 'retenido' :
                             status == 'Liberado' ? 'liberado' : '';
 
-    if(licensePlate == null) {
-        navigate('/backoffice');
-        return;
+    async function handleSetStatusButton(e) {
+        let newStatus = '';
+        if(status === 'Incautado por grua') 
+            newStatus = 'Retenido';
+        
+        else if(status === 'Retenido') 
+            newStatus = 'Liberado';
+        
+        else 
+            return;
+
+        await fetch(`${url}/ciudadanos/updateStatus`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({licensePlate: licensePlate, newStatus: newStatus})
+        })
+        navigate(0);
     }
 
     return (
@@ -108,6 +133,14 @@ export function ResultadoConsulta() {
                     
                 </article>
                 <div id="setStatus">
+                    
+                    <article className={`setStatus ${(status == 'Incautado por grua' || status == 'Retenido') ? '' : 'hidden'}`}>
+                        <p>{status == 'Incautado por grua' ? 'Si el vehículo ha sido recibido en el centro de retención favor confirmar.' : 
+                            status == 'Retenido' ? `Multa pagada. Vehículo acepto para liberación.` : ''}</p>
+                        <button onClick={handleSetStatusButton}>{status == 'Incautado por grua' ? 'Vehículo recibido' : 
+                            status == 'Retenido' ? 'Liberar vehículo' : ''}</button>
+                    </article>   
+                    
                 </div>
                 <article className="fotos-vehiculo">
                     <h3>Fotos del vehículo</h3>

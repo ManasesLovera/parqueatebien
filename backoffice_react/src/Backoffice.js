@@ -58,7 +58,6 @@ export default function Backoffice() {
         try{
             const response = await fetch(`${url}/ciudadanos/${licensePlate}`);
             if(response.ok) {
-                //const data = await response.json();
                 navigate('/resultado', {
                     state: {
                         username: username,
@@ -67,15 +66,15 @@ export default function Backoffice() {
                 })
                 setError(null);
             }
-            else if(response == 404){
+            else if(response.status == 404){
                 alert('La placa no existe');
                 return;
             }
-            else if(response == 500){
+            else if(response.status == 500){
                 alert("SERVER ERROR");
                 return;
             }
-            else if(response == 400){
+            else if(response.status == 400){
                 alert("Bad Request");
                 return;
             }

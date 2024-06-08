@@ -40,16 +40,49 @@ nav {
 .user_data .email {
     font-size: 12px;
 }
-.user_data .flechita {
+.flechita {
     font-size: 13px;
     font-weight: bold;
     cursor: pointer;
-    transform: scale(1.7,1) rotate(180deg);
     margin-left: 7px;
 }
-.user_data .flechita:hover {
+.flechitaUnClicked {
+    transform: scale(1.7,1) rotate(180deg);
+}
+.flechitaClicked {
     transform: scale(1.7,1);
-    
+}
+.options {
+    position: fixed;
+    width: 160px;
+    height: 120px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    right: 30px;
+    visibility: hidden;
+    list-style-type: none;
+    display:flex;
+    flex-direction: column;
+    justify-content:space-evenly;
+}
+.options.visible {
+    visibility: visible;    
+}
+.options li {
+    font-size: 11px;
+    padding: 2px 5px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+.options li:hover {
+    background-color: #f7f7f7;
+    cursor: pointer;
+}
+.options li img {
+    padding: 0px 5px;
+    height: 12px;
 }
 a {
     text-decoration: none;
