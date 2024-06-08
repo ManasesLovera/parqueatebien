@@ -1,5 +1,6 @@
 using Microsoft.Data.Sqlite;
 using Models;
+using System.Data;
 
 namespace db;
 
@@ -31,7 +32,9 @@ public class DbConnection
                 ArrivalAtParkinglot VARCHAR(100),
                 ReleaseDate VARCHAR(100),
                 Lat VARCHAR(60),
-                Lon VARCHAR(60)
+                Lon VARCHAR(60),
+                ReportedBy VARCHAR(30),
+                ReleasedBy VARCHAR(30)
             )"; // Status: Reportado, Incautado por grua, Retenido, Liberado
             command.ExecuteNonQuery();
 
@@ -108,12 +111,14 @@ public class DbConnection
                             VehicleColor = reader["VehicleColor"].ToString()!,
                             Status = reader["Status"].ToString()!,
                             CurrentAddress = reader["CurrentAddress"].ToString()!,
+                            ReportedBy = reader["ReportedBy"].ToString()!,
                             ReportedDate = reader["ReportedDate"].ToString()!,
                             TowedByCraneDate = reader["TowedByCraneDate"].ToString()!,
                             ArrivalAtParkinglot = reader["ArrivalAtParkinglot"].ToString()!,
                             ReleaseDate = reader["ReleaseDate"].ToString()!,
                             Lat = reader["Lat"].ToString()!,
                             Lon = reader["Lon"].ToString()!,
+                            ReleasedBy = reader["ReleasedBy"].ToString()!,
                             Photos = GetPhotosByLicensePlate(reader["LicensePlate"].ToString()!),
                         }
                     );
@@ -123,7 +128,6 @@ public class DbConnection
             return citizens;
         }
     }
-
     public static Citizen? GetByLicensePlate(string licensePlate)
     {
 
@@ -151,12 +155,14 @@ public class DbConnection
                     VehicleColor = reader["VehicleColor"].ToString()!,
                     Status = reader["Status"].ToString()!,
                     CurrentAddress = reader["CurrentAddress"].ToString()!,
+                    ReportedBy = reader["ReportedBy"].ToString()!,
                     ReportedDate = reader["ReportedDate"].ToString()!,
                     TowedByCraneDate = reader["TowedByCraneDate"].ToString()!,
                     ArrivalAtParkinglot = reader["ArrivalAtParkinglot"].ToString()!,
                     ReleaseDate = reader["ReleaseDate"].ToString()!,
                     Lat = reader["Lat"].ToString()!,
                     Lon = reader["Lon"].ToString()!,
+                    ReleasedBy = reader["ReleasedBy"].ToString()!,
                     Photos = GetPhotosByLicensePlate(licensePlate)
                 };
             }
@@ -164,7 +170,6 @@ public class DbConnection
             return citizen;
         }
     }
-
     private static List<Pictures> GetPhotosByLicensePlate(string licensePlate)
     {
         using (var connection = new SqliteConnection(connectionString))
@@ -199,7 +204,6 @@ public class DbConnection
             return pictures;
         }
     }
-
     public static bool CitizenExists(string licensePlate)
     {
         using (var connection = new SqliteConnection(connectionString))
@@ -215,7 +219,6 @@ public class DbConnection
             }
         }
     }
-
     public static Citizen? AddCitizen(CitizenRequest citizen)
     {
         using (var connection = new SqliteConnection(connectionString))
@@ -226,11 +229,16 @@ public class DbConnection
             cmd.CommandText = @"
             INSERT INTO Citizens 
             (LicensePlate, VehicleType, VehicleColor, Address, Status, CurrentAddress, 
-            ReportedDate, TowedByCraneDate, ArrivalAtParkinglot, ReleaseDate, Lat, Lon)
+            ReportedDate, TowedByCraneDate, ArrivalAtParkinglot, ReleaseDate, Lat, Lon,
+            ReportedBy, ReleasedBy)
             VALUES 
             (@licensePlate, @vehicleType, @vehicleColor, @address, @status, @currentAddress,
-            @reportedDate, @towedByCraneDate, @arrivalAtParkinglot, @releaseDate, @lat, @lon)
+            @reportedDate, @towedByCraneDate, @arrivalAtParkinglot, @releaseDate, @lat, @lon,
+            @reportedBy, @releasedBy)
             ";
+
+            DateTime utcNow = DateTime.UtcNow;
+            DateTime dominicanNow = utcNow.AddHours(-4);
 
             cmd.Parameters.AddWithValue("@licensePlate", citizen.LicensePlate);
             cmd.Parameters.AddWithValue("@vehicleType", citizen.VehicleType);
@@ -238,12 +246,14 @@ public class DbConnection
             cmd.Parameters.AddWithValue("@address", citizen.Address);
             cmd.Parameters.AddWithValue("@status", "Reportado");
             cmd.Parameters.AddWithValue("@currentAddress", citizen.Address);
-            cmd.Parameters.AddWithValue("@reportedDate", DateTime.Now.ToString("g"));
+            cmd.Parameters.AddWithValue("@reportedDate", dominicanNow.ToString("g"));
             cmd.Parameters.AddWithValue("@towedByCraneDate", "");
             cmd.Parameters.AddWithValue("@arrivalAtParkinglot", "");
             cmd.Parameters.AddWithValue("@releaseDate", "");
             cmd.Parameters.AddWithValue("@lat", citizen.Lat);
             cmd.Parameters.AddWithValue("@lon", citizen.Lon);
+            cmd.Parameters.AddWithValue("@reportedBy", citizen.ReportedBy);
+            cmd.Parameters.AddWithValue("@releasedBy", "");
 
             cmd.ExecuteNonQuery();
 
@@ -265,7 +275,6 @@ public class DbConnection
         }
         return GetByLicensePlate(citizen.LicensePlate);
     }
-    
     public Citizen? UpdateCitizen(Citizen citizen)
     {
         using (var connection = new SqliteConnection(connectionString))
@@ -275,7 +284,7 @@ public class DbConnection
             var command = connection.CreateCommand();
             command.CommandText = @"
             UPDATE Citizens
-            SET VehicleType = @vehicleType, VehicleColor = @vehicleColor, Address = @address, Lat = @lat, Lon = @lon
+            SET VehicleType = @vehicleType, VehicleColor = @vehicleColor, Address = @address
             WHERE LicensePlate = @licensePlate
             ";
 
@@ -283,8 +292,6 @@ public class DbConnection
             command.Parameters.AddWithValue("@vehicleType", citizen.VehicleType);
             command.Parameters.AddWithValue("@vehicleColor", citizen.VehicleColor);
             command.Parameters.AddWithValue("@address", citizen.Address);
-            command.Parameters.AddWithValue("@lat", citizen.Lat);
-            command.Parameters.AddWithValue("@lon", citizen.Lon);
 
             command.ExecuteNonQuery();
 
@@ -292,7 +299,6 @@ public class DbConnection
         }
         return GetByLicensePlate(citizen.LicensePlate);
     }
-
     public static string DeleteCitizen(string licensePlate)
     {
         using (var connection = new SqliteConnection(connectionString))
@@ -326,11 +332,21 @@ public class DbConnection
             connection.Open();
 
             var cmd = connection.CreateCommand();
-            cmd.CommandText = @"UPDATE Citizens
-                              Set Status = @status
+            if(changeStatusDTO.NewStatus == "Liberado")
+            {
+                cmd.CommandText = @"UPDATE Citizens
+                              Set Status = @status, ReleasedBy = @releasedBy 
                               WHERE LicensePlate = @licensePlate";
+            }
+            else
+            {
+                cmd.CommandText = @"UPDATE Citizens
+                              Set Status = @status 
+                              WHERE LicensePlate = @licensePlate";
+            }
             cmd.Parameters.AddWithValue("@status", changeStatusDTO.NewStatus);
             cmd.Parameters.AddWithValue("@licensePlate", changeStatusDTO.LicensePlate);
+            cmd.Parameters.AddWithValue("@releasedBy", changeStatusDTO.Username);
 
             cmd.ExecuteNonQuery();
 
@@ -350,7 +366,9 @@ public class DbConnection
                               CurrentAddress = @currentAddress
                               WHERE 
                               LicensePlate = @licensePlate";
-            cmd.Parameters.AddWithValue("@value", DateTime.Now.ToString("g"));
+            DateTime utcNow = DateTime.UtcNow;
+            DateTime dominicanNow = utcNow.AddHours(-4);
+            cmd.Parameters.AddWithValue("@value", dominicanNow.ToString("g"));
             cmd.Parameters.AddWithValue("@currentAddress", newAddress);
             cmd.Parameters.AddWithValue("@licensePlate", licensePlate);
 

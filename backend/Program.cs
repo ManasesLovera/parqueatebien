@@ -79,11 +79,6 @@ app.MapPost("/ciudadanos", async (HttpContext httpContext, [FromBody] CitizenReq
             httpContext.Response.StatusCode = 400;
             await httpContext.Response.WriteAsync("Missing info or Invalid data");
         }
-        else if (DbConnection.GetByLicensePlate(citizen!.LicensePlate) != null)
-        {
-            httpContext.Response.StatusCode = 409;
-            await httpContext.Response.WriteAsync("409 Conflict: This licensePlate already exists");
-        }
         else
         {
             DbConnection.AddCitizen(citizen);

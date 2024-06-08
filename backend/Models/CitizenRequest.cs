@@ -9,6 +9,7 @@ public class CitizenRequest
     public string Lat { get; set; } = String.Empty;
     public string Lon { get; set; } = String.Empty;
     public List<Pictures> Photos { get; set; } = new List<Pictures>();
+    public string ReportedBy { get; set; } = String.Empty;
 }
 /*
  {
