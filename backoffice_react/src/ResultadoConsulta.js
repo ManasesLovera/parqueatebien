@@ -6,10 +6,11 @@ import './resultadoconsulta.css'
 
 export function ResultadoConsulta() {
 
-    const url = "https://demooriontek.azurewebsites.net"
+    const url = "https://parqueatebiendemo.azurewebsites.net"
     
     const [vehicleType, setVehicleType] = useState('');
     const [vehicleColor, setVehicleColor] = useState('');
+    const [reportedBy, setReportedBy] = useState('');
     const [reportedDate, setReportedDate] = useState('');
     const [status, setStatus] = useState('');
     const [address, setAddress] = useState('');
@@ -17,6 +18,7 @@ export function ResultadoConsulta() {
     const [towedByCraneDate, setTowedByCraneDate] = useState('');
     const [arrivalAtParkinglot, setArrivalAtParkinglot] = useState('');
     const [releaseDate, setReleaseDate] = useState('');
+    const [releasedBy, setReleasedBy] = useState('');
     const [images, setImages] = useState([]);
 
     const navigate = useNavigate();
@@ -34,12 +36,14 @@ export function ResultadoConsulta() {
                 const data = await response.json();
                 setVehicleType(data.VehicleType);
                 setVehicleColor(data.VehicleColor);
+                setReportedBy(data.ReportedBy);
                 setReportedDate(data.ReportedDate);
                 setStatus(data.Status);
                 setAddress(data.Address);
                 setCurrentAddress(data.CurrentAddress);
                 setTowedByCraneDate(data.TowedByCraneDate || 'N/A');
                 setArrivalAtParkinglot(data.ArrivalAtParkinglot || 'N/A');
+                setReleasedBy(data.ReleasedBy || 'N/A');
                 setReleaseDate(data.ReleaseDate || 'N/A');
                 setImages(data.Photos);
             }
@@ -81,7 +85,7 @@ export function ResultadoConsulta() {
         await fetch(`${url}/ciudadanos/updateStatus`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({licensePlate: licensePlate, newStatus: newStatus})
+            body: JSON.stringify({licensePlate: licensePlate, newStatus: newStatus, username: username})
         })
         navigate(0);
     }
@@ -123,7 +127,7 @@ export function ResultadoConsulta() {
                     <div className="dato">
                         <div>
                             <h4 className="subtitleh4">Nombre del agente:</h4>
-                            <p>Juan Manuel Sanchez Ruiz</p>
+                            <p>{reportedBy}</p>
                         </div>
                         <div>
                             <h4 className="subtitleh4">Fecha y hora del reporte:</h4>
@@ -168,7 +172,7 @@ export function ResultadoConsulta() {
                 <h5>Fecha y hora de liberación:</h5>
                 <span>{releaseDate}</span>
                 <h5>Liberado por:</h5>
-                <span>N/A</span>
+                <span>{releasedBy}</span>
             </section>
         </div>
     </>
