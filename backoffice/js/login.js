@@ -22,7 +22,7 @@ btnLogin.addEventListener('click', async (e) =>{
 async function inputFormValidator(user, password) {
     try {
         console.log({"governmentID": user, "password": password});
-        const response = await fetch('http://localhost:8089/users/login/agente', {
+        const response = await fetch(`${url}/users/login/agente`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

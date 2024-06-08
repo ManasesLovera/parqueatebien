@@ -68,17 +68,17 @@ public class UsersCRUD
             var command = connection.CreateCommand();
             command.CommandText = $"SELECT Password FROM Users WHERE GovernmentID = @governmentID";
             command.Parameters.AddWithValue("@governmentID", governmentID);
-
+            string passwordFromDb = String.Empty;
             using (var reader = command.ExecuteReader())
             {
                 if (reader.Read())
                 {
-                    string? passwordFromDb = reader["Password"].ToString();
-                    return password == passwordFromDb;
+                    passwordFromDb = reader["Password"].ToString()!;
                 }
             }
+            connection.Close();
+            return password == passwordFromDb;
         }
-        return false;
     }
     public bool IsValidAdmin(string governmentID, string password)
     {

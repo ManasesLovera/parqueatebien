@@ -1,6 +1,7 @@
 import {displayResult, retrieveData} from './resultadoconsulta.js'
 import {setStatus} from './setStatus.js'
 import {setStatusButton} from './setStatusButton.js'
+import {url} from './url.js'
 
 document.addEventListener("DOMContentLoaded", () => {
     const h2 = document.getElementById('h2');
@@ -14,16 +15,11 @@ async function displayData() {
     const reportados = document.getElementById('reportados');
     const recogidos = document.getElementById('recogidos');
     const retenidos = document.getElementById('retenidos');
-    let data = await fetchData();
+    let data = await (await fetch(`${url}/ciudadanos/estadisticas`)).json();
 
     reportados.innerHTML = data.filter(status => status === 'Reportado').length;
     recogidos.innerHTML = data.filter(status => status === 'Incautado por grua').length;
     retenidos.innerHTML = data.filter(status => status === 'Retenido').length;
-}
-async function fetchData() {
-    let response = await fetch("http://localhost:8089/ciudadanos/estadisticas");
-    let body = await response.json();
-    return body;
 }
 
 const btnConsultarPlaca = document.getElementById('btn-consultarplaca');

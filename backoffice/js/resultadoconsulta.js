@@ -1,3 +1,5 @@
+import {url} from './url.js';
+
 export async function displayResult(licensePlate) {
     const data = await retrieveData(licensePlate);
     if([404,400,500].includes(data))
@@ -83,7 +85,7 @@ export async function displayResult(licensePlate) {
 }
 
 export async function retrieveData(licensePlate) {
-    let response = await fetch(`http://localhost:8089/ciudadanos/${licensePlate}`);
+    let response = await fetch(`${url}/ciudadanos/${licensePlate}`);
     if(!response.ok)
         return response.status;
     let body = await response.json();

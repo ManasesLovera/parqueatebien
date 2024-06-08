@@ -1,3 +1,5 @@
+import {url} from './url.js';
+
 export async function setStatusButton(placa, status) {
     alert(status)
     let newStatus;
@@ -11,7 +13,7 @@ export async function setStatusButton(placa, status) {
         default:
             return;
     }
-    const result = await fetch(`http://localhost:8089/ciudadanos/updateStatus`, {
+    const result = await fetch(`${url}/ciudadanos/updateStatus`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'

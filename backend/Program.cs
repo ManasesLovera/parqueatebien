@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http;
 
+// multiples si ya fueron liberados
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
 {
@@ -70,7 +72,6 @@ app.MapGet("/ciudadanos/{licensePlate}", async (HttpContext context, [FromRoute]
 
 app.MapPost("/ciudadanos", async (HttpContext httpContext, [FromBody] CitizenRequest citizen) =>
 {
-    Console.WriteLine(citizen);
     try
     {
         if (citizen == null || !citizens.ValidateCitizenBody(citizen))
@@ -205,21 +206,16 @@ app.MapGet("/ciudadanos/estadisticas", () => citizens.VehicleStatus());
 
 // Endpoints for users
 
-app.MapPost("users/login/{role}", async (HttpContext httpContext, [FromBody] User user, [FromRoute] string role) =>
+app.MapPost("/users/login", async (HttpContext httpContext, [FromBody] User user) =>
 {
     try
     {
-        if ((user == null || user.GovernmentID == null || user.Password == null || user.Role == null) && citizens.ValidateRole(user!.Role))
-        {
-            httpContext.Response.StatusCode = 400;
-            await httpContext.Response.WriteAsync("Missing info or Invalid data");
-        }
         if (users.IsValid(user.GovernmentID!, user.Password!))
         {
             httpContext.Response.StatusCode = 200;
             await httpContext.Response.WriteAsync("OK");
         }
-        else if (users.GetByGovernmentIDWithRole(user.GovernmentID!, role) != null)
+        else if (users.GetByGovernmentIDWithRole(user.GovernmentID!, user.Role!) != null)
         {
             httpContext.Response.StatusCode = 401;
             await httpContext.Response.WriteAsync("Unathorized - Wrong Password");
