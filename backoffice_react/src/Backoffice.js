@@ -4,7 +4,7 @@ import './backoffice.css'
 import {Nav} from './nav.js'
 import React from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Backoffice() {
 

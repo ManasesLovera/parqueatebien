@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import LogoParqueateBnAzul from './img/LOGO PARQUEATE BN - AZUL.png';
 import userIcon from './img/user.svg'
 import userList from './img/member-list.svg'
