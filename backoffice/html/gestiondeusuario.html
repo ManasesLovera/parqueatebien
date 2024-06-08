@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios</title>
+    <link rel="stylesheet" href="../styles/gestiondeusuarios.css">
+    <link rel="stylesheet" href="popups.css">
+</head>
+<body>
+    <div class="header">
+        <img src="../src/img/LOGO PARQUEATE BN.png" alt="Logo">
+        <div class="user-info">
+            <img src="../src/img/LOGO PARQUEATE BN.png" alt="User Photo">
+            <div>
+                <strong>Juan Pérez</strong><br>
+                j.perez@correo.com
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="title-section">
+            <h1>Gestión de usuarios</h1>
+            <button id="crearUsuarioButton">+Crear nuevo usuario</button>
+        </div>
+    
+        <div class="filters">
+            <h3 class="filter-title">Filtro de consulta</h3>
+            <div class="filter-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" placeholder="Ingresar nombre del usuario">
+            </div>
+            <div class="filter-group">
+                <label for="codigo">Código</label>
+                <input type="text" id="codigo" placeholder="Ingresar código del usuario">
+            </div>
+            <div class="filter-group">
+                <label for="estatus">Estatus</label>
+                <select id="estatus">
+                    <option value="">Seleccionar</option>
+                    <option value="activo">Activo</option>
+                    <option value="inactivo">Inactivo</option>
+                </select>
+            </div>
+            <button>Buscar</button>
+        </div>
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Tipo de usuario</th>
+                    <th>Estatus</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>3456789</td>
+                    <td>Maria Jose Melo Alvares</td>
+                    <td>Agente</td>
+                    <td>Activo</td>
+                    <td class="actions">
+                        <a href="#" class="delete-button">Eliminar</a>
+                        <a href="#" class="edit-button">Editar</a>
+                    </td>
+                </tr>
+                <!-- Repetir esta fila según sea necesario -->
+            </tbody>
+        </table>
+        <div class="pagination">
+            <button>&lt;</button>
+            <button class="active">1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>&gt;</button>
+        </div>
+    </div>
+
+    <!-- Popups -->
+    <div id="crearUsuarioPopup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup('crearUsuarioPopup')">&times;</span>
+          
+            <!-- Contenido del formulario para crear un nuevo usuario -->
+            <!-- Aquí puedes agregar los campos del formulario -->
+        </div>
+    </div>
+
+    <div id="editarUsuarioPopup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup('editarUsuarioPopup')">&times;</span>
+          
+            <!-- Contenido del formulario para editar un usuario -->
+            <!-- Aquí puedes agregar los campos del formulario -->
+        </div>
+    </div>
+
+    <div id="eliminarUsuarioPopup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup('eliminarUsuarioPopup')">&times;</span>
+            <!-- Contenido del formulario para eliminar un usuario -->
+            <!-- Aquí puedes agregar los campos del formulario -->
+        </div>
+    </div>
+
+    <!-- Scripts JavaScript -->
+    <script src="gestiondeusuario.js"></script> <!-- Ruta al archivo JavaScript existente -->
+    <script src="popup.js"></script> <!-- Ruta al archivo JavaScript para los popups -->
+</body>
+</html>

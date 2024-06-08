@@ -51,7 +51,7 @@ class _MainAppState extends State<MainApp> {
     String licensePlate = _licensePlateController.text;
     try {
       var response = await http
-          .get(Uri.parse('http://localhost:8089/ciudadanos/$licensePlate'));
+          .get(Uri.parse('https://parqueatebiendemo.azurewebsites.net/ciudadanos/$licensePlate'));
       if (response.statusCode == 200) {
         var citizen = parseResponse(response.body);
         Navigator.push(
@@ -103,61 +103,81 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 100.0,
+        toolbarHeight: 10.0,
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body:LayoutBuilder(
+      body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(0.1),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Center(
-                child:Image.asset(
-                  'assets/image/LOGO_PARQUEATE.png',
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
-                ),
-                const SizedBox(height:16.0),
-                Center(
-                  child: Text(
-                    'Introduzca el Numero de Placa de su Vehiculo',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF010F56),
+            padding: const EdgeInsets.all(1),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: IntrinsicHeight(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      'assets/image/LOGO_PARQUEATE.png',
+                      height: 125,
+                      fit: BoxFit.cover,
                     ),
-                  ),
-                ),
-                const SizedBox(height: 100),
-                SizedBox(
-                  width: constraints.maxWidth * 0.8,
-                  child: TextField(
-                    controller: _licensePlateController,
-                    decoration: const InputDecoration(
-                      labelText: 'Ingresar Dígitos De Placa',
-                      border: OutlineInputBorder(),
+                    const SizedBox(height: 50),
+                    Center(
+                      child: Text(
+                        'INTRODUZCA EL NÚMERO DE PLACA DE SU VEHÍCULO',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF010F56),
+                        ),
+                      ),
                     ),
-                    maxLength: 7,
-                    onChanged: (value) {
-                      setState(() {});
-                    },
-                  ),
+                    const SizedBox(height: 50),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Placa:',
+                          style: TextStyle(
+                            fontSize: 15,
+                           color: Color.fromARGB(255, 1, 15, 117),
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        SizedBox(
+                          width: constraints.maxWidth * 0.8,
+                          child: TextField(
+                            controller: _licensePlateController,
+                            decoration: const InputDecoration(
+                              hintText: 'Ingresar Dígitos De Placa',
+                              border: OutlineInputBorder(),
+                              filled: true,
+                              fillColor: Color.fromARGB(255, 228, 237, 255),
+                            ),
+                            maxLength: 7,
+                            onChanged: (value) {
+                              setState(() {});
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    if (_isLoading) ...[
+                      CircularProgressIndicator(),
+                      const SizedBox(height: 20),
+                    ],
+                    if (_errorMessage.isNotEmpty) ...[
+                      Text(_errorMessage),
+                      const SizedBox(height: 50),
+                    ],
+                    _buildConsultButton(),
+                  ],
                 ),
-                const SizedBox(height: 60), // Adjusted spacing
-                if (_isLoading) ...[
-                  CircularProgressIndicator(),
-                  const SizedBox(height: 50),
-                ],
-                if (_errorMessage.isNotEmpty) ...[
-                  Text(_errorMessage),
-                  const SizedBox(height: 10),
-                ],
-                _buildConsultButton(),
-              ],
+              ),
             ),
           );
         },
@@ -168,29 +188,31 @@ class _MainAppState extends State<MainApp> {
   Widget _buildConsultButton() {
     return Align(
       alignment: Alignment.center,
-      child: SizedBox(
-        width: 300,
-        height: 50,
-        child: ElevatedButton(
-          onPressed:
-              _licensePlateController.text.length == 7 ? _getCitizen : null,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: _licensePlateController.text.length == 7
-                ? Color.fromARGB(255, 0, 18, 153)
-                : Color.fromARGB(255, 63, 62, 62),
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 20.0), // Ajusta el margen inferior aquí
+        child: SizedBox(
+          width: 300,
+          child: ElevatedButton(
+            onPressed:
+                _licensePlateController.text.length == 7 ? _getCitizen : null,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: _licensePlateController.text.length == 7
+                  ? Color.fromARGB(255, 1, 15, 86)
+                  : Colors.grey,
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
             ),
-          ),
-          child: _isLoading
-              ? CircularProgressIndicator()
-              : const Text(
-                  'consultar',
-                  style: TextStyle(
-                    color: Colors.white,
+            child: _isLoading
+                ? CircularProgressIndicator()
+                : const Text(
+                    'consultar',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
-                ),
+          ),
         ),
       ),
     );
