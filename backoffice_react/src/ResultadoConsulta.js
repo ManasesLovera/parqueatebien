@@ -1,51 +1,78 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import imgBusqueda from './img/BUSQUEDA.svg'
+import { Nav } from './nav'
+import './resultadoconsulta.css'
 
-export async function ResultadoConsulta(props) {
+export function ResultadoConsulta() {
 
     const url = "https://demooriontek.azurewebsites.net"
-    const licensePlate = props.licensePlate;
-    const data = await (await fetch(`${url}/ciudadanos/${licensePlate}`)).json();
+    
+    const [vehicleType, setVehicleType] = useState('');
+    const [vehicleColor, setVehicleColor] = useState('');
+    const [reportedDate, setReportedDate] = useState('');
+    const [status, setStatus] = useState('');
+    const [address, setAddress] = useState('');
+    const [currentAddress, setCurrentAddress] = useState('');
+    const [towedByCraneDate, setTowedByCraneDate] = useState('');
+    const [arrivalAtParkinglot, setArrivalAtParkinglot] = useState('');
+    const [releaseDate, setReleaseDate] = useState('');
+    const [images, setImages] = useState([]);
 
     const navigate = useNavigate();
-    
-    let towedByCraneDate = 'N/A';
-    let currentAddress = 'N/A';
-    let arrivalAtParkinglot = 'N/A';
-    let releaseDate = 'N/A';
+    const location = useLocation();
 
-    
+    const licensePlate = location?.state?.licensePlate;
+    const username = location?.state?.username;
 
+    useEffect(() => {
 
+        const fetchData = async () => {
 
-        towedByCraneDate = data.TowedByCraneDate && data.TowedByCraneDate;
-        currentAddress = data.CurrentAddress === '' ? 'N/A' : data.CurrentAddress;
-        arrivalAtParkinglot = data.ArrivalAtParkinglot === '' ? 'N/A' : data.ArrivalAtParkinglot;
-        releaseDate = data.ReleaseDate === '' ? 'N/A' : data.ReleaseDate;
+            const response = await fetch(`${url}/ciudadanos/${licensePlate}`);
+            if(response.ok) {
+                const data = await response.json();
+                setVehicleType(data.VehicleType);
+                setVehicleColor(data.VehicleColor);
+                setReportedDate(data.ReportedDate);
+                setStatus(data.Status);
+                setAddress(data.Address);
+                setCurrentAddress(data.CurrentAddress);
+                setTowedByCraneDate(data.TowedByCraneDate || 'N/A');
+                setArrivalAtParkinglot(data.ArrivalAtParkinglot || 'N/A');
+                setReleaseDate(data.ReleaseDate || 'N/A');
+                setImages(data.Photos);
+            }
+            else {
+                navigate('/resultadoError');
+            }
+        }
+        fetchData()
 
-        const reportados = document.getElementById('reportados');
-        const recogidos = document.getElementById('recogidos');
-        const retenidos = document.getElementById('retenidos');
-        let estadistica = await (await fetch(`${url}/ciudadanos/estadisticas`)).json();
+    }, [])
 
-        reportados.innerHTML = estadistica.filter(status => status === 'Reportado').length;
-        recogidos.innerHTML = estadistica.filter(status => status === 'Incautado por grua').length;
-        retenidos.innerHTML = estadistica.filter(status => status === 'Retenido').length;
+    const statusClassName = status == 'Reportado' ? 'reportado' :
+                            status == 'Incautado por grua' ? 'incautado' :
+                            status == 'Retenido' ? 'retenido' :
+                            status == 'Liberado' ? 'liberado' : '';
 
-    
+    if(licensePlate == null) {
+        navigate('/backoffice');
+        return;
+    }
 
     return (
         <>
+        <Nav username={username}/>
         <article className="title">
             <h1>RESULTADO DE CONSULTA</h1>
         
-            <button onClick = {()=>{navigate('/backoffice')}} id="btnRealizarOtraConsulta">
+            <button onClick = {()=>{navigate('/backoffice', {state: {username: username}})}} id="btnRealizarOtraConsulta">
                 <img src={imgBusqueda} />
                 Realizar otra consulta</button>
         </article>
 
-        <div classNameName="resultado-consulta">
+        <div className="resultado-consulta">
 
             <section className="datos">
                 <article className="datos-vehiculo">
@@ -53,15 +80,15 @@ export async function ResultadoConsulta(props) {
                     <div className="dato">
                         <div>
                             <h4 className="subtitleh4">No. de Registro y placa:</h4>
-                            <p id="placa">{data.LicensePlate}</p>
+                            <p id="placa">{licensePlate}</p>
                         </div>
                         <div>
                             <h4 className="subtitleh4">Tipo de vehiculo:</h4>
-                            <p>{data.VehicleType}</p>
+                            <p>{vehicleType}</p>
                         </div>
                         <div>
                             <h4 className="subtitleh4">Color:</h4>
-                            <p>{data.VehicleColor}</p>
+                            <p>{vehicleColor}</p>
                         </div>
                     </div>
                     
@@ -75,7 +102,7 @@ export async function ResultadoConsulta(props) {
                         </div>
                         <div>
                             <h4 className="subtitleh4">Fecha y hora del reporte:</h4>
-                            <p>{data.ReportedDate}</p>
+                            <p>{reportedDate}</p>
                         </div>
                     </div>
                     
@@ -85,16 +112,20 @@ export async function ResultadoConsulta(props) {
                 <article className="fotos-vehiculo">
                     <h3>Fotos del vehículo</h3>
                     <div id="imagenes" className="imagenes">
-
+                        {
+                            images.map( (photo,index) => 
+                                <img key={index} src={`${photo.FileType}${photo.File}`} alt={`Photo ${index}`} />
+                            )
+                        }
                     </div>
                 </article>
             </section>
             <section className="informacion">
                 <h3 className="subtitleh3">Información del reporte</h3>
                 <h5>Estatus</h5>
-                <span id="status" className="status">{data.Status}</span>
+                <span id="status" className={`status ${statusClassName}`}>{status}</span>
                 <h5>Ubicación de reporte / recogida:</h5>
-                <span>{data.Address}</span>
+                <span>{address}</span>
                 <h5>Fecha y hora de incautación por grúa:</h5>
                 <span>{towedByCraneDate}</span>
                 <h5>Ubicación actual:</h5>
@@ -109,23 +140,4 @@ export async function ResultadoConsulta(props) {
         </div>
     </>
     )
-    
-}
-
-function ResultNotOk(props) {
-    const navigate = useNavigate();
-    return (
-        <>
-            <h1>{props.status}</h1>
-            <button onClick={()=> navigate('/backoffice')}>Volver Atras</button>
-        </>
-    )
-}
-
-async function retrieveData(licensePlate) {
-    let response = await fetch(`https://demooriontek.azurewebsites.net/ciudadanos/${licensePlate}`);
-    if(!response.ok)
-        return response.status;
-    let body = await response.json();
-    return body;
 }

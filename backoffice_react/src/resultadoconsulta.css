@@ -1,0 +1,112 @@
+:root {
+    --first: #031154;
+    --second: #0da1d8;
+    --third: #f9f9f9;
+}
+.title {
+    background-color: var(--third);
+    padding: 20px 50px;
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+}
+.title h1 {
+    color: var(--first);
+    font-size: 25px;
+    text-align: center;
+    align-self: center;
+}
+.title button, .setStatus button {
+    color: #fff;
+    background-color: var(--first);
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.title button img {
+    height: 20px;
+}
+.resultado-consulta {
+    padding: 30px 50px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+.resultado-consulta .datos {
+    width: 70%;
+}
+.resultado-consulta .informacion {
+    width: 350px;
+    padding: 20px;
+    background-color: var(--third);
+    border-radius: 10px;
+}
+.dato {
+    display: flex;
+    gap: 20%;
+    padding: 20px 0;
+}
+.dato p, .informacion span {
+    font-size: 15px;
+}
+.fotos-vehiculo {
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid #ddd;
+}
+.informacion .status {
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+.reportado {
+    background-color: #ccc;
+}
+.incautado {
+    color: #fefefe;
+    background-color: #ffad0a;
+}
+.retenido {
+    color: #fefefe;
+    background-color: #ff1a1a;
+}
+.liberado {
+    color: #fefefe;
+    background-color: #20ad0a;
+}
+@media screen and (max-width: 800px) {
+    .resultado-consulta {
+        flex-direction: column;
+        justify-content: center;
+    }
+    .resultado-consulta .datos {
+        width: 90%;
+        margin: auto;
+    }
+    .resultado-consulta .informacion {
+        width: 60%;
+        margin: auto;
+    }
+}
+@media screen and (max-width: 625px) {
+    .title h1 {
+        font-size: 18px;
+    }
+    .title button {
+        font-size: 10px;
+    }
+}
+.setStatus {
+    display: flex;
+    border: 2px solid #34f534;
+    border-radius: 10px;
+    padding: 15px;
+    justify-content: space-between;
+}
+.setStatus p {
+    align-self: center;
+}

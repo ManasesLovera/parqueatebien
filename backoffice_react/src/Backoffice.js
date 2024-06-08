@@ -3,21 +3,22 @@ import imgFlecha from './img/pngwing.com.png'
 import './backoffice.css'
 import {Nav} from './nav.js'
 import React from 'react';
-import {useLocation} from 'react-router-dom';
-import { useState, useRef, useEffect, useLayoutEffect } from 'react';
-import { ResultadoConsulta } from './ResultadoConsulta.js';
+import {useLocation, useNavigate} from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
 
 export default function Backoffice() {
 
+    const navigate = useNavigate();
+    const location = useLocation();
+
     let url = 'https://demooriontek.azurewebsites.net';
 
-    const location = useLocation();
     const [licensePlate, setLicensePlate] = useState('');
     const [reportado, setReportado] = useState('');
     const [incautado, setIncautado] = useState('');
     const [retenido, setRetenido] = useState('');
-    const [showResult, setShowResult] = useState(false);
     const [error, setError] = useState(null);
+    const username = location?.state?.username;
 
     useEffect(() => {
 
@@ -57,8 +58,13 @@ export default function Backoffice() {
         try{
             const response = await fetch(`${url}/ciudadanos/${licensePlate}`);
             if(response.ok) {
-                const data = await response.json();
-                setShowResult(true);
+                //const data = await response.json();
+                navigate('/resultado', {
+                    state: {
+                        username: username,
+                        licensePlate: licensePlate.trim()
+                    }
+                })
                 setError(null);
             }
             else if(response == 404){
@@ -78,12 +84,15 @@ export default function Backoffice() {
             alert('Error fetching data: ', err)
         }
     }
-    if(showResult) {
-        return <ResultadoConsulta licensePlate={licensePlate} />;
+
+    if(location?.state?.username == null) {
+        navigate('/login');
+        return;
     }
+
     return (
         <div>
-            <Nav username={location?.state?.username} />
+            <Nav username={username} />
             <main id="main">
                 <article className="consultar_placa">
                     <h1>Consultar placa</h1>

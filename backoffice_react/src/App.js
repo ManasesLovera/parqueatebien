@@ -3,6 +3,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Login from './login.js'
 import Backoffice from './Backoffice'; 
 import {ResultadoConsulta} from './ResultadoConsulta.js'
+import {ResultadoError} from './resulterror.js'
 
 const router = createBrowserRouter([
     {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
     {
         path: '/resultado',
         element: <ResultadoConsulta />
+    },
+    {
+        path: '/resultadoError',
+        element: <ResultadoError />
     }
 ]);
 
