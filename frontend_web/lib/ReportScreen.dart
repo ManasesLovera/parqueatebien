@@ -102,9 +102,9 @@ class ReportScreen extends StatelessWidget {
               ),
             ),
             if (status.toLowerCase() == 'retenido') ...[
-              const SizedBox(height: 250),
+              const SizedBox(height: 200),
               Center(
-                child: _buildTextBox('Instrucciones para Sacar el Vehículo', releaseDate),
+                child: _buildTextBox('Instrucciones para Sacar el Vehículo', 'PUEDE LIBERAR SU VEHICULO VISITANDO EL CENTRO DE RETENCION DE VEHICULOS DE PROGRAMA "PARQUEATE BIEN" UBICADO EN LA AVENIDA TIRADENTES #17, SECTOR NACO, EN HORARIOS D 8:00AM a 7:00PM '),
               ),
             ],
           ],
