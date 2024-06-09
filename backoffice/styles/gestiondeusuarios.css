@@ -1,8 +1,8 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Open Sans', sans-serif;
+    color: #444;
     margin: 0;
     padding: 0;
-    background-color: #f9f9f9;
 }
 
 .header {
@@ -15,7 +15,7 @@ body {
 }
 
 .header img {
-    height: 40px;
+    height: 50px;
 }
 
 .user-info {
@@ -30,7 +30,7 @@ body {
 }
 
 .container {
-    padding: 20px;
+    padding: 10px 10px;
 }
 
 .title-section {
@@ -46,21 +46,23 @@ body {
 
 .title-section button {
     border: 2px solid #010F56;
-    padding: 10px 20px;
+    padding: 10px 10px;
     background-color: #010F56;
     color: #ffffff;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
 }
+
 
 .filters {
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
     flex-wrap: wrap;
-    padding: 10px;
+    padding: 5px 10px 30px;
     background-color: #f9f9f9;
     border-radius: 5px;
+    
 }
 
 .filter-title {
@@ -68,36 +70,54 @@ body {
     margin-bottom:1px;
     width: 100%;
 }
-
 .filter-group {
     display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-width: 100px;
+    flex-direction: row;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan si es necesario */
+    align-items: center; /* Centra los elementos verticalmente */
+    justify-content: flex-start; /* Alinea los elementos a la izquierda */
+    width: auto; /* Ajusta el ancho según el contenido */
+    min-width: 80px;
+    font-size: 0.8em;
+    margin: 5px;
+    padding: 5px; /* Añade un pequeño padding para el contenedor */
+    gap: 10px; /* Espacio entre los elementos */
+    display: inline-block;
+    margin-right: 20px;
 }
-
-.filters label {
+.filter-group label {
+    display: block; /* Hacemos que los label sean bloques para que estén arriba de los inputs */
     margin-bottom: 5px;
     color: #010F56;
 }
+.filters label {
+    margin-bottom: 5px;
+    color: #000000;
+    
+}
 
-.filters input, .filters select {
+.filters input, 
+.filters select {
     padding: 5px;
     border: 1px solid #cccccc;
+    border-color: #010F56;
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 0.8em; /* Reduce el tamaño de la fuente */
+    width: 100px; /* Ajusta el ancho de los inputs y selects */
 }
 
 .filters button {
     padding: 5px 10px;
+    height: 40px;
     background-color: #010F56;
-    color: white;
-    border: none;
-    border-radius: 4px;
+    color: #ffffff;
+    border: 1px;
+    border-radius: 20px;
     cursor: pointer;
-    align-self: flex-end;
+    font-size: 0.8em; /* Reduce el tamaño de la fuente del botón */
+    margin: left 1px;; /* Empuja el botón al final de la fila */
+    margin-top: 20px;
 }
-
 .user-table {
     width: 100%;
     border-collapse: collapse;
@@ -121,10 +141,13 @@ body {
 }
 
 .user-table .actions .edit-button {
-    color: #007bff;
-    text-decoration: none;
+    background-color: #010F56;
+    color: #ffffff;
+    border: 1px;
+    border-radius: 20px;
     cursor: pointer;
-    margin-left: auto;
+    font-size: 0.8em; /* Reduce el tamaño de la fuente del botón */
+    margin: left 1px;;;
 }
 
 .user-table .actions .delete-button {
