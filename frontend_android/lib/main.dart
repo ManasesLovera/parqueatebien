@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/routes/app_routes.dart';
+import 'package:frontend_android/routes/routes.dart';
 
 void main() => runApp(const Main());
 

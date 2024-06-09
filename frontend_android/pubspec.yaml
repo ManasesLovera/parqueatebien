@@ -17,6 +17,7 @@ dependencies:
   image_picker: ^1.0.7
   permission_handler: ^11.3.1
   logger: ^2.2.0
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_lints: ^3.0.0
@@ -33,9 +34,9 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/main_splash.png
-    - assets/back.png
-    - assets/bottom.png
-    - assets/ic_icon.png
-    - assets/main_w.png
-    - assets/main.png
+    - assets/splash/back.png
+    - assets/splash/bottom.png
+    - assets/splash/main.png
+    - assets/launcher_android_12+/main_splash.png
+    - assets/launcher_android_-11/ic_icon.png
+    - assets/whiteback/main_w.png
