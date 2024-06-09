@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/Services/location_Serv/service/location_service.dart';
+import 'package:frontend_android/Services/_location_.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
 

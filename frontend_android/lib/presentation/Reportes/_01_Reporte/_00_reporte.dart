@@ -18,7 +18,7 @@ class WelcomeNewReport extends StatelessWidget {
                 children: [
                   SizedBox(height: 50.h),
                   Image.asset(
-                    'assets/main_w.png',
+                    'assets/whiteback/main_w.png',
                     height: 100.h,
                   ),
                   SizedBox(height: 30.h),

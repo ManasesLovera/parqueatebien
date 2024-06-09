@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/presentation/_02_Consulta/_01_detalles_vehiculo.dart';
+import 'package:frontend_android/presentation/Consulta/_02_Consulta/_01_detalles_vehiculo.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:logger/logger.dart';
@@ -32,12 +32,12 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
 
   Future<void> _searchVehicle() async {
     const String baseUrl =
-        'http://192.168.0.236:8089'; // Correct your base URL here
-    final String endpoint = '/ciudadanos/${_plateController.text}';
+        'https://parqueatebiendemo.azurewebsites.net/ciudadanos/';
+    final String endpoint = _plateController.text;
     final Uri url = Uri.parse('$baseUrl$endpoint');
 
     try {
-      _logger.i('Attempting to fetch vehicle details...');
+      _logger.i('Attempting to fetch vehicle details from $url...');
       final response = await http.get(url);
 
       _logger.i('HTTP response status: ${response.statusCode}');
@@ -112,7 +112,7 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
               SizedBox(height: 30.h),
               Center(
                 child: Image.asset(
-                  'assets/main_w.png',
+                  'assets/whiteback/main_w.png',
                   height: 100.h,
                 ),
               ),

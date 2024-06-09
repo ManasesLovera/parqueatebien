@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:frontend_android/Services/login_method.dart';
 
-class Forgot extends StatelessWidget {
-  const Forgot({super.key});
+class Login extends StatefulWidget {
+  const Login({super.key});
 
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  final TextEditingController _governmentIDController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,44 +25,11 @@ class Forgot extends StatelessWidget {
                 children: [
                   SizedBox(height: 50.h),
                   Image.asset(
-                    'assets/main.png',
+                    'assets/splash/main.png',
                     height: 100.h,
                     //  width: double.infinity,
                   ),
-                  SizedBox(height: 30.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 14.w),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Text(
-                        'Olvidaste tu\n'
-                        'contraseña?',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24.h,
-                          //    fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 14.w),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Text(
-                        'ingresa tu Usuario para recibir instrucciones'
-                        ' de como recuperar tu contraseña.',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14.h,
-                          // fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 50.h),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 14.w),
                     child: Align(
@@ -63,24 +38,24 @@ class Forgot extends StatelessWidget {
                         'Usuario',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 14.h,
+                          fontSize: 10.h,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
+                  SizedBox(height: 0.h),
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 14.w, vertical: 2.h),
                     child: SizedBox(
                       height: 30.h,
                       child: TextField(
+                        controller: _governmentIDController,
                         decoration: InputDecoration(
                           hintText: 'Ingresar número de cédula',
-                          hintStyle: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 13.h,
-                          ),
+                          hintStyle:
+                              TextStyle(color: Colors.grey, fontSize: 10.h),
                           filled: true,
                           fillColor: Colors.white,
                           enabledBorder: OutlineInputBorder(
@@ -101,6 +76,51 @@ class Forgot extends StatelessWidget {
                   SizedBox(height: 20.h),
                   Padding(
                     padding:
+                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 2.h),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Contraseña',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10.h,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 2.h),
+                    child: SizedBox(
+                      height: 30.h,
+                      child: TextField(
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          suffixIcon: const Icon(Icons.remove_red_eye),
+                          hintText: 'Ingresar la contraseña',
+                          hintStyle:
+                              TextStyle(color: Colors.grey, fontSize: 10.h),
+                          filled: true,
+                          fillColor: Colors.white,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.r)),
+                            borderSide: const BorderSide(color: Colors.white70),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.r)),
+                            borderSide: const BorderSide(color: Colors.white),
+                          ),
+                        ),
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 15.h),
+                  Padding(
+                    padding:
                         EdgeInsets.symmetric(horizontal: 14.w, vertical: 0),
                     child: SizedBox(
                       width: double.infinity,
@@ -108,8 +128,8 @@ class Forgot extends StatelessWidget {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              Colors.grey[400]!, // Start color
-                              Colors.grey[600]!, // End color
+                              Colors.grey[400]!,
+                              Colors.grey[600]!,
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -117,7 +137,13 @@ class Forgot extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.r),
                         ),
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            signUserIn(
+                              context,
+                              _governmentIDController,
+                              _passwordController,
+                            );
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
                             shadowColor: Colors.transparent,
@@ -128,7 +154,7 @@ class Forgot extends StatelessWidget {
                                 horizontal: 2.w, vertical: 6.h),
                           ),
                           child: Text(
-                            'Recuperar',
+                            'Ingresar',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16.h,
@@ -139,9 +165,23 @@ class Forgot extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 100.h),
+                  SizedBox(height: 20.h),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/Forgot');
+                    },
+                    child: Text(
+                      'Olvidaste La Contraseña',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12.h,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 120.h),
                   Image.asset(
-                    'assets/bottom.png',
+                    'assets/splash/bottom.png',
                     height: 50.h,
                   )
                 ],
