@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/Services/Api_Serv/api_service.dart';
-import 'package:frontend_android/presentation/_01_Reporte/_04_success_screen.dart';
+import 'package:frontend_android/Services/_api_.dart';
+import 'package:frontend_android/presentation/Reportes/_01_Reporte/_04_success_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 
@@ -35,11 +35,19 @@ var logger = Logger();
 
 class ConfirmationScreenState extends State<ConfirmationScreen> {
   Future<void> _createReport() async {
+    DateTime now = DateTime.now();
+    String formattedDate =
+        "${now.month}/${now.day}/${now.year} ${now.hour}:${now.minute} ${now.hour >= 12 ? 'PM' : 'AM'}";
+
     Map<String, dynamic> reportData = {
       'licensePlate': widget.plateNumber,
       'vehicleType': widget.vehicleType,
       'vehicleColor': widget.color,
       'address': widget.address,
+      'status': "Reportado",
+      "reportedBy": "Agente",
+      'currentAddress': widget.address,
+      'reportedDate': formattedDate,
       'lat': widget.latitude,
       'lon': widget.longitude,
     };
@@ -47,19 +55,24 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
     List<File> images =
         widget.imageFileList.map((xfile) => File(xfile.path)).toList();
 
+    logger.i('Creating report with data: $reportData');
+    logger.i('Images: ${images.length}');
+
     try {
       var response = await ApiService.createReport(reportData, images)
           .timeout(const Duration(seconds: 30));
-      logger.i('Response: ${response.body}'); // Info level log
+      logger.i('Response status: ${response.statusCode}');
+      logger.i('Response body: ${response.body}');
+
       if (!mounted) return;
+
       if (response.statusCode == 200) {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const SuccessScreen()),
         );
       } else {
-        logger
-            .e('Failed to create report: ${response.body}'); // Error level log
+        logger.e('Failed to create report: ${response.body}');
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -75,7 +88,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
         );
       }
     } on TimeoutException catch (e) {
-      logger.e('Request timed out: $e'); // Error level log
+      logger.e('Request timed out: $e');
       if (!mounted) return;
       showDialog(
         context: context,
@@ -91,7 +104,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
         ),
       );
     } catch (e) {
-      logger.e('Failed to create report: $e'); // Error level log
+      logger.e('Failed to create report: $e');
       if (!mounted) return;
       showDialog(
         context: context,

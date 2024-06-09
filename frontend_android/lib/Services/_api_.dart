@@ -6,7 +6,8 @@ import 'package:logger/logger.dart';
 var logger = Logger();
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.0.236:8089/ciudadanos';
+  static const String baseUrl =
+      'https://parqueatebiendemo.azurewebsites.net/ciudadanos';
 
   static Future<http.Response> createReport(
       Map<String, dynamic> reportData, List<File> images) async {
@@ -15,7 +16,7 @@ class ApiService {
       List<int> imageBytes = await image.readAsBytes();
       String base64Image = base64Encode(imageBytes);
       photos.add({
-        "fileType": "image/jpeg",
+        "fileType": "data:image/jpeg;base64,",
         "file": base64Image,
       });
     }
@@ -28,9 +29,13 @@ class ApiService {
       body: jsonEncode(reportData),
     );
 
-    logger.i('Request Body: ${jsonEncode(reportData)}'); // Info level log
-    logger.i('Response Status: ${response.statusCode}'); // Info level log
-    logger.i('Response Body: ${response.body}'); // Info level log
+    logger.i('Request Body: ${jsonEncode(reportData)}');
+    logger.i('Response Status: ${response.statusCode}');
+    logger.i('Response Body: ${response.body}');
+
+    if (response.statusCode != 200) {
+      logger.e('Error: ${response.statusCode} - ${response.reasonPhrase}');
+    }
 
     return response;
   }

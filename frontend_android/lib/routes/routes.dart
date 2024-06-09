@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_android/presentation/_01_Reporte/_00_reporte.dart';
-import 'package:frontend_android/presentation/_01_Reporte/_01_nuevo_reporte.dart';
-import 'package:frontend_android/presentation/_01_Reporte/_02_foto_nuevo_reporte.dart';
-import 'package:frontend_android/presentation/_00_login/forgot_.dart';
-import 'package:frontend_android/presentation/_00_login/login.dart';
-import 'package:frontend_android/presentation/_01_Reporte/_03_confirmation_screen.dart';
-import 'package:frontend_android/presentation/_01_Reporte/_04_success_screen.dart';
-import 'package:frontend_android/presentation/_01_Reporte/_05_error_screen.dart';
-import 'package:frontend_android/presentation/_02_Consulta/_00_buscar_plate.dart';
+import 'package:frontend_android/presentation/Consulta/_02_Consulta/_00_buscar_plate.dart';
+import 'package:frontend_android/presentation/Reportes/_01_Reporte/_00_reporte.dart';
+import 'package:frontend_android/presentation/Reportes/_01_Reporte/_01_nuevo_reporte.dart';
+import 'package:frontend_android/presentation/Reportes/_01_Reporte/_02_foto_nuevo_reporte.dart';
+import 'package:frontend_android/presentation/Reportes/_01_Reporte/_03_confirmation_screen.dart';
+import 'package:frontend_android/presentation/Reportes/_01_Reporte/_04_success_screen.dart';
+import 'package:frontend_android/presentation/Reportes/_01_Reporte/_05_error_screen.dart';
+import 'package:frontend_android/presentation/Welcome/_00_login/_00_login.dart';
+import 'package:frontend_android/presentation/Welcome/_00_login/_01_forgot_.dart';
 
 class AppRoutes {
   static Map<String, WidgetBuilder> routes = {

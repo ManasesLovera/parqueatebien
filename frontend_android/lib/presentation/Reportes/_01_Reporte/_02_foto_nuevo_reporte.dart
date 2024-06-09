@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:frontend_android/presentation/Reportes/_01_Reporte/_03_confirmation_screen.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:frontend_android/presentation/_01_Reporte/_03_confirmation_screen.dart';
 
 class NewReportPhotoScreen extends StatefulWidget {
   final String plateNumber;
