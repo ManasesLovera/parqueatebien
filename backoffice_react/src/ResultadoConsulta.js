@@ -53,11 +53,11 @@ export function ResultadoConsulta() {
             
         }
         fetchData()
-    }, [])
+    }, [url,navigate,licensePlate,vehicleType,vehicleColor,reportedBy,status,address,currentAddress,towedByCraneDate,arrivalAtParkinglot,releasedBy,releaseDate,images])
 
     
 
-    if(licensePlate == null) {
+    if(licensePlate === null) {
         navigate('/backoffice', {
             state: {
                 username: username
@@ -66,10 +66,10 @@ export function ResultadoConsulta() {
         return;
     }
 
-    const statusClassName = status == 'Reportado' ? 'reportado' :
-                            status == 'Incautado por grua' ? 'incautado' :
-                            status == 'Retenido' ? 'retenido' :
-                            status == 'Liberado' ? 'liberado' : '';
+    const statusClassName = status === 'Reportado' ? 'reportado' :
+                            status === 'Incautado por grua' ? 'incautado' :
+                            status === 'Retenido' ? 'retenido' :
+                            status === 'Liberado' ? 'liberado' : '';
 
     async function handleSetStatusButton(e) {
         let newStatus = '';
@@ -87,7 +87,12 @@ export function ResultadoConsulta() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({licensePlate: licensePlate, newStatus: newStatus, username: username})
         })
-        navigate(0);
+        navigate('/resultado', {
+            state: {
+                username: username,
+                licensePlate: licensePlate.trim()
+            }
+        })
     }
 
     return (
@@ -97,7 +102,7 @@ export function ResultadoConsulta() {
             <h1>RESULTADO DE CONSULTA</h1>
         
             <button onClick = {()=>{navigate('/backoffice', {state: {username: username}})}} id="btnRealizarOtraConsulta">
-                <img src={imgBusqueda} />
+                <img src={imgBusqueda} alt="Logo busqueda" />
                 Realizar otra consulta</button>
         </article>
 
@@ -138,11 +143,11 @@ export function ResultadoConsulta() {
                 </article>
                 <div id="setStatus">
                     
-                    <article className={`setStatus ${(status == 'Incautado por grua' || status == 'Retenido') ? '' : 'hidden'}`}>
-                        <p>{status == 'Incautado por grua' ? 'Si el vehículo ha sido recibido en el centro de retención favor confirmar.' : 
-                            status == 'Retenido' ? `Multa pagada. Vehículo acepto para liberación.` : ''}</p>
-                        <button onClick={handleSetStatusButton}>{status == 'Incautado por grua' ? 'Vehículo recibido' : 
-                            status == 'Retenido' ? 'Liberar vehículo' : ''}</button>
+                    <article className={`setStatus ${(status === 'Incautado por grua' || status === 'Retenido') ? '' : 'hidden'}`}>
+                        <p>{status === 'Incautado por grua' ? 'Si el vehículo ha sido recibido en el centro de retención favor confirmar.' : 
+                            status === 'Retenido' ? `Multa pagada. Vehículo acepto para liberación.` : ''}</p>
+                        <button onClick={handleSetStatusButton}>{status === 'Incautado por grua' ? 'Vehículo recibido' : 
+                            status === 'Retenido' ? 'Liberar vehículo' : ''}</button>
                     </article>   
                     
                 </div>
@@ -151,7 +156,7 @@ export function ResultadoConsulta() {
                     <div id="imagenes" className="imagenes">
                         {
                             images.map( (photo,index) => 
-                                <img key={index} src={`${photo.FileType}${photo.File}`} alt={`Photo ${index}`} />
+                                <img key={index} src={`${photo.FileType}${photo.File}`} alt={`${index}`} />
                             )
                         }
                     </div>

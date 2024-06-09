@@ -48,10 +48,10 @@ export default function Backoffice() {
             isMounted = false;
         }
         
-    }, [url])
+    }, [url,reportado,incautado,retenido,error])
 
     async function handleConsultarButton() {
-        if (licensePlate.trim() == '') {
+        if (licensePlate.trim() === '') {
             alert('Ingresa digitos de la placa');
             return;
         }
@@ -66,15 +66,15 @@ export default function Backoffice() {
                 })
                 setError(null);
             }
-            else if(response.status == 404){
+            else if(response.status === 404){
                 alert('La placa no existe');
                 return;
             }
-            else if(response.status == 500){
+            else if(response.status === 500){
                 alert("SERVER ERROR");
                 return;
             }
-            else if(response.status == 400){
+            else if(response.status === 400){
                 alert("Bad Request");
                 return;
             }
@@ -84,7 +84,7 @@ export default function Backoffice() {
         }
     }
 
-    if(location?.state?.username == null) {
+    if(location?.state?.username === null) {
         navigate('/login');
         return;
     }
