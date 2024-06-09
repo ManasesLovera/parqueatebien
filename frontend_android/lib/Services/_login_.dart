@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginSendData {
   static final Logger _logger = Logger();
@@ -24,6 +25,8 @@ class LoginSendData {
       switch (response.statusCode) {
         case 200:
           _logger.i('Inicio de sesión exitoso');
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('loggedInUser', username);
           return true;
         case 401:
           _logger.e('Unauthorized - Wrong Password');
