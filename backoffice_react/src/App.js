@@ -5,6 +5,7 @@ import Backoffice from './Backoffice';
 import {ResultadoConsulta} from './ResultadoConsulta.js'
 import {ResultadoError} from './resulterror.js'
 import {Home} from './home.js'
+import {GestionUsuarios} from './gestionusuario.js';
 
 const router = createBrowserRouter([
     {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
     {
         path: '/resultadoError',
         element: <ResultadoError />
+    },
+    {
+        path: '/gestionusuarios',
+        element: <GestionUsuarios />
     }
 ]);
 

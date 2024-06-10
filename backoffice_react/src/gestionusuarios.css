@@ -1,0 +1,181 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+    color: #444;
+    margin: 0;
+    padding: 0;
+}
+.container-gestionusuarios {
+    background-color: #fff;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #dddddd;
+}
+
+.header img {
+    height: 50px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-info img {
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.container {
+    padding: 10px 10px;
+}
+
+.title-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    color: #010F56;
+}
+
+.title-section button {
+    border: 2px solid #010F56;
+    padding: 10px 10px;
+    background-color: #010F56;
+    color: #ffffff;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    padding: 5px 10px 30px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    
+}
+
+.filter-title {
+    color: #010F56;
+    margin-bottom:1px;
+    width: 100%;
+}
+.filter-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan si es necesario */
+    align-items: center; /* Centra los elementos verticalmente */
+    justify-content: flex-start; /* Alinea los elementos a la izquierda */
+    width: auto; /* Ajusta el ancho según el contenido */
+    min-width: 80px;
+    font-size: 0.8em;
+    margin: 5px;
+    padding: 5px; /* Añade un pequeño padding para el contenedor */
+    gap: 10px; /* Espacio entre los elementos */
+    display: inline-block;
+    margin-right: 20px;
+}
+.filter-group label {
+    display: block; /* Hacemos que los label sean bloques para que estén arriba de los inputs */
+    margin-bottom: 5px;
+    color: #010F56;
+}
+.filters label {
+    margin-bottom: 5px;
+    color: #000000;
+    
+}
+
+.filters input, 
+.filters select {
+    padding: 5px;
+    border: 1px solid #cccccc;
+    border-color: #010F56;
+    border-radius: 5px;
+    font-size: 0.8em; /* Reduce el tamaño de la fuente */
+    width: 100px; /* Ajusta el ancho de los inputs y selects */
+}
+
+.filters button {
+    padding: 5px 10px;
+    height: 40px;
+    background-color: #010F56;
+    color: #ffffff;
+    border: 1px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.8em; /* Reduce el tamaño de la fuente del botón */
+    margin: left 1px;; /* Empuja el botón al final de la fila */
+    margin-top: 20px;
+}
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.user-table th, .user-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #dddddd;
+}
+
+.user-table th {
+    background-color: #f1f1f1;
+}
+
+.user-table .actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.user-table .actions .edit-button {
+    background-color: #010F56;
+    color: #ffffff;
+    border: 1px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.8em; /* Reduce el tamaño de la fuente del botón */
+    margin: left 1px;;;
+}
+
+.user-table .actions .delete-button {
+    text-decoration: none;
+    cursor: pointer;
+    margin-left: auto;
+    color: red;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.pagination button {
+    padding: 10px;
+    border: 1px solid #cccccc;
+    background-color: #ffffff;
+    cursor: pointer;
+    border-radius: 10%;
+}
+
+.pagination button.active {
+    background-color: #007bff;
+    color: #ffffff;
+    border-radius: 20%;
+}
