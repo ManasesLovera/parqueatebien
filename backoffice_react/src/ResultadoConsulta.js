@@ -55,8 +55,6 @@ export function ResultadoConsulta() {
         fetchData()
     }, [url,navigate,licensePlate,vehicleType,vehicleColor,reportedBy,status,address,currentAddress,towedByCraneDate,arrivalAtParkinglot,releasedBy,releaseDate,images])
 
-    
-
     if(licensePlate === null) {
         navigate('/backoffice', {
             state: {
@@ -113,7 +111,11 @@ export function ResultadoConsulta() {
                     <h3>Datos del vehículo</h3>
                     <div className="dato">
                         <div>
-                            <h4 className="subtitleh4">No. de Registro y placa:</h4>
+                            <h4 className="subtitleh4">No. de Registro:</h4>
+                            <p id="placa">{`PB20240610`+licensePlate[1]}</p>
+                        </div>
+                        <div>
+                            <h4 className="subtitleh4">Placa:</h4>
                             <p id="placa">{licensePlate}</p>
                         </div>
                         <div>
