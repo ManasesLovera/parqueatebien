@@ -3,10 +3,27 @@ import {useLocation} from 'react-router-dom'
 import {Nav} from './nav'
 import './gestionusuarios.css'
 
+const users = [
+    { codigo: '001', nombre: 'Usuario 1', tipo: 'Admin', estatus: 'Activo' },
+    { codigo: '002', nombre: 'Usuario 2', tipo: 'Usuario', estatus: 'Inactivo' },
+    { codigo: '003', nombre: 'Usuario 3', tipo: 'Usuario', estatus: 'Activo' }
+];
 
 export function GestionUsuarios() {
 
     const location = useLocation();
+
+    function agregarUsuario() {
+
+    }
+
+    function guardarCambiosUsuario() {
+        
+    }
+
+    function closePopup(e) {
+        e.target.style.display = 'none';
+    }
 
     return (
         <>
@@ -62,7 +79,7 @@ export function GestionUsuarios() {
 
             <div id="crearUsuarioPopup" className="popup">
                 <div className="popup-content">
-                    <span className="close" onclick="closePopup('crearUsuarioPopup')">&times;</span>
+                    <span className="close" onClick={closePopup}>&times;</span>
                     <h2>Nuevo Usuario</h2>
                     <div className="form-row">
                         <div className="form-group">
@@ -101,8 +118,8 @@ export function GestionUsuarios() {
                         </div>
                     </div>
                     <div className="form-row">
-                        <button className="cancelar" onclick="closePopup('crearUsuarioPopup')">Cancelar</button>
-                        <button className="agregar" id="agregarUsuarioBtn" onclick="agregarUsuario()" disabled>Agregar
+                        <button className="cancelar" onClick={closePopup}>Cancelar</button>
+                        <button className="agregar" id="agregarUsuarioBtn" onClick={agregarUsuario} disabled>Agregar
                             usuario</button>
                     </div>
                 </div>
@@ -149,8 +166,8 @@ export function GestionUsuarios() {
                         </div>
                     </div>
                     <div className="form-row">
-                        <button className="cancelar" onclick="closePopup('editarUsuarioPopup')">Cancelar</button>
-                        <button onclick="guardarCambiosUsuario()">Guardar Cambios</button>
+                        <button className="cancelar" onClick={closePopup}>Cancelar</button>
+                        <button onClick={guardarCambiosUsuario}>Guardar Cambios</button>
 
                     </div>
                 </div>
@@ -162,7 +179,7 @@ export function GestionUsuarios() {
                     <h2>Eliminar Usuario</h2>
                     <p>¿Estás seguro de que deseas eliminar este usuario?</p>
                     <div className="form-row">
-                        <button className="cancelar" onclick="closePopup('eliminarUsuarioPopup')">Cancelar</button>
+                        <button className="cancelar" onClick={closePopup}>Cancelar</button>
                         <button onclick="eliminarUsuario('codigoDelUsuario')">Eliminar Usuario</button>      
                     </div>
                 </div>
