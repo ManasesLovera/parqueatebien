@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Color.fromARGB(255, 1, 15, 117),
         colorScheme: ColorScheme.light(primary: Color.fromARGB(255, 1, 15, 86)),
-        scaffoldBackgroundColor: Color.fromARGB(255, 0, 157, 212),
+        scaffoldBackgroundColor: Color.fromARGB(255, 255, 255, 255),
       ),
       home: SplashScreen(),
     );
@@ -155,7 +155,7 @@ class _MainAppState extends State<MainApp> {
                               hintText: 'Ingresar Dígitos De Placa',
                               border: OutlineInputBorder(),
                               filled: true,
-                              fillColor: Color.fromARGB(255, 228, 237, 255),
+                              fillColor: Color.fromARGB(255, 255, 255, 255),
                             ),
                             maxLength: 7,
                             onChanged: (value) {
