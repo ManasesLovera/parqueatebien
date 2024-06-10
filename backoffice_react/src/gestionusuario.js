@@ -16,7 +16,6 @@ export function GestionUsuarios() {
                 <h1>Gestión de usuarios</h1>
                 <button id="agregarUsuarioButton">+Crear nuevo usuario</button>
             </div>
-            <div></div>
             <div className="filters">
                 <h3 className="filter-title">Filtro de consulta</h3>
                 <div className="filter-group">
