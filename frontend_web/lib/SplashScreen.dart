@@ -14,7 +14,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainApp()));
     });
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
