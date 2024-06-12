@@ -76,20 +76,20 @@ body {
 .filter-group {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap; /* Permite que los elementos se envuelvan si es necesario */
-    align-items: center; /* Centra los elementos verticalmente */
-    justify-content: flex-start; /* Alinea los elementos a la izquierda */
-    width: auto; /* Ajusta el ancho según el contenido */
+    flex-wrap: wrap; 
+    align-items: center; 
+    justify-content: flex-start;
+    width: auto; 
     min-width: 80px;
     font-size: 0.8em;
     margin: 5px;
-    padding: 5px; /* Añade un pequeño padding para el contenedor */
-    gap: 10px; /* Espacio entre los elementos */
+    padding: 5px;
+    gap: 10px; 
     display: inline-block;
     margin-right: 20px;
 }
 .filter-group label {
-    display: block; /* Hacemos que los label sean bloques para que estén arriba de los inputs */
+    display: block; 
     margin-bottom: 5px;
     color: #010F56;
 }
@@ -105,8 +105,8 @@ body {
     border: 1px solid #cccccc;
     border-color: #010F56;
     border-radius: 5px;
-    font-size: 0.8em; /* Reduce el tamaño de la fuente */
-    width: 100px; /* Ajusta el ancho de los inputs y selects */
+    font-size: 0.8em; 
+    width: 100px; 
 }
 
 .filters button {
@@ -115,12 +115,13 @@ body {
     background-color: #010F56;
     color: #ffffff;
     border: 1px;
-    border-radius: 20px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 0.8em; /* Reduce el tamaño de la fuente del botón */
-    margin: left 1px;; /* Empuja el botón al final de la fila */
+    font-size: 0.8em; 
+    margin-left: 1px; 
     margin-top: 20px;
 }
+
 .user-table {
     width: 100%;
     border-collapse: collapse;
@@ -130,11 +131,11 @@ body {
 .user-table th, .user-table td {
     padding: 10px;
     text-align: left;
-    border-bottom: 1px solid #dddddd;
+    border-bottom: 1px solid #bdbdbd;
 }
 
 .user-table th {
-    background-color: #f1f1f1;
+    background-color: #ffffff;
 }
 
 .user-table .actions {
@@ -143,22 +144,28 @@ body {
     gap: 10px;
 }
 
-.user-table .actions .edit-button {
-    background-color: #010F56;
-    color: #ffffff;
+.user-table .edit-button {
+    background-color: #ffffff;
+    color: #f30000;
     border: 1px;
     border-radius: 20px;
     cursor: pointer;
-    font-size: 0.8em; /* Reduce el tamaño de la fuente del botón */
-    margin: left 1px;;;
+    font-size: 0.8em; 
+    margin-left: 1px;
 }
 
-.user-table .actions .delete-button {
-    text-decoration: none;
+.user-table .delet-button {
+    background: none;
+    border: none;
     cursor: pointer;
-    margin-left: auto;
-    color: red;
-}
+    padding: 0;
+    background-color: rgb(255, 255, 255); 
+  }
+  
+  .delete-button .fa-trash {
+    vertical-align: middle;
+    margin-left: 5px; 
+  }
 
 .pagination {
     display: flex;
@@ -167,11 +174,11 @@ body {
 }
 
 .pagination button {
-    padding: 10px;
+    padding: 5px;
     border: 1px solid #cccccc;
     background-color: #ffffff;
     cursor: pointer;
-    border-radius: 10%;
+    border-radius: 20%;
 }
 
 .pagination button.active {
