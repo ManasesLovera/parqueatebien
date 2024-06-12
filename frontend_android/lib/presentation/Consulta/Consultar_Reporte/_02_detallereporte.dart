@@ -5,6 +5,21 @@ class ReportInfoScreen extends StatelessWidget {
   final Map<String, dynamic> vehicleData;
   const ReportInfoScreen({super.key, required this.vehicleData});
 
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'reportado':
+        return Colors.grey;
+      case 'incautado por grua':
+        return Colors.orange;
+      case 'retenido':
+        return Colors.red;
+      case 'liberado':
+        return Colors.green;
+      default:
+        return Colors.grey;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +79,8 @@ class ReportInfoScreen extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                     decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: _getStatusColor(
+                          vehicleData['Status'] ?? 'Desconocido'),
                       borderRadius: BorderRadius.circular(30.r),
                     ),
                     child: Text(
@@ -98,7 +114,6 @@ class ReportInfoScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.blueGrey),
                       borderRadius: BorderRadius.circular(10.r),
-                      // color: Colors.grey,
                     ),
                     padding: EdgeInsets.all(10.h),
                     child: Text(

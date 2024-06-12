@@ -1,10 +1,8 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android/Services/_api_.dart';
-import 'package:frontend_android/Services/change_status_dto.dart';
-import 'package:frontend_android/presentation/Reportes/Crear_Reporte/_04_success_screen.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,137 +35,56 @@ var logger = Logger();
 
 class ConfirmationScreenState extends State<ConfirmationScreen> {
   Future<void> _createReport() async {
-    DateTime now = DateTime.now();
-    String formattedDate =
-        "${now.month}/${now.day}/${now.year} ${now.hour}:${now.minute} ${now.hour >= 12 ? 'PM' : 'AM'}";
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? reportedBy = prefs.getString('loggedInUser');
-
-    if (reportedBy == null) {
-      _showDialog('Error', 'No se pudo obtener el usuario actual.');
-      return;
-    }
-
-    // Check current status
-    String? currentStatus = await getVehicleStatus(widget.plateNumber);
-    if (currentStatus == null) {
-      _showDialog('Error', 'No se pudo obtener el estado actual del vehículo.');
-      return;
-    }
-
-    if (currentStatus != 'Reportado') {
-      ChangeStatusDTO changeStatusDTO = ChangeStatusDTO(
-        licensePlate: widget.plateNumber,
-        newStatus: 'Reportado',
-        username: reportedBy,
-      );
-
-      bool updateSuccess =
-          await ApiService.updateVehicleStatus(changeStatusDTO);
-      if (!updateSuccess) {
-        _showDialog('Error', 'No se pudo actualizar el estado del vehículo.');
-        return;
-      }
-    }
-
-    Map<String, dynamic> reportData = {
-      'licensePlate': widget.plateNumber,
-      'vehicleType': widget.vehicleType,
-      'vehicleColor': widget.color,
-      'address': widget.address,
-      'status': "Reportado",
-      "reportedBy": reportedBy,
-      'currentAddress': widget.address,
-      'reportedDate': formattedDate,
-      'lat': widget.latitude,
-      'lon': widget.longitude,
-    };
-
-    List<File> images =
-        widget.imageFileList.map((xfile) => File(xfile.path)).toList();
-
-    logger.i('Creating report with data: $reportData');
-    logger.i('Images: ${images.length}');
-
     try {
+      DateTime now = DateTime.now();
+      String formattedDate =
+          "${now.month}/${now.day}/${now.year} ${now.hour}:${now.minute} ${now.hour >= 12 ? 'PM' : 'AM'}";
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? reportedBy = prefs.getString('loggedInUser');
+
+      if (reportedBy == null) {
+        throw Exception("No se pudo obtener el usuario actual.");
+      }
+
+      Map<String, dynamic> reportData = {
+        'licensePlate': widget.plateNumber,
+        'vehicleType': widget.vehicleType,
+        'vehicleColor': widget.color,
+        'address': widget.address,
+        'status': "Reportado",
+        "reportedBy": reportedBy,
+        'currentAddress': widget.address,
+        'reportedDate': formattedDate,
+        'lat': widget.latitude,
+        'lon': widget.longitude,
+      };
+
+      List<File> images =
+          widget.imageFileList.map((xfile) => File(xfile.path)).toList();
+
+      logger.i('Creating report with data: $reportData');
+      logger.i('Images: ${images.length}');
+
       var response = await ApiService.createReport(reportData, images)
           .timeout(const Duration(seconds: 30));
+
       logger.i('Response status: ${response.statusCode}');
       logger.i('Response body: ${response.body}');
 
       if (!mounted) return;
 
       if (response.statusCode == 200) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const SuccessScreen()),
-        );
+        Navigator.pushNamed(context, '/success');
       } else {
-        logger.e('Failed to create report: ${response.body}');
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to create report: ${response.body}'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Retry'),
-              ),
-            ],
-          ),
-        );
+        throw Exception('Failed to create report: ${response.body}');
       }
-    } on TimeoutException catch (e) {
-      logger.e('Request timed out: $e');
-      if (!mounted) return;
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Error'),
-          content: Text('Request timed out: $e'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Retry'),
-            ),
-          ],
-        ),
-      );
     } catch (e) {
       logger.e('Failed to create report: $e');
       if (!mounted) return;
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Error'),
-          content: Text('Failed to create report: $e'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Retry'),
-            ),
-          ],
-        ),
-      );
+      Navigator.pushNamed(context, '/error',
+          arguments: {'errorMessage': e.toString()});
     }
-  }
-
-  void _showDialog(String title, String content) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(title),
-        content: Text(content),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
   }
 
   @override
@@ -332,8 +249,6 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
       ),
     );
   }
-
-  getVehicleStatus(String plateNumber) {}
 }
 
 class DetailItem extends StatelessWidget {
