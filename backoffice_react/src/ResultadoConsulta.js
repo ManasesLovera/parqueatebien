@@ -147,7 +147,7 @@ export function ResultadoConsulta() {
                     
                     <article className={`setStatus ${(status === 'Incautado por grua' || status === 'Retenido') ? '' : 'hidden'}`}>
                         <p>{status === 'Incautado por grua' ? 'Si el vehículo ha sido recibido en el centro de retención favor confirmar.' : 
-                            status === 'Retenido' ? `Multa pagada. Vehículo acepto para liberación.` : ''}</p>
+                            status === 'Retenido' ? `Multa pagada. Vehículo apto para liberación.` : ''}</p>
                         <button onClick={handleSetStatusButton}>{status === 'Incautado por grua' ? 'Vehículo recibido' : 
                             status === 'Retenido' ? 'Liberar vehículo' : ''}</button>
                     </article>   
