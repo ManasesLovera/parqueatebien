@@ -84,11 +84,10 @@ export default function Backoffice() {
         }
     }
 
-    if(location?.state?.username === null) {
+    if(username === null || username === undefined) {
         navigate('/login');
         return;
     }
-
     return (
         <div>
             <Nav username={username} />

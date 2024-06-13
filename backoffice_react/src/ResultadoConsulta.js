@@ -8,17 +8,7 @@ export function ResultadoConsulta() {
 
     const url = "https://parqueatebiendemo.azurewebsites.net"
     
-    const [vehicleType, setVehicleType] = useState('');
-    const [vehicleColor, setVehicleColor] = useState('');
-    const [reportedBy, setReportedBy] = useState('');
-    const [reportedDate, setReportedDate] = useState('');
-    const [status, setStatus] = useState('');
-    const [address, setAddress] = useState('');
-    const [currentAddress, setCurrentAddress] = useState('');
-    const [towedByCraneDate, setTowedByCraneDate] = useState('');
-    const [arrivalAtParkinglot, setArrivalAtParkinglot] = useState('');
-    const [releaseDate, setReleaseDate] = useState('');
-    const [releasedBy, setReleasedBy] = useState('');
+    const [report, setReport] = useState({});
     const [images, setImages] = useState([]);
 
     const navigate = useNavigate();
@@ -34,28 +24,18 @@ export function ResultadoConsulta() {
             const response = await fetch(`${url}/ciudadanos/${licensePlate}`);
             if(response.ok) {
                 const data = await response.json();
-                setVehicleType(data.VehicleType);
-                setVehicleColor(data.VehicleColor);
-                setReportedBy(data.ReportedBy);
-                setReportedDate(data.ReportedDate);
-                setStatus(data.Status);
-                setAddress(data.Address);
-                setCurrentAddress(data.CurrentAddress);
-                setTowedByCraneDate(data.TowedByCraneDate || 'N/A');
-                setArrivalAtParkinglot(data.ArrivalAtParkinglot || 'N/A');
-                setReleasedBy(data.ReleasedBy || 'N/A');
-                setReleaseDate(data.ReleaseDate || 'N/A');
+                setReport(data);
                 setImages(data.Photos);
             }
             else {
-                navigate('/resultadoError');
+                navigate('/resultadoError', {state: {username: username}});
             }
             
         }
         fetchData()
-    }, [url,navigate,licensePlate,vehicleType,vehicleColor,reportedBy,status,address,currentAddress,towedByCraneDate,arrivalAtParkinglot,releasedBy,releaseDate,images])
+    }, [url,licensePlate,navigate,images,username])
 
-    if(licensePlate === null) {
+    if(licensePlate === null || licensePlate === undefined) {
         navigate('/backoffice', {
             state: {
                 username: username
@@ -64,17 +44,18 @@ export function ResultadoConsulta() {
         return;
     }
 
-    const statusClassName = status === 'Reportado' ? 'reportado' :
-                            status === 'Incautado por grua' ? 'incautado' :
-                            status === 'Retenido' ? 'retenido' :
-                            status === 'Liberado' ? 'liberado' : '';
+    const statusClassName = report.Status === 'Reportado' ? 'reportado' :
+                            report.Status === 'Incautado por grua' ? 'incautado' :
+                            report.Status === 'Retenido' ? 'retenido' :
+                            report.Status === 'Liberado' ? 'liberado' : '';
 
     async function handleSetStatusButton(e) {
+        e.preventDefault();
         let newStatus = '';
-        if(status === 'Incautado por grua') 
+        if(report.Status === 'Incautado por grua') 
             newStatus = 'Retenido';
         
-        else if(status === 'Retenido') 
+        else if(report.Status === 'Retenido') 
             newStatus = 'Liberado';
         
         else 
@@ -116,15 +97,15 @@ export function ResultadoConsulta() {
                         </div>
                         <div>
                             <h4 className="subtitleh4">Placa:</h4>
-                            <p id="placa">{licensePlate}</p>
+                            <p id="placa">{report.LicensePlate}</p>
                         </div>
                         <div>
                             <h4 className="subtitleh4">Tipo de vehiculo:</h4>
-                            <p>{vehicleType}</p>
+                            <p>{report.VehicleType}</p>
                         </div>
                         <div>
                             <h4 className="subtitleh4">Color:</h4>
-                            <p>{vehicleColor}</p>
+                            <p>{report.VehicleColor}</p>
                         </div>
                     </div>
                     
@@ -134,22 +115,22 @@ export function ResultadoConsulta() {
                     <div className="dato">
                         <div>
                             <h4 className="subtitleh4">Nombre del agente:</h4>
-                            <p>{reportedBy}</p>
+                            <p>{report.ReportedBy}</p>
                         </div>
                         <div>
                             <h4 className="subtitleh4">Fecha y hora del reporte:</h4>
-                            <p>{reportedDate}</p>
+                            <p>{report.ReportedDate}</p>
                         </div>
                     </div>
                     
                 </article>
                 <div id="setStatus">
                     
-                    <article className={`setStatus ${(status === 'Incautado por grua' || status === 'Retenido') ? '' : 'hidden'}`}>
-                        <p>{status === 'Incautado por grua' ? 'Si el vehículo ha sido recibido en el centro de retención favor confirmar.' : 
-                            status === 'Retenido' ? `Multa pagada. Vehículo apto para liberación.` : ''}</p>
-                        <button onClick={handleSetStatusButton}>{status === 'Incautado por grua' ? 'Vehículo recibido' : 
-                            status === 'Retenido' ? 'Liberar vehículo' : ''}</button>
+                    <article className={`setStatus ${(report.Status === 'Incautado por grua' || report.Status === 'Retenido') ? '' : 'hidden'}`}>
+                        <p>{report.Status === 'Incautado por grua' ? 'Si el vehículo ha sido recibido en el centro de retención favor confirmar.' : 
+                            report.Status === 'Retenido' ? `Multa pagada. Vehículo apto para liberación.` : ''}</p>
+                        <button onClick={handleSetStatusButton}>{report.Status === 'Incautado por grua' ? 'Vehículo recibido' : 
+                            report.Status === 'Retenido' ? 'Liberar vehículo' : ''}</button>
                     </article>   
                     
                 </div>
@@ -167,19 +148,19 @@ export function ResultadoConsulta() {
             <section className="informacion">
                 <h3 className="subtitleh3">Información del reporte</h3>
                 <h5>Estatus</h5>
-                <span id="status" className={`status ${statusClassName}`}>{status}</span>
+                <span id="status" className={`status ${statusClassName}`}>{report.Status}</span>
                 <h5>Ubicación de reporte / recogida:</h5>
-                <span>{address}</span>
+                <span>{report.Address}</span>
                 <h5>Fecha y hora de incautación por grúa:</h5>
-                <span>{towedByCraneDate}</span>
+                <span>{report.TowedByCraneDate}</span>
                 <h5>Ubicación actual:</h5>
-                <span>{currentAddress}</span>
+                <span>{report.CurrentAddress}</span>
                 <h5>Fecha y hora de llegada al centro:</h5>
-                <span>{arrivalAtParkinglot}</span>
+                <span>{report.ArrivalAtParkinglot}</span>
                 <h5>Fecha y hora de liberación:</h5>
-                <span>{releaseDate}</span>
+                <span>{report.ReleaseDate}</span>
                 <h5>Liberado por:</h5>
-                <span>{releasedBy}</span>
+                <span>{report.ReleasedBy}</span>
             </section>
         </div>
     </>
