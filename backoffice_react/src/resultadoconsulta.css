@@ -48,14 +48,14 @@
 }
 .dato {
     display: flex;
-    gap: 8vw;
+    gap: 7vw;
     padding: 20px 0;
 }
 .dato div {
     width: 137px;
 }
 .dato p, .informacion span {
-    font-size: 15px;
+    font-size: 14px;
 }
 .fotos-vehiculo {
     margin-top: 30px;

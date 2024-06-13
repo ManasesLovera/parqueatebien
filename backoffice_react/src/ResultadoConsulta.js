@@ -24,6 +24,7 @@ export function ResultadoConsulta() {
             const response = await fetch(`${url}/ciudadanos/${licensePlate}`);
             if(response.ok) {
                 const data = await response.json();
+                console.log(data);
                 setReport(data);
                 setImages(data.Photos);
             }
@@ -152,15 +153,15 @@ export function ResultadoConsulta() {
                 <h5>Ubicación de reporte / recogida:</h5>
                 <span>{report.Address}</span>
                 <h5>Fecha y hora de incautación por grúa:</h5>
-                <span>{report.TowedByCraneDate}</span>
+                <span>{report.TowedByCraneDate || 'N/A'}</span>
                 <h5>Ubicación actual:</h5>
                 <span>{report.CurrentAddress}</span>
                 <h5>Fecha y hora de llegada al centro:</h5>
-                <span>{report.ArrivalAtParkinglot}</span>
+                <span>{report.ArrivalAtParkinglot || 'N/A'}</span>
                 <h5>Fecha y hora de liberación:</h5>
-                <span>{report.ReleaseDate}</span>
+                <span>{report.ReleaseDate || 'N/A'}</span>
                 <h5>Liberado por:</h5>
-                <span>{report.ReleasedBy}</span>
+                <span>{report.ReleasedBy || 'N/A'}</span>
             </section>
         </div>
     </>

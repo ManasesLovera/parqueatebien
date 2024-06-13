@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 import FormularioUsuarioModal from './formulario_usuario_modal';
 import FormularioEditarUsuarioModal from './formulario_editar_usuario_modal';
 import FormularioEliminarUsuarioModal from './formulario_eliminar_usuario_modal';
+import busqueda from './img/BUSQUEDA.svg';
 
 
 export function GestionUsuarios() {
@@ -53,10 +54,10 @@ export function GestionUsuarios() {
       <div className="container-gestionusuarios">
         <div className="title-section">
           <h1>Gestión de usuarios</h1>
-          <button onClick={() => openModal('crear')}>+Crear nuevo usuario</button>
+          <button onClick={() => openModal('crear')}><span className='symbol'>+</span>Crear nuevo usuario</button>
         </div>
         <div className="filters">
-          <h3 className="filter-title">Filtro de consulta</h3>
+          <h3 className="filter-title">Filtros de consulta</h3>
           <div className="filter-group">
             <label htmlFor="nombre">Nombre</label>
             <input type="text" id="nombre" placeholder="Ingresar nombre del usuario" />
@@ -73,7 +74,7 @@ export function GestionUsuarios() {
               <option value="inactivo">Inactivo</option>
             </select>
           </div>
-          <button>Buscar</button>
+          <button><img src={busqueda} alt='busqueda' /></button>
         </div>
 
         <h3 className="user-table-title">Listado de usuarios</h3>
