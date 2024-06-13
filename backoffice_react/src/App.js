@@ -5,7 +5,7 @@ import Backoffice from './Backoffice';
 import {ResultadoConsulta} from './ResultadoConsulta.js'
 import {ResultadoError} from './resulterror.js'
 import {Home} from './home.js'
-import {GestionUsuarios} from './gestionusuario.js';
+import {GestionUsuarios} from './gestionusuarios.js';
 
 const router = createBrowserRouter([
     {

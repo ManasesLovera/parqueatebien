@@ -48,8 +48,11 @@
 }
 .dato {
     display: flex;
-    gap: 20%;
+    gap: 8vw;
     padding: 20px 0;
+}
+.dato div {
+    width: 137px;
 }
 .dato p, .informacion span {
     font-size: 15px;
