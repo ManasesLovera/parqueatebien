@@ -22,18 +22,19 @@ export default function Backoffice() {
 
     useEffect(() => {
 
-        let isMounted = true;
+        if(username === null || username === undefined) {
+            navigate('/login');
+            return;
+        }
 
         const fetchData = async () => {
             try {
                 let response = await fetch(`${url}/ciudadanos/estadisticas`);
                 if(response.ok) {
                     let data = await response.json();
-                    if(isMounted) {
-                        setReportado(data.filter(status => status === 'Reportado').length);
-                        setIncautado(data.filter(status => status === 'Incautado por grua').length);
-                        setRetenido(data.filter(status => status === 'Retenido').length);
-                    }
+                    setReportado(data.filter(status => status === 'Reportado').length);
+                    setIncautado(data.filter(status => status === 'Incautado por grua').length);
+                    setRetenido(data.filter(status => status === 'Retenido').length);
                 } else {
                     alert('Error fetching data: ', response.statusText);
                 }
@@ -43,12 +44,8 @@ export default function Backoffice() {
             }
         }
         fetchData();
-
-        return () => {
-            isMounted = false;
-        }
         
-    }, [url,reportado,incautado,retenido,error])
+    }, [username,navigate,url,reportado,incautado,retenido,error])
 
     async function handleConsultarButton() {
         if (licensePlate.trim() === '') {
@@ -84,10 +81,7 @@ export default function Backoffice() {
         }
     }
 
-    if(username === null || username === undefined) {
-        navigate('/login');
-        return;
-    }
+    
     return (
         <div>
             <Nav username={username} />
