@@ -15,6 +15,7 @@ class EnterPlateNumberScreen extends StatefulWidget {
 
 class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
   final TextEditingController _plateController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   bool _isButtonEnabled = false;
   final Logger _logger = Logger();
 
@@ -38,7 +39,7 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
 
     try {
       _logger.i('Attempting to fetch vehicle details from $url...');
-    final response = await http.get(url).timeout(const Duration(seconds: 45));
+      final response = await http.get(url).timeout(const Duration(seconds: 45));
 
       _logger.i('HTTP response status: ${response.statusCode}');
       if (!mounted) return;
@@ -56,41 +57,26 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
           );
         }
       } else {
-        _logger.e(
-            'Failed to fetch vehicle details. Status code: ${response.statusCode}');
-        if (mounted) {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Error'),
-              content: const Text('Vehicle not found or server error.'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('OK'),
-                ),
-              ],
-            ),
-          );
-        }
+        _handleError('Vehicle not found or server error.');
       }
     } catch (e) {
-      _logger.e('Failed to connect to the server: $e');
-      if (mounted) {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to connect to the server: $e'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('OK'),
-              ),
-            ],
+      _handleError('Failed to connect to the server: $e');
+    }
+  }
+
+  void _handleError(String message) {
+    _logger.e('Error: $message');
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          duration: const Duration(seconds: 3),
+          action: SnackBarAction(
+            label: 'OK',
+            onPressed: () {},
           ),
-        );
-      }
+        ),
+      );
     }
   }
 
@@ -105,83 +91,104 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 14.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 30.h),
-              Center(
-                child: Image.asset(
-                  'assets/whiteback/main_w.png',
-                  height: 100.h,
-                ),
-              ),
-              SizedBox(height: 30.h),
-              Center(
-                child: Text(
-                  'Introduzca el número de placa de su vehículo',
-                  style: TextStyle(
-                    fontSize: 18.h,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              SizedBox(height: 30.h),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Placa',
-                  style: TextStyle(
-                    fontSize: 16.h,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+          padding: EdgeInsets.symmetric(horizontal: 14.w),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 30.h),
+                Center(
+                  child: Image.asset(
+                    'assets/whiteback/main_w.png',
+                    height: 50.h,
                   ),
                 ),
-              ),
-              SizedBox(height: 4.h),
-              TextField(
-                controller: _plateController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  hintText: 'Ingresar dígitos de la placa',
-                ),
-                maxLength: 7,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(
-                      RegExp(r'^[A-Z][0-9]{0,6}$')),
-                  LengthLimitingTextInputFormatter(7),
-                ],
-                keyboardType: TextInputType.text,
-              ),
-              SizedBox(height: 200.h),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isButtonEnabled ? _searchVehicle : null,
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
-                    backgroundColor:
-                        _isButtonEnabled ? Colors.blue : Colors.grey,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                  ),
+                SizedBox(height: 65.h),
+                Center(
                   child: Text(
-                    'Consultar',
+                    'Introduzca el número de placa de su vehículo',
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 16.h,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(height: 30.h),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Placa',
+                    style: TextStyle(
+                      color: Colors.blueAccent,
+                      fontSize: 12.h,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: 20.h),
-            ],
+                SizedBox(height: 4.h),
+                SizedBox(
+                  height: 40.h,
+                  child: TextFormField(
+                    controller: _plateController,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 10.w, horizontal: 20.w),
+                      hintText: 'Ingresar Dígitos de la placa',
+                      hintStyle: TextStyle(color: Colors.grey, fontSize: 10.h),
+                      filled: true,
+                      fillColor: Colors.white,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.r)),
+                        borderSide: const BorderSide(color: Colors.black12),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.r)),
+                        borderSide: const BorderSide(color: Colors.black),
+                      ),
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r'^[A-Z][0-9]{0,6}$')),
+                      LengthLimitingTextInputFormatter(7),
+                    ],
+                    keyboardType: TextInputType.text,
+                    validator: (value) {
+                      if (value!.isEmpty || value.length < 7) {
+                        return 'Ingrese una placa válida';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                SizedBox(height: 270.h),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _isButtonEnabled ? _searchVehicle : null,
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 14.w),
+                      backgroundColor:
+                          _isButtonEnabled ? Colors.blue : Colors.grey,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                    ),
+                    child: Text(
+                      'Consultar',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.h,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.h),
+              ],
+            ),
           ),
         ),
       ),

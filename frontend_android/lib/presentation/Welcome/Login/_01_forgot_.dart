@@ -10,7 +10,7 @@ class Forgot extends StatelessWidget {
       backgroundColor: const Color.fromARGB(255, 9, 157, 210),
       body: SafeArea(
         child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 2.w),
+            padding: EdgeInsets.symmetric(horizontal: 2.h),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -18,7 +18,7 @@ class Forgot extends StatelessWidget {
                   SizedBox(height: 50.h),
                   Image.asset(
                     'assets/splash/main.png',
-                    height: 100.h,
+                    height: 95.h,
                     //  width: double.infinity,
                   ),
                   SizedBox(height: 30.h),
@@ -27,28 +27,25 @@ class Forgot extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.topCenter,
                       child: Text(
-                        'Olvidaste tu\n'
-                        'contraseña?',
+                        'Olvidaste tu contraseña?',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 24.h,
-                          //    fontWeight: FontWeight.bold,
+                          fontSize: 22.h,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 15.h),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 14.w),
                     child: Align(
                       alignment: Alignment.topCenter,
                       child: Text(
-                        'ingresa tu Usuario para recibir instrucciones'
-                        ' de como recuperar tu contraseña.',
+                        'Ingresa tu Usuario para recibir instrucciones de como recuperar tu contraseña.',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 14.h,
-                          // fontWeight: FontWeight.bold,
+                          fontSize: 11.h,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -63,7 +60,7 @@ class Forgot extends StatelessWidget {
                         'Usuario',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 14.h,
+                          fontSize: 10.h,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -79,7 +76,7 @@ class Forgot extends StatelessWidget {
                           hintText: 'Ingresar número de cédula',
                           hintStyle: TextStyle(
                             color: Colors.grey,
-                            fontSize: 13.h,
+                            fontSize: 10.h,
                           ),
                           filled: true,
                           fillColor: Colors.white,
@@ -108,8 +105,8 @@ class Forgot extends StatelessWidget {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              Colors.grey[400]!, // Start color
-                              Colors.grey[600]!, // End color
+                              Colors.grey[100]!, // Start color
+                              Colors.grey[200]!, // End color
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -139,7 +136,7 @@ class Forgot extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 100.h),
+                  SizedBox(height: 135.h),
                   Image.asset(
                     'assets/splash/bottom.png',
                     height: 50.h,

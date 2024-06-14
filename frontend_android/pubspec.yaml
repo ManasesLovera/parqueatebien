@@ -18,6 +18,7 @@ dependencies:
   permission_handler: ^11.3.1
   logger: ^2.2.0
   shared_preferences: ^2.2.3
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_lints: ^3.0.0
@@ -27,6 +28,7 @@ dev_dependencies:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: false
+  wed: false
   image_path: "assets/ic_icon.png"
   min_sdk_android: 21
 
@@ -40,3 +42,7 @@ flutter:
     - assets/launcher_android_12+/main_splash.png
     - assets/launcher_android_-11/ic_icon.png
     - assets/whiteback/main_w.png
+    - assets/icons/photo.svg
+    - assets/icons/add.svg
+    - assets/icons/car.svg 
+    - assets/icons/create.svg

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:frontend_android/Services/change_status_dto.dart';
+import 'package:frontend_android/Services/update_status/change_status_dto.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
@@ -34,21 +34,24 @@ class ApiService {
     logger.i('Response Status: ${response.statusCode}');
     logger.i('Response Body: ${response.body}');
 
-    if (response.statusCode != 200) {
-      logger.e('Error: ${response.statusCode} - ${response.reasonPhrase}');
+    switch (response.statusCode) {
+      case 200:
+        logger.i('Success: ${response.body}');
+        break;
+      case 400:
+        logger.w('Bad Request: ${response.reasonPhrase}');
+        break;
+      case 500:
+        logger.e('Server Error: ${response.reasonPhrase}');
+        break;
+      default:
+        logger.e(
+            'Unexpected Error: ${response.statusCode} - ${response.reasonPhrase}');
+        break;
     }
 
     return response;
   }
 
   static updateVehicleStatus(ChangeStatusDTO changeStatusDTO) {}
-  
-  
 }
-
-
-
-
-
-
-
