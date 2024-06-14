@@ -71,7 +71,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
 
       logger.i('Response status: ${response.statusCode}');
       logger.i('Response body: ${response.body}');
-    if (!mounted) return;
+      if (!mounted) return;
 
       switch (response.statusCode) {
         case 200:
@@ -115,6 +115,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
           arguments: {'errorMessage': e.toString()});
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -311,29 +312,6 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                 ),
                 SizedBox(height: 10.h),
                 if (widget.latitude != null && widget.longitude != null)
-                  // Column(
-                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                  //   children: [
-                  //     Text(
-                  //       'Datos Geográficos',
-                  //       style: TextStyle(
-                  //         fontSize: 16.h,
-                  //         fontWeight: FontWeight.bold,
-                  //         color: Colors.grey,
-                  //       ),
-                  //     ),
-                  //     SizedBox(height: 10.h),
-                  //     DetailItem(
-                  //       title: 'Latitud',
-                  //       content: widget.latitude!,
-                  //     ),
-                  //     DetailItem(
-                  //       title: 'Longitud',
-                  //       content: widget.longitude!,
-                  //     ),
-                  //   ],
-                  // ),
-                  // SizedBox(height: 20.h),
                   Text(
                     'Fotos del vehículo',
                     style: TextStyle(

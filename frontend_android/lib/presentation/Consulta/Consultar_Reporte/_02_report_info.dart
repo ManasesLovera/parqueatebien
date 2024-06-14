@@ -38,7 +38,7 @@ class ReportInfoScreen extends StatelessWidget {
                       Center(
                         child: Image.asset(
                           'assets/whiteback/main_w.png',
-                          height: 60.h,
+                          height: 50.h,
                         ),
                       ),
                       Positioned(
@@ -55,40 +55,48 @@ class ReportInfoScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 40.h),
                 Center(
-                  child: Text('Información del reporte',
-                      style: TextStyle(
-                        fontSize: 14.h,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                      textAlign: TextAlign.center),
-                ),
-                SizedBox(height: 10.h),
-                Center(
                   child: Text(
-                    'Status:',
+                    'Informacion del reporte',
                     style: TextStyle(
-                      fontSize: 12.h,
+                      fontSize: 16.h,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Colors.blue,
                     ),
                   ),
                 ),
-                Center(
-                  child: Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-                    decoration: BoxDecoration(
-                      color: _getStatusColor(
-                          vehicleData['Status'] ?? 'Desconocido'),
-                      borderRadius: BorderRadius.circular(30.r),
-                    ),
+                SizedBox(height: 20.h),
+                SizedBox(
+                  child: Align(
+                    alignment: Alignment.center,
                     child: Text(
-                      vehicleData['Status'] ?? 'Desconocido',
+                      'Status',
                       style: TextStyle(
                         fontSize: 12.h,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Colors.black,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 2.h, vertical: 2.w),
+                  child: Center(
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 60.w, vertical: 2.h),
+                      decoration: BoxDecoration(
+                        color: _getStatusColor(
+                            vehicleData['Status'] ?? 'Desconocido'),
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      child: Text(
+                        vehicleData['Status'] ?? 'Desconocido',
+                        style: TextStyle(
+                          fontSize: 12.h,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -106,7 +114,7 @@ class ReportInfoScreen extends StatelessWidget {
                   title: 'Fecha y hora de llegada al centro',
                   content: vehicleData['ArrivalAtParkinglot'] ?? 'Desconocido',
                 ),
-                SizedBox(height: 80.h),
+                SizedBox(height: 50.h),
                 Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 14.h, vertical: 4.w),
