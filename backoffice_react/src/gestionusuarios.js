@@ -15,6 +15,10 @@ export function GestionUsuarios() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [currentModal, setCurrentModal] = useState(null);
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [nombre, setNombre] = useState('');
+  const [codigo, setCodigo] = useState('');
+  const [status, setStatus] = useState('');
 
   const customStyles = {
     content: {
@@ -30,27 +34,9 @@ export function GestionUsuarios() {
   };
 
   useEffect(() => {
-    const storedUsers = JSON.parse(localStorage.getItem('users')) || [
-      {
-        codigo: '001',
-        nombre: 'Admin',
-        tipo: 'Admin',
-        status: 'Activo'
-      },
-      {
-        codigo: '002',
-        nombre: 'Agente',
-        tipo: 'Agente',
-        status: 'Activo'
-      },
-      {
-        codigo: '003',
-        nombre: 'Agente2',
-        tipo: 'Agente',
-        status: 'Inactivo'
-      }
-    ];
+    const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
     setUsers(storedUsers);
+    setFilteredUsers(storedUsers);
   },[setUsers]);
 
   const closeModal = () => {
@@ -63,11 +49,27 @@ export function GestionUsuarios() {
     setModalIsOpen(true);
   };
 
+  function filterUsers() {
+    const filtered = users.filter( user => {
+      return (
+        (nombre === '' || user.nombre === nombre) &&
+        (codigo === '' || user.codigo === codigo) &&
+        (status === '' || user.status.toLowerCase() === status.toLowerCase())
+      )
+    });
+    setFilteredUsers(filtered);
+  }
+
+  function reset() {
+    setNombre('');
+    setCodigo('');
+    setStatus('');
+    setFilteredUsers(users);
+  }
 
   return (
     <>
       <Nav username={location?.state?.username} />
-      <div className="container-gestionusuarios">
         <div className="title-section">
           <h1>Gestión de usuarios</h1>
           <button onClick={() => openModal('crear')}><span className='symbol'>+</span>Crear nuevo usuario</button>
@@ -76,21 +78,24 @@ export function GestionUsuarios() {
           <h3 className="filter-title">Filtros de consulta</h3>
           <div className="filter-group">
             <label htmlFor="nombre">Nombre</label>
-            <input type="text" id="nombre" placeholder="Ingresar nombre del usuario" />
+            <input type="text" placeholder="Ingresar nombre del usuario"
+            value={nombre} onChange={(e) => setNombre(e.target.value)} />
           </div>
           <div className="filter-group">
-            <label htmlFor="codigo">Código</label>
-            <input type="text" id="codigo" placeholder="Ingresar código del usuario" />
+            <label>Código</label>
+            <input type="text" placeholder="Ingresar código del usuario"
+            value={codigo} onChange={(e) => setCodigo(e.target.value)} />
           </div>
           <div className="filter-group">
             <label htmlFor="estatus">Estatus</label>
-            <select id="estatus">
+            <select id="estatus" value={status} onChange={(e) => setStatus(e.target.value)} >
               <option value="">Seleccionar</option>
               <option value="activo">Activo</option>
               <option value="inactivo">Inactivo</option>
             </select>
           </div>
-          <button><img src={busqueda} alt='busqueda' /></button>
+          <button onClick={filterUsers} ><img src={busqueda} alt='busqueda' /></button>
+          <button onClick={reset} >Reset</button>
         </div>
 
         <h3 className="user-table-title">Listado de usuarios</h3>
@@ -106,7 +111,7 @@ export function GestionUsuarios() {
           </thead>
           <tbody id="user-list">
             {
-              users.map((user, index) => (<User key={index} {...user} />))
+              filteredUsers.map((user, index) => (<User key={index} {...user} />))
             }
           </tbody>
         </table>
@@ -117,7 +122,6 @@ export function GestionUsuarios() {
           <button>3</button>
           <button>&gt;</button>
         </div>
-      </div>
 
       <Modal
         isOpen={modalIsOpen}

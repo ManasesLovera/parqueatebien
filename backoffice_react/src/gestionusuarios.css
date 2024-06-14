@@ -11,10 +11,6 @@ body {
     color: #444;
 
 }
-.container-gestionusuarios {
-    background-color: #fff;
-}
-
 .header {
     display: flex;
     justify-content: space-between;
@@ -23,16 +19,13 @@ body {
     background-color: #ffffff;
     border-bottom: 1px solid #dddddd;
 }
-
 .header img {
     height: 50px;
 }
-
 .user-info {
     display: flex;
     align-items: center;
 }
-
 .user-info img {
     height: 40px;
     border-radius: 50%;
@@ -125,7 +118,7 @@ body {
 }
 
 .user-table th, .user-table td {
-    padding: 10px;
+    padding: 5px;
     text-align: left;
     border-bottom: 1px solid #bdbdbd;
 }
@@ -142,7 +135,11 @@ body {
 .buttons {
     display:flex;
     justify-content: flex-end;
-    padding-right: 20px;
+}
+.buttons button {
+    padding: 0;
+    padding-right: 10px;
+    margin: 5px;
 }
 .btnDelete {
     background-color: #fff;

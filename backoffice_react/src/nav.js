@@ -42,7 +42,7 @@ export function Nav(props) {
                 <li onClick={handleGestionUsuariosClick}><img src={userIcon} alt="icono" />Gestión de usuarios</li>
                 <li><img src={userList} alt="icono" />Gestión de roles</li>
                 <li><img src={lock} alt="icono" />Cambiar contraseña</li>
-                <li><img src={logout} alt="icono" />Cerrar sesión</li>
+                <li onClick={() => navigate('/login')}><img src={logout} alt="icono" />Cerrar sesión</li>
             </ul>
         </>
     )
