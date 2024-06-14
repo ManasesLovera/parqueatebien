@@ -11,45 +11,46 @@ class WelcomeNewReport extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 14.w),
+            padding: EdgeInsets.symmetric(horizontal: 12.h),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 50.h),
+                  SizedBox(height: 20.h),
                   Image.asset(
                     'assets/whiteback/main_w.png',
-                    height: 100.h,
+                    height: 60.h,
                   ),
-                  SizedBox(height: 30.h),
+                  SizedBox(height: 40.h),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 14.w),
+                    padding: EdgeInsets.symmetric(horizontal: 12.h),
                     child: Align(
                       alignment: Alignment.topCenter,
                       child: Text(
                         'Bienvenido',
                         style: TextStyle(
                           color: Colors.blue,
-                          fontSize: 24.sp,
+                          fontSize: 26.h,
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 4.h),
+                  SizedBox(height: 3.h),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 14.w),
+                    padding: EdgeInsets.symmetric(horizontal: 14.h),
                     child: Align(
                       alignment: Alignment.topCenter,
                       child: Text(
-                        'Que deseas realizar hoy ',
+                        '¿Que deseas realizar hoy?',
                         style: TextStyle(
                           color: Colors.grey,
-                          fontSize: 16.sp,
+                          fontSize: 13.h,
                         ),
                       ),
                     ),
                   ),
                   SizedBox(height: 30.h),
+                  // Icon
                   ReportButton(
                     icon: Icons.add,
                     title: 'Crear reporte',

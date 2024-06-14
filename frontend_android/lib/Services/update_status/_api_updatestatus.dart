@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:frontend_android/Services/change_status_dto.dart';
+import 'package:frontend_android/Services/update_status/change_status_dto.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:logger/logger.dart';

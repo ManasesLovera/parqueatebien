@@ -27,7 +27,6 @@ class _LoginState extends State<Login> {
                   Image.asset(
                     'assets/splash/main.png',
                     height: 100.h,
-                    //  width: double.infinity,
                   ),
                   SizedBox(height: 50.h),
                   Padding(
@@ -96,6 +95,7 @@ class _LoginState extends State<Login> {
                       height: 30.h,
                       child: TextField(
                         controller: _passwordController,
+                        obscureText: true,
                         decoration: InputDecoration(
                           suffixIcon: const Icon(Icons.remove_red_eye),
                           hintText: 'Ingresar la contraseña',
@@ -118,7 +118,7 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 15.h),
+                  SizedBox(height: 16.h),
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 14.w, vertical: 0),
@@ -128,8 +128,8 @@ class _LoginState extends State<Login> {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              Colors.grey[400]!,
-                              Colors.grey[600]!,
+                              Colors.grey[100]!,
+                              Colors.grey[200]!,
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -151,13 +151,13 @@ class _LoginState extends State<Login> {
                               borderRadius: BorderRadius.circular(10.r),
                             ),
                             padding: EdgeInsets.symmetric(
-                                horizontal: 2.w, vertical: 6.h),
+                                horizontal: 2.h, vertical: 6.w),
                           ),
                           child: Text(
                             'Ingresar',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 16.h,
+                              fontSize: 15.h,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -171,7 +171,7 @@ class _LoginState extends State<Login> {
                       Navigator.of(context).pushNamed('/Forgot');
                     },
                     child: Text(
-                      'Olvidaste La Contraseña',
+                      '¿Olvidaste La Contraseña?',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 12.h,
@@ -179,7 +179,7 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 120.h),
+                  SizedBox(height: 140.h),
                   Image.asset(
                     'assets/splash/bottom.png',
                     height: 50.h,

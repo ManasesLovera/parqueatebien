@@ -71,13 +71,42 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
 
       logger.i('Response status: ${response.statusCode}');
       logger.i('Response body: ${response.body}');
+    if (!mounted) return;
 
-      if (!mounted) return;
-
-      if (response.statusCode == 200) {
-        Navigator.pushNamed(context, '/success');
-      } else {
-        throw Exception('Failed to create report: ${response.body}');
+      switch (response.statusCode) {
+        case 200:
+          Navigator.pushNamed(context, '/success');
+          break;
+        case 400:
+          Navigator.pushNamed(
+            context,
+            '/error',
+            arguments: {
+              'errorMessage':
+                  'El reporte con esta información ya existe. Por favor, verifique los detalles e intente nuevamente.'
+            },
+          );
+          break;
+        case 500:
+          Navigator.pushNamed(
+            context,
+            '/error',
+            arguments: {
+              'errorMessage':
+                  'Ocurrió un error en el servidor. Por favor, inténtelo más tarde.'
+            },
+          );
+          break;
+        default:
+          Navigator.pushNamed(
+            context,
+            '/error',
+            arguments: {
+              'errorMessage':
+                  'Ocurrió un error inesperado: ${response.statusCode} - ${response.reasonPhrase}'
+            },
+          );
+          break;
       }
     } catch (e) {
       logger.e('Failed to create report: $e');
@@ -86,110 +115,256 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
           arguments: {'errorMessage': e.toString()});
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 14.w),
+          padding: EdgeInsets.symmetric(horizontal: 10.h),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 10.h),
-                Center(
-                  child: Text(
-                    'Confirmación',
-                    style: TextStyle(
-                      fontSize: 24.h,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                Center(
-                  child: Text(
-                    'Datos del vehículo',
-                    style: TextStyle(
-                      fontSize: 16.h,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ),
                 SizedBox(height: 20.h),
-                DetailItem(
-                  title: 'Número de placa',
-                  content: widget.plateNumber,
-                ),
-                DetailItem(
-                  title: 'Tipo de vehículo',
-                  content: widget.vehicleType,
-                ),
-                DetailItem(
-                  title: 'Color',
-                  content: widget.color,
-                ),
-                DetailItem(
-                  title: 'Dirección',
-                  content: widget.address,
-                ),
-                SizedBox(height: 20.h),
-                if (widget.latitude != null && widget.longitude != null)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Datos Geográficos',
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.h),
+                  child: SizedBox(
+                    child: Center(
+                      child: Text(
+                        'Confirmación',
                         style: TextStyle(
-                          fontSize: 16.h,
+                          fontSize: 20.h,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 15.h,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.h),
+                  child: SizedBox(
+                    child: Center(
+                      child: Text(
+                        'Datos del vehículo',
+                        style: TextStyle(
+                          fontSize: 14.h,
                           fontWeight: FontWeight.bold,
                           color: Colors.grey,
                         ),
                       ),
-                      SizedBox(height: 10.h),
-                      DetailItem(
-                        title: 'Latitud',
-                        content: widget.latitude!,
-                      ),
-                      DetailItem(
-                        title: 'Longitud',
-                        content: widget.longitude!,
-                      ),
-                    ],
-                  ),
-                SizedBox(height: 20.h),
-                Text(
-                  'Fotos del vehículo',
-                  style: TextStyle(
-                    fontSize: 16.h,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+                    ),
                   ),
                 ),
+                SizedBox(
+                  height: 30.h,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0.h, vertical: 0.h),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Numero de placa',
+                      style: TextStyle(
+                        color: Colors.blueAccent,
+                        fontSize: 14.h,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0.h, vertical: 0.h),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      widget.plateNumber,
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 11.h,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 6.h,
+                ),
+                Divider(
+                  height: 10.h,
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                //
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0.h, vertical: 0.h),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Tipo de vehiculo',
+                      style: TextStyle(
+                        color: Colors.blueAccent,
+                        fontSize: 14.h,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0.h, vertical: 0.h),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      widget.vehicleType,
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 11.h,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 6.h,
+                ),
+                Divider(
+                  height: 10.h,
+                ),
+                SizedBox(
+                  height: 6.h,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0.h, vertical: 0.h),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Color',
+                      style: TextStyle(
+                        color: Colors.blueAccent,
+                        fontSize: 14.h,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0.h, vertical: 0.h),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      widget.color,
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 11.h,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 6.h,
+                ),
+                Divider(
+                  height: 10.h,
+                ),
+                SizedBox(
+                  height: 6.h,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0.h, vertical: 0.h),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Direccion',
+                      style: TextStyle(
+                        color: Colors.blueAccent,
+                        fontSize: 14.h,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 0.h),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      widget.address,
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 11.h,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 6.h,
+                ),
+                Divider(
+                  height: 10.h,
+                ),
+                SizedBox(height: 10.h),
+                if (widget.latitude != null && widget.longitude != null)
+                  // Column(
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: [
+                  //     Text(
+                  //       'Datos Geográficos',
+                  //       style: TextStyle(
+                  //         fontSize: 16.h,
+                  //         fontWeight: FontWeight.bold,
+                  //         color: Colors.grey,
+                  //       ),
+                  //     ),
+                  //     SizedBox(height: 10.h),
+                  //     DetailItem(
+                  //       title: 'Latitud',
+                  //       content: widget.latitude!,
+                  //     ),
+                  //     DetailItem(
+                  //       title: 'Longitud',
+                  //       content: widget.longitude!,
+                  //     ),
+                  //   ],
+                  // ),
+                  // SizedBox(height: 20.h),
+                  Text(
+                    'Fotos del vehículo',
+                    style: TextStyle(
+                      fontSize: 14.h,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
                 SizedBox(height: 10.h),
                 SizedBox(
-                  height: 100.h,
+                  height: 65.h,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: widget.imageFileList.length,
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 5.w),
-                        child: Image.file(
-                          File(widget.imageFileList[index].path),
-                          width: 100.w,
-                          fit: BoxFit.cover,
-                        ),
-                      );
+                          padding: EdgeInsets.symmetric(horizontal: 2.h),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10.0),
+                            child: Image.file(
+                              File(widget.imageFileList[index].path),
+                              width: 100.w,
+                              fit: BoxFit.cover,
+                            ),
+                          ));
                     },
                   ),
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 30.h),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 14.w),
+                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
                   child: Column(
                     children: [
                       SizedBox(
@@ -197,8 +372,8 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                         child: ElevatedButton(
                           onPressed: _createReport,
                           style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 12.h),
-                            backgroundColor: Colors.blue,
+                            padding: EdgeInsets.symmetric(vertical: 8.h),
+                            backgroundColor: Colors.blueAccent,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.r),
                             ),
@@ -213,7 +388,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 10.h),
+                      SizedBox(height: 5.h),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -221,7 +396,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                             Navigator.pop(context);
                           },
                           style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 12.h),
+                            padding: EdgeInsets.symmetric(vertical: 8.h),
                             backgroundColor: Colors.white,
                             side: const BorderSide(color: Colors.blue),
                             shape: RoundedRectangleBorder(
@@ -241,56 +416,10 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: 20.h),
+                //   SizedBox(height: 10.h)
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class DetailItem extends StatelessWidget {
-  final String title;
-  final String content;
-
-  const DetailItem({super.key, required this.title, required this.content});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 5.h),
-      child: Container(
-        padding: EdgeInsets.all(10.h),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.grey[300]!),
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 14.h,
-                color: Colors.grey,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Expanded(
-              child: Text(
-                content,
-                style: TextStyle(
-                  fontSize: 14.h,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.right,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
         ),
       ),
     );

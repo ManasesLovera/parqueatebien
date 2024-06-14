@@ -19,17 +19,16 @@ class ReportButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(8.0),
+      //  borderRadius: BorderRadius.circular(20),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 14.h),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.blue),
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
           children: [
             Icon(icon, color: Colors.blue, size: 36),
-            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -42,7 +41,8 @@ class ReportButton extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     subtitle,
-                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    textAlign: TextAlign.center
                   ),
                 ],
               ),
