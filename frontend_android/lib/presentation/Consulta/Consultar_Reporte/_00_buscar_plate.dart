@@ -109,7 +109,7 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
                   child: Text(
                     'Introduzca el número de placa de su vehículo',
                     style: TextStyle(
-                      fontSize: 16.sp,
+                      fontSize: 16.h,
                       fontWeight: FontWeight.bold,
                       color: Colors.blue,
                     ),
@@ -123,21 +123,21 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
                     'Placa',
                     style: TextStyle(
                       color: Colors.blueAccent,
-                      fontSize: 12.sp,
+                      fontSize: 12.h,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
                 SizedBox(height: 4.h),
                 SizedBox(
-                  height: 30.h,
+                  height: 40.h,
                   child: TextFormField(
                     controller: _plateController,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(
-                          vertical: 10.w, horizontal: 14.w),
+                          vertical: 10.w, horizontal: 20.w),
                       hintText: 'Ingresar Dígitos de la placa',
-                      hintStyle: TextStyle(color: Colors.grey, fontSize: 10.sp),
+                      hintStyle: TextStyle(color: Colors.grey, fontSize: 10.h),
                       filled: true,
                       fillColor: Colors.white,
                       enabledBorder: OutlineInputBorder(
@@ -163,13 +163,13 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
                     },
                   ),
                 ),
-                SizedBox(height: 250.h),
+                SizedBox(height: 270.h),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _isButtonEnabled ? _searchVehicle : null,
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 12.w),
+                      padding: EdgeInsets.symmetric(vertical: 14.w),
                       backgroundColor:
                           _isButtonEnabled ? Colors.blue : Colors.grey,
                       shape: RoundedRectangleBorder(
@@ -180,7 +180,7 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
                       'Consultar',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 16.sp,
+                        fontSize: 16.h,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
