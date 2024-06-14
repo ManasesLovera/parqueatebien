@@ -1,11 +1,29 @@
-import React from 'react';
+import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import './formularios.css';
 
 const FormularioUsuarioModal = (props) => {
 
+    const [codigo, setCodigo] = useState('');
+    const [nombre, setNombre] = useState('');
+    const [apellido, setApellido] = useState('');
+    const [tipo, setTipo] = useState('');
+    const [status, setStatus] = useState('');
+    const navigate = useNavigate();
+
     function agregarUsuario() {
-        alert('Usuario agregado!')
-        console.log('Usuario agregado')
+        if(!codigo || !nombre || !apellido || !tipo || !status){
+            alert('Por favor completa todos los campos');
+            return;
+        }
+        const newUser = {
+            codigo, nombre, apellido, status, tipo
+        }
+        const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
+        const newUsers = [...storedUsers, newUser];
+        localStorage.setItem('users', JSON.stringify(newUsers));
+        props.closeModal();
+        navigate(0);
     }
 
     return (
@@ -26,36 +44,36 @@ const FormularioUsuarioModal = (props) => {
                     <div className="form-row">
                         <div className="form-group">
                             <label className='label'>Código de empleado</label>
-                            <input type="text" placeholder="Ingrese el código de empleado" />
+                            <input type="text" placeholder="Ingrese el código de empleado" value={codigo} onChange={(e) => setCodigo(e.target.value)}/>
                         </div>
                         <div className="form-group">
                             <label className='label'>Estatus</label>
-                            <select>
+                            <select value={status} onChange={(e) => setStatus(e.target.value)}>
                                 <option value="">Seleccionar</option>
-                                <option value="activo">Activo</option>
-                                <option value="inactivo">Inactivo</option>
+                                <option value="Activo">Activo</option>
+                                <option value="Inactivo">Inactivo</option>
                             </select>
                         </div>
                     </div>
                     <div className="form-row">
                         <div className="form-group">
-                        <label className='label'>Nombre</label>
-                            <input type="text" placeholder="Ingrese el nombre" />
+                            <label className='label'>Nombre</label>
+                            <input type="text" placeholder="Ingrese el nombre" value={nombre} onChange={(e) => setNombre(e.target.value)}/>
                         </div>
                         <div className="form-group">
-                        <label className='label'>Apellido</label>
-                            <input type="text" placeholder="Ingrese el apellido" />
+                            <label className='label'>Apellido</label>
+                            <input type="text" placeholder="Ingrese el apellido" value={apellido} onChange={(e) => setApellido(e.target.value)}/>
                         </div>
                     </div>
                     <div className="form-row">
                         <div className="form-group">
                         <label className='label'>Asignación de rol</label>
-                            <select>
+                            <select value={tipo} onChange={(e) => setTipo(e.target.value)}>
                                 <option value="">Seleccionar</option>
-                                <option value="agente">Agente</option>
-                                <option value="admin">Admin</option>
-                                <option value="supervisor">Supervisor</option>
-                                <option value="grua">Grua</option>
+                                <option value="Agente">Agente</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Supervisor">Supervisor</option>
+                                <option value="Grua">Grua</option>
                             </select>
                         </div>
                     </div>

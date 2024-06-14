@@ -1,10 +1,33 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import {useNavigate} from 'react-router-dom';
 import './formularios.css';
 
 const FormularioEliminarUsuarioModal = (props) => {
 
+    const [users, setUsers] = useState([]);
+    const navigate = useNavigate();
+
+    useEffect( () => {
+        setUsers(JSON.parse(localStorage.getItem('users')) || []);
+    }, [setUsers]);
+
     function eliminarUsuario() {
-        alert('Eliminado!')
+        const toDelete = JSON.parse(localStorage.getItem('toDelete')) || '';
+        if(toDelete === '') {
+            alert('No hay usuario para eliminar');
+            return;
+        }
+        const userToDelete = users.find(user => user.nombre === toDelete);
+        if(!userToDelete) {
+            alert(`El usuario ${toDelete} no existe`);
+            return;
+        }
+        const newUsers = users.filter(user => user.nombre !== toDelete)
+        setUsers(newUsers);
+        localStorage.setItem('users', JSON.stringify(newUsers));
+        localStorage.removeItem('toDelete');
+        props.closeModal();
+        navigate(0);
     }
 
     return (

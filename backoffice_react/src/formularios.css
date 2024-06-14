@@ -10,6 +10,17 @@
     background-color: #00000080;
     z-index: 999;
 }
+.modal { 
+    width: 500px;
+    position: absolute;
+    top: 800%;
+    left: 80%;
+    transform: translate(-50%, -50%);
+    background-color: #fff; 
+    padding: 20px; 
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3)
+}
 .popup-title {
     color: #031154;
     display: flex;

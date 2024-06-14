@@ -136,14 +136,21 @@ export function GestionUsuarios() {
     return (
       <tr>
         <td>{props.codigo}</td>
-        <td>{props.nombre}</td>
+        <td>{props.nombre + ' ' + props.apellido}</td>
         <td>{props.tipo}</td>
         <td>{props.status}</td>
         <td className='buttons'>
   
-          <button className='btnDelete' onClick={() => openModal('eliminar')}><img src={deleteButton} alt='Delete button'/></button>
+          <button className='btnDelete' onClick={() => {
+            localStorage.setItem('toDelete', JSON.stringify(props.nombre))
+            openModal('eliminar')
+          }
+            }><img src={deleteButton} alt='Delete button'/></button>
           
-          <button className='btnEdit' onClick={() => openModal('editar')}>Editar</button>
+          <button className='btnEdit' onClick={() => {
+            localStorage.setItem('toEdit', JSON.stringify(props))
+            openModal('editar')
+          }}>Editar</button>
           
         </td>
       </tr>
