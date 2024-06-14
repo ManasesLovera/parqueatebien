@@ -26,9 +26,9 @@ class DetailItem extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 12.h,
+                    fontSize: 11.h,
                     color: Colors.grey,
-                    fontWeight: FontWeight.bold,
+                   // fontWeight: FontWeight.bold,
                   ),
                 ),
                 Expanded(

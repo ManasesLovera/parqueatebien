@@ -44,3 +44,5 @@ flutter:
     - assets/whiteback/main_w.png
     - assets/icons/photo.svg
     - assets/icons/add.svg
+    - assets/icons/car.svg 
+    - assets/icons/create.svg

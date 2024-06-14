@@ -551,7 +551,7 @@ class NewReportScreenState extends State<NewReportScreen> {
                         ],
                       ),
                     ),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 50.h),
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 14.h, vertical: 14.w),
