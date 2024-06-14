@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/Services/login_method.dart';
+import 'package:frontend_android/Services/login/login_method.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});

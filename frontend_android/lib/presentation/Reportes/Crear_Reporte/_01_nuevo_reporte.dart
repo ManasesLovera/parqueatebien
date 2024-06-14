@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/Services/_location_.dart';
+import 'package:frontend_android/Services/location/_location_.dart';
 import 'package:frontend_android/config/Report_Buttons/geo_labels.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
@@ -551,7 +551,7 @@ class NewReportScreenState extends State<NewReportScreen> {
                         ],
                       ),
                     ),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 50.h),
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 14.h, vertical: 14.w),
