@@ -26,7 +26,7 @@ class ErrorScreen extends StatelessWidget {
               Text(
                 'Error al crear reporte',
                 style: TextStyle(
-                  fontSize: 18.sp,
+                  fontSize: 18.h,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
@@ -36,7 +36,7 @@ class ErrorScreen extends StatelessWidget {
               Text(
                 errorMessage,
                 style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: 14.h,
                   color: Colors.black,
                 ),
                 textAlign: TextAlign.center,
@@ -59,7 +59,7 @@ class ErrorScreen extends StatelessWidget {
                     'Reintentar',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16.sp,
+                      fontSize: 16.h,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

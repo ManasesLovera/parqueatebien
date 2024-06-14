@@ -38,7 +38,7 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
 
     try {
       _logger.i('Attempting to fetch vehicle details from $url...');
-    final response = await http.get(url).timeout(const Duration(seconds: 45));
+      final response = await http.get(url).timeout(const Duration(seconds: 45));
 
       _logger.i('HTTP response status: ${response.statusCode}');
       if (!mounted) return;
