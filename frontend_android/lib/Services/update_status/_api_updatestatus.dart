@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'package:frontend_android/Services/update_status/change_status_dto.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:logger/logger.dart';
 
 class ApiService {
@@ -33,5 +31,25 @@ class ApiService {
       _logger.e('Error al conectar con el servidor: $e');
       return false;
     }
+  }
+}
+
+class ChangeStatusDTO {
+  final String licensePlate;
+  final String newStatus;
+  final String username;
+
+  ChangeStatusDTO({
+    required this.licensePlate,
+    required this.newStatus,
+    required this.username,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'LicensePlate': licensePlate,
+      'NewStatus': newStatus,
+      'Username': username,
+    };
   }
 }
