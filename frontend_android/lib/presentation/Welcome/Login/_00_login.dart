@@ -18,10 +18,9 @@ class _LoginState extends State<Login> {
       backgroundColor: const Color.fromARGB(255, 9, 157, 210),
       body: SafeArea(
         child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 2.w),
+            padding: EdgeInsets.symmetric(horizontal: 0.h),
             child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(height: 50.h),
                   Image.asset(
@@ -30,7 +29,7 @@ class _LoginState extends State<Login> {
                   ),
                   SizedBox(height: 50.h),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 14.w),
+                    padding: EdgeInsets.symmetric(horizontal: 14.h),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -46,7 +45,7 @@ class _LoginState extends State<Login> {
                   SizedBox(height: 0.h),
                   Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 2.h),
+                        EdgeInsets.symmetric(horizontal: 14.h, vertical: 1.h),
                     child: SizedBox(
                       height: 30.h,
                       child: TextField(
@@ -75,7 +74,7 @@ class _LoginState extends State<Login> {
                   SizedBox(height: 20.h),
                   Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 2.h),
+                        EdgeInsets.symmetric(horizontal: 14.h, vertical: 1.h),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -90,7 +89,7 @@ class _LoginState extends State<Login> {
                   ),
                   Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 2.h),
+                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 1.h),
                     child: SizedBox(
                       height: 30.h,
                       child: TextField(
@@ -121,7 +120,7 @@ class _LoginState extends State<Login> {
                   SizedBox(height: 16.h),
                   Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 0),
+                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 0.h),
                     child: SizedBox(
                       width: double.infinity,
                       child: Container(
