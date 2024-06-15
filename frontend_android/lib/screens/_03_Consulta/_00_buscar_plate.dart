@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/presentation/Consulta/Consultar_Reporte/_01_detalles_vehiculo.dart';
+import 'package:frontend_android/screens/_03_Consulta/_01_detalles_vehiculo.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:logger/logger.dart';

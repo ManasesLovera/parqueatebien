@@ -8,7 +8,7 @@ class ForgotPasswordText extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed('/Forgot');
+        Navigator.of(context).pushNamed('/forgot');
       },
       child: Text(
         '¿Olvidaste La Contraseña?',

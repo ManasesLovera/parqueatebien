@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_android/Services/login/Controller/__controller_sign_user_in.dart';
-import 'package:frontend_android/Services/login/dialogs_for_login/__error_dialog.dart';
+import 'package:frontend_android/Services/_00_login/Controller/__controller_sign_user_in.dart';
+import 'package:frontend_android/Services/_00_login/dialogs_for_login/__error_dialog.dart';
 
 import 'dart:async';
 
@@ -16,7 +16,7 @@ Future<void> sign(
     final success = await controllersignUserIn(governmentID, password);
     if (success) {
       if (!context.mounted) return;
-      Navigator.pushReplacementNamed(context, '/WelcomeNewReport');
+      Navigator.pushReplacementNamed(context, '/report_or_consult');
     }
   } catch (error) {
     if (!context.mounted) return;
