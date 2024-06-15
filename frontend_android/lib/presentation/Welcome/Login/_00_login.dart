@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/Services/login/login_method.dart';
+import 'package:frontend_android/Services/login/method/handle_sign_in.dart';
+import 'package:frontend_android/Services/login/widgets/_01_user_above_text_.dart';
+import 'package:frontend_android/Services/login/widgets/_03_password_above_text.dart';
+import 'package:frontend_android/Services/login/widgets/_04_password_text_field.dart';
+import 'package:frontend_android/Services/login/widgets/_07_bottom_image.dart';
+import 'package:frontend_android/Services/login/widgets/_02_government_id_text_field.dart';
+import 'package:frontend_android/Services/login/widgets/_00_main_image.dart';
+import 'package:frontend_android/Services/login/widgets/_05_sign_in_button.dart';
+import 'package:frontend_android/Services/login/widgets/_06_forgot_password_text.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -12,180 +20,47 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final TextEditingController _governmentIDController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _governmentIDController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 9, 157, 210),
       body: SafeArea(
         child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 0.h),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: 50.h),
-                  Image.asset(
-                    'assets/splash/main.png',
-                    height: 100.h,
-                  ),
-                  SizedBox(height: 50.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 14.h),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Usuario',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10.h,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 0.h),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 14.h, vertical: 1.h),
-                    child: SizedBox(
-                      height: 30.h,
-                      child: TextField(
-                        controller: _governmentIDController,
-                        decoration: InputDecoration(
-                          hintText: 'Ingresar número de cédula',
-                          hintStyle:
-                              TextStyle(color: Colors.grey, fontSize: 10.h),
-                          filled: true,
-                          fillColor: Colors.white,
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.r)),
-                            borderSide: const BorderSide(color: Colors.white70),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.r)),
-                            borderSide: const BorderSide(color: Colors.white),
-                          ),
-                        ),
-                        style: const TextStyle(color: Colors.black),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20.h),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 14.h, vertical: 1.h),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Contraseña',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10.h,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 1.h),
-                    child: SizedBox(
-                      height: 30.h,
-                      child: TextField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          suffixIcon: const Icon(Icons.remove_red_eye),
-                          hintText: 'Ingresar la contraseña',
-                          hintStyle:
-                              TextStyle(color: Colors.grey, fontSize: 10.h),
-                          filled: true,
-                          fillColor: Colors.white,
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.r)),
-                            borderSide: const BorderSide(color: Colors.white70),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.r)),
-                            borderSide: const BorderSide(color: Colors.white),
-                          ),
-                        ),
-                        style: const TextStyle(color: Colors.black),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 0.h),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.grey[100]!,
-                              Colors.grey[200]!,
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            signUserIn(
-                              context,
-                              _governmentIDController,
-                              _passwordController,
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 2.h, vertical: 6.w),
-                          ),
-                          child: Text(
-                            'Ingresar',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15.h,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20.h),
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).pushNamed('/Forgot');
-                    },
-                    child: Text(
-                      '¿Olvidaste La Contraseña?',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12.h,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 140.h),
-                  Image.asset(
-                    'assets/splash/bottom.png',
-                    height: 50.h,
-                  )
-                ],
-              ),
-            )),
+          padding: EdgeInsets.symmetric(horizontal: 0.h),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: 50.h),
+                const MainImage(),
+                SizedBox(height: 50.h),
+                const Usertext(),
+                GovernmentIDTextField(controller: _governmentIDController),
+                SizedBox(height: 20.h),
+                const Passwordtext(),
+                PasswordTextField(controller: _passwordController),
+                SizedBox(height: 16.h),
+                SignInButton(
+                    onPressed: () => handleSignIn(
+                          context,
+                          _governmentIDController,
+                          _passwordController,
+                        )),
+                SizedBox(height: 20.h),
+                const ForgotPasswordText(),
+                SizedBox(height: 140.h),
+                const BottomImage(),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
