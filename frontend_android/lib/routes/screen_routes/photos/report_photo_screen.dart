@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_android/presentation/Reportes/Crear_Reporte/_02_foto_nuevo_reporte.dart';
+import 'package:frontend_android/screens/_02_Reportes/_02_foto_nuevo_reporte.dart';
 
 
-Widget buildNewReportPhotoScreen(BuildContext context) {
+Widget photoScreen(BuildContext context) {
   final args = ModalRoute.of(context)?.settings.arguments as Map;
   return NewReportPhotoScreen(
     plateNumber: args['plateNumber'],

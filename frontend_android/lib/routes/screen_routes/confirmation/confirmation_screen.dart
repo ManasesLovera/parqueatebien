@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_android/presentation/Reportes/Crear_Reporte/_03_confirmation_screen.dart';
+import 'package:frontend_android/screens/_02_Reportes/_03_confirmation_screen.dart';
 
-Widget buildConfirmationScreen(BuildContext context) {
+Widget confirmationScreen(BuildContext context) {
   final args = ModalRoute.of(context)?.settings.arguments as Map;
   return ConfirmationScreen(
     plateNumber: args['plateNumber'],

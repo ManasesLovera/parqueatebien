@@ -6,14 +6,14 @@ import 'package:frontend_android/config/Report_Buttons/geo_labels.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
 
-class NewReportScreen extends StatefulWidget {
-  const NewReportScreen({super.key});
+class ReportScreen extends StatefulWidget {
+  const ReportScreen({super.key});
 
   @override
   NewReportScreenState createState() => NewReportScreenState();
 }
 
-class NewReportScreenState extends State<NewReportScreen> {
+class NewReportScreenState extends State<ReportScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _plateController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
@@ -183,7 +183,7 @@ class NewReportScreenState extends State<NewReportScreen> {
   void _navigateToPhotoScreen() {
     Navigator.pushNamed(
       context,
-      '/newreportfoto',
+      '/foto',
       arguments: {
         'plateNumber': _plateController.text,
         'vehicleType': _selectedVehicleType,

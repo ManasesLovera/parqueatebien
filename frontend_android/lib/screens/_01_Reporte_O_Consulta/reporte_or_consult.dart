@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class WelcomeNewReport extends StatelessWidget {
-  const WelcomeNewReport({super.key});
+class ReportorConsult extends StatelessWidget {
+  const ReportorConsult({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class WelcomeNewReport extends StatelessWidget {
                     'Crea un nuevo reporte de un vehículo mal estacionado.',
                 onTap: () {
                   Navigator.of(context).pop();
-                  Navigator.pushNamed(context, '/NewReport');
+                  Navigator.pushNamed(context, '/report');
                 },
               ),
               SizedBox(height: 12.h),
