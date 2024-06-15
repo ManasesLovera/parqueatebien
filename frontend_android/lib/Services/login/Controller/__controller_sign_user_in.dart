@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:frontend_android/Services/login/api/api_login.dart';
+import 'package:frontend_android/Services/login/api/_api_login.dart';
 
-Future<bool> signUserIn(
+Future<bool> controllersignUserIn(
   String governmentID,
   String password,
 ) async {
@@ -15,7 +15,7 @@ Future<bool> signUserIn(
       return true;
     } else {
       return Future.error(
-          'Error durante el Inicio De Sesión. Por favor, inténtelo de nuevo.');
+          'Por favor, Verifique Usuario y Contraseña, Incorrectos');
     }
   } catch (e) {
     return Future.error(
