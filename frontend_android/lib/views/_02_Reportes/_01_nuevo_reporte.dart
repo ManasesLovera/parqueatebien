@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/Services/location/_location_.dart';
-import 'package:frontend_android/config/Report_Buttons/geo_labels.dart';
+import 'package:frontend_android/Services/_02_Reporte/api/location.dart';
+import 'package:frontend_android/Services/_02_Reporte/widgets/colortext.dart';
+import 'package:frontend_android/Services/_02_Reporte/widgets/downtextreferencia.dart';
+import 'package:frontend_android/Services/_02_Reporte/widgets/numeroplaca.dart';
+import 'package:frontend_android/Services/_02_Reporte/widgets/referenciatext.dart';
+import 'package:frontend_android/Services/_02_Reporte/widgets/siguientetext.dart';
+import 'package:frontend_android/Services/_02_Reporte/widgets/tipovehiculo.dart';
+import 'package:frontend_android/Services/_02_Reporte/widgets/tittletext.dart';
+import 'package:frontend_android/Services/_02_Reporte/widgets/vechiculodata.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
 
@@ -18,9 +25,10 @@ class NewReportScreenState extends State<ReportScreen> {
   final TextEditingController _plateController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
 
+  bool _isFormValid = false;
+
   String? _selectedVehicleType;
   String? _selectedColor;
-  bool _isFormValid = false;
   bool _plateFieldTouched = false;
   bool _addressFieldTouched = false;
   bool _vehicleTypeTouched = false;
@@ -28,13 +36,11 @@ class NewReportScreenState extends State<ReportScreen> {
   String? _latitude;
   String? _longitude;
 
-  // Focus
   final FocusNode _plateFocusNode = FocusNode();
   final FocusNode _addressFocusNode = FocusNode();
   final FocusNode _vehicleTypeFocusNode = FocusNode();
   final FocusNode _colorFocusNode = FocusNode();
 
-  // Logger
   final Logger _logger = Logger();
 
   @override
@@ -208,38 +214,11 @@ class NewReportScreenState extends State<ReportScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(height: 20.h),
-                  Text(
-                    'Nuevo reporte',
-                    style: TextStyle(
-                      fontSize: 22.h,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
-                  ),
+                  const TittleText(),
                   SizedBox(height: 10.h),
-                  Text(
-                    'Datos del vehículo',
-                    style: TextStyle(
-                      fontSize: 14.h,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),
-                  ),
+                  const DatosdelVehiculo(),
                   SizedBox(height: 30.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 14.w),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Numero de placa',
-                        style: TextStyle(
-                          color: Colors.blueAccent,
-                          fontSize: 10.h,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
+                  const NumeroPlaca(),
                   SizedBox(height: 2.h),
                   Padding(
                     padding:
@@ -281,9 +260,7 @@ class NewReportScreenState extends State<ReportScreen> {
                             ],
                             keyboardType: TextInputType.text,
                             onChanged: (value) {
-                              setState(() {
-                                // Trigger a rebuild to show or hide the error message
-                              });
+                              setState(() {});
                             },
                           ),
                         ),
@@ -315,20 +292,7 @@ class NewReportScreenState extends State<ReportScreen> {
                     ),
                   ),
                   SizedBox(height: 20.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 14.w),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Tipo de vehiculo',
-                        style: TextStyle(
-                          color: Colors.blueAccent,
-                          fontSize: 10.h,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
+                  const TipodeVehiculo(),
                   SizedBox(height: 3.h),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 14.w),
@@ -379,20 +343,7 @@ class NewReportScreenState extends State<ReportScreen> {
                     ),
                   ),
                   SizedBox(height: 15.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 14.w),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Color',
-                        style: TextStyle(
-                          color: Colors.blueAccent,
-                          fontSize: 10.h,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
+                  const ColorText(),
                   SizedBox(height: 3.h),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 14.w),
@@ -441,20 +392,7 @@ class NewReportScreenState extends State<ReportScreen> {
                     ),
                   ),
                   SizedBox(height: 16.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 14.w),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Direccion',
-                        style: TextStyle(
-                          color: Colors.blueAccent,
-                          fontSize: 10.h,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
+                  const Referencia(),
                   SizedBox(height: 3.h),
                   Padding(
                     padding:
@@ -463,7 +401,6 @@ class NewReportScreenState extends State<ReportScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          //   height: 30.h,
                           child: TextFormField(
                             controller: _addressController,
                             focusNode: _addressFocusNode,
@@ -490,9 +427,7 @@ class NewReportScreenState extends State<ReportScreen> {
                               ),
                             ),
                             onChanged: (value) {
-                              setState(() {
-                                // Trigger a rebuild to show or hide the error message
-                              });
+                              setState(() {});
                             },
                           ),
                         ),
@@ -510,48 +445,10 @@ class NewReportScreenState extends State<ReportScreen> {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 14.w),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Dirección donde el vehículo está mal parqueado',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 10.h,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
+                  const DownTextVehiculoText(),
                   SizedBox(height: 10.h),
                   if (_latitude != null && _longitude != null)
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 14.h),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Datos Geográficos',
-                            style: TextStyle(
-                              fontSize: 11.h,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                            ),
-                          ),
-                          SizedBox(height: 10.h),
-                          DetailItem(
-                            title: 'Latitud',
-                            content: _latitude!,
-                          ),
-                          DetailItem(
-                            title: 'Longitud',
-                            content: _longitude!,
-                          ),
-                        ],
-                      ),
-                    ),
-                  SizedBox(height: 50.h),
+                    SizedBox(height: 50.h),
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 14.h, vertical: 14.w),
@@ -582,14 +479,7 @@ class NewReportScreenState extends State<ReportScreen> {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 2.w, vertical: 6.h),
                           ),
-                          child: Text(
-                            'Siguiente',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16.h,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          child: const SiguienteText(),
                         ),
                       ),
                     ),
@@ -603,3 +493,54 @@ class NewReportScreenState extends State<ReportScreen> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Padding(
+                    //   padding: EdgeInsets.symmetric(horizontal: 14.h),
+                    //   child: Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       Text(
+                    //         'Datos Geográficos',
+                    //         style: TextStyle(
+                    //           fontSize: 11.h,
+                    //           fontWeight: FontWeight.bold,
+                    //           color: Colors.blue,
+                    //         ),
+                    //       ),
+                    //       SizedBox(height: 10.h),
+                    //       DetailItem(
+                    //         title: 'Latitud',
+                    //         content: _latitude!,
+                    //       ),
+                    //       DetailItem(
+                    //         title: 'Longitud',
+                    //         content: _longitude!,
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
