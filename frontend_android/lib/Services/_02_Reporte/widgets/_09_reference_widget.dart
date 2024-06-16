@@ -6,7 +6,7 @@ class AddressWidget extends StatefulWidget {
   final bool touched;
   final FocusNode focusNode;
   final Function(String) onChanged;
-  // final Function() onValidate;
+  final Function() onValidate;
 
   const AddressWidget({
     super.key,
@@ -14,7 +14,7 @@ class AddressWidget extends StatefulWidget {
     required this.touched,
     required this.focusNode,
     required this.onChanged,
-    // required this.onValidate,
+     required this.onValidate,
   });
 
   @override
@@ -30,13 +30,13 @@ class _AddressWidgetState extends State<AddressWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 50.h,
+            height: 30.h,
             child: TextFormField(
               controller: widget.controller,
               focusNode: widget.focusNode,
               decoration: InputDecoration(
                 contentPadding:
-                    EdgeInsets.symmetric(vertical: 10.w, horizontal: 8.h),
+                    EdgeInsets.symmetric(vertical: 4.w, horizontal: 8.h),
                 hintText: 'Ingresar',
                 hintStyle: TextStyle(color: Colors.grey, fontSize: 10.h),
                 filled: true,
@@ -56,7 +56,7 @@ class _AddressWidgetState extends State<AddressWidget> {
           ),
           if (widget.touched && widget.controller.text.isEmpty)
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 0.w, horizontal: 0.h),
+              padding: EdgeInsets.symmetric(vertical: 0.h, horizontal: 0.w),
               child: Text(
                 'Por favor ingrese una dirección',
                 style: TextStyle(color: Colors.red, fontSize: 10.h),

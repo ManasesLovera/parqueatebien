@@ -9,7 +9,7 @@ class DownTextVehiculoText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 14.w),
+      padding: EdgeInsets.symmetric(horizontal: 0.h),
       child: Align(
         alignment: Alignment.center,
         child: Text(

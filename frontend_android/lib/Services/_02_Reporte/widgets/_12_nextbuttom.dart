@@ -47,7 +47,7 @@ class NextButton extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.r),
               ),
-              padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 6.h),
+              padding: EdgeInsets.symmetric(horizontal: 2.h),
             ),
             child: const SiguienteText(),
           ),

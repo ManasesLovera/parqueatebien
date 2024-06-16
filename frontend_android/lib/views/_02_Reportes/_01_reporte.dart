@@ -100,7 +100,6 @@ class ReportScreenState extends State<ReportScreen> {
                   const DatosdelVehiculo(),
                   SizedBox(height: 30.h),
                   const NumeroPlaca(),
-                  SizedBox(height: 2.h),
                   PlateWidget(
                     controller: _formHandlers.plateController,
                     touched: _formHandlers.plateFieldTouched,
@@ -111,8 +110,8 @@ class ReportScreenState extends State<ReportScreen> {
                       });
                     },
                   ),
+                  SizedBox(height: 12.h),
                   const TipodeVehiculo(),
-                  SizedBox(height: 3.h),
                   VehicleTypeWidget(
                     selectedValue: _formHandlers.selectedVehicleType,
                     focusNode: FocusNode(),
@@ -126,8 +125,8 @@ class ReportScreenState extends State<ReportScreen> {
                     touched: _formHandlers.vehicleTypeTouched,
                     onValidate: _onValidate,
                   ),
+                  SizedBox(height: 12.h),
                   const ColorText(),
-                  SizedBox(height: 3.h),
                   ColorWidget(
                     selectedValue: _formHandlers.selectedColor,
                     focusNode: FocusNode(),
@@ -141,8 +140,8 @@ class ReportScreenState extends State<ReportScreen> {
                     touched: _formHandlers.colorTouched,
                     onValidate: _onValidate,
                   ),
+                  SizedBox(height: 12.h),
                   const Referencia(),
-                  SizedBox(height: 3.h),
                   AddressWidget(
                     controller: _formHandlers.addressController,
                     touched: _formHandlers.addressFieldTouched,
@@ -152,17 +151,17 @@ class ReportScreenState extends State<ReportScreen> {
                         _formHandlers.addressFieldTouched = false;
                       });
                     },
-                //    onValidate: _onValidate,
+                    onValidate: _onValidate,
                   ),
-                  const DownTextVehiculoText(),
+                  SizedBox(height: 1.h),
                   const DownTextVehiculoText(),
                   if (_formHandlers.latitude != null &&
                       _formHandlers.longitude != null)
-                    SizedBox(height: 100.h),
-                  NextButton(
-                    formHandlers: _formHandlers,
-                    onValidate: _onValidate,
-                  ),
+                 SizedBox(height: 140.h),
+                    NextButton(
+                      formHandlers: _formHandlers,
+                      onValidate: _onValidate,
+                    ),
                 ],
               ),
             ),

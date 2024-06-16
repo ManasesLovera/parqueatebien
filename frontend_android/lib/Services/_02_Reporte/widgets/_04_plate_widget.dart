@@ -31,7 +31,7 @@ class PlateWidget extends StatelessWidget {
               focusNode: focusNode,
               decoration: InputDecoration(
                 contentPadding:
-                    EdgeInsets.symmetric(vertical: 18.w, horizontal: 8.h),
+                    EdgeInsets.symmetric(vertical: 15.w, horizontal: 8.h),
                 hintText: 'Ingrese número',
                 hintStyle: TextStyle(color: Colors.grey, fontSize: 10.h),
                 filled: true,
@@ -57,7 +57,7 @@ class PlateWidget extends StatelessWidget {
               controller.text.isNotEmpty &&
               !RegExp(r'^[A-Z][0-9]{6}$').hasMatch(controller.text))
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 0.w, horizontal: 0.h),
+              padding: EdgeInsets.symmetric(vertical: 0.h, horizontal: 0.w),
               child: Text(
                 'La placa debe empezar con una letra mayúscula seguida de 6 números',
                 style: TextStyle(color: Colors.red, fontSize: 10.h),
@@ -65,7 +65,7 @@ class PlateWidget extends StatelessWidget {
             ),
           if (touched && controller.text.isEmpty)
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 0.w, horizontal: 0.h),
+              padding: EdgeInsets.symmetric(vertical: 0.h, horizontal: 0.w),
               child: Text(
                 'Por favor ingrese un número de placa',
                 style: TextStyle(color: Colors.red, fontSize: 10.h),

@@ -25,7 +25,7 @@ class VehicleTypeWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 50.h,
+            height: 30.h,
             child: DropdownButtonFormField<String>(
               focusNode: focusNode,
               decoration: InputDecoration(
@@ -53,20 +53,16 @@ class VehicleTypeWidget extends StatelessWidget {
                 );
               }).toList(),
               onChanged: onChanged,
-              validator: (value) {
-                if (!touched) return null;
-                return value == null ? 'Seleccione un tipo de vehículo' : null;
-              },
             ),
           ),
-          // if (touched && selectedValue == null)
-          //   Padding(
-          //     padding: EdgeInsets.symmetric(vertical: 4.w, horizontal: 14.h),
-          //     child: Text(
-          //       'Seleccione un tipo de vehículo',
-          //       style: TextStyle(color: Colors.red, fontSize: 10.h),
-          //     ),
-          //   ),
+          if (touched && selectedValue == null)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 0.h, horizontal: 0.w),
+              child: Text(
+                'Seleccione un tipo de vehículo',
+                style: TextStyle(color: Colors.red, fontSize: 10.h),
+              ),
+            ),
         ],
       ),
     );

@@ -9,7 +9,7 @@ class TipodeVehiculo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 14.w),
+      padding: EdgeInsets.symmetric(horizontal: 14.h),
       child: Align(
         alignment: Alignment.centerLeft,
         child: Text(

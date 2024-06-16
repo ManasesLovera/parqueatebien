@@ -1,4 +1,3 @@
-// form_handlers.dart
 import 'package:flutter/material.dart';
 import 'package:frontend_android/Services/_02_Reporte/api/location.dart';
 import 'package:geolocator/geolocator.dart';
@@ -95,6 +94,7 @@ class FormHandlers {
             'Location Service Disabled Please enable location services.');
         return;
       }
+
       Position? position = await locationService.getCurrentLocation();
       if (position != null) {
         latitude = position.latitude.toString();
