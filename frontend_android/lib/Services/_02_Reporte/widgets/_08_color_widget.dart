@@ -20,7 +20,7 @@ class ColorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 14.w),
+      padding: EdgeInsets.symmetric(horizontal: 14.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -56,12 +56,9 @@ class ColorWidget extends StatelessWidget {
             ),
           ),
           if (touched && selectedValue == null)
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 0.h, horizontal: 0.w),
-              child: Text(
-                'Seleccione un color',
-                style: TextStyle(color: Colors.red, fontSize: 10.h),
-              ),
+            Text(
+              'Seleccione un color',
+              style: TextStyle(color: Colors.red, fontSize: 10.h),
             ),
         ],
       ),

@@ -25,7 +25,7 @@ class _AddressWidgetState extends State<AddressWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 0.h),
+      padding: EdgeInsets.symmetric(horizontal: 14.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -55,12 +55,9 @@ class _AddressWidgetState extends State<AddressWidget> {
             ),
           ),
           if (widget.touched && widget.controller.text.isEmpty)
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 0.h, horizontal: 0.w),
-              child: Text(
-                'Por favor ingrese una dirección',
-                style: TextStyle(color: Colors.red, fontSize: 10.h),
-              ),
+            Text(
+              'Por favor ingrese una dirección',
+              style: TextStyle(color: Colors.red, fontSize: 10.h),
             ),
         ],
       ),

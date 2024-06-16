@@ -56,20 +56,14 @@ class PlateWidget extends StatelessWidget {
           if (touched &&
               controller.text.isNotEmpty &&
               !RegExp(r'^[A-Z][0-9]{6}$').hasMatch(controller.text))
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 0.h, horizontal: 0.w),
-              child: Text(
-                'La placa debe empezar con una letra mayúscula seguida de 6 números',
-                style: TextStyle(color: Colors.red, fontSize: 10.h),
-              ),
+            Text(
+              'La placa debe empezar con una letra mayúscula seguida de 6 números',
+              style: TextStyle(color: Colors.red, fontSize: 10.h),
             ),
           if (touched && controller.text.isEmpty)
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 0.h, horizontal: 0.w),
-              child: Text(
-                'Por favor ingrese un número de placa',
-                style: TextStyle(color: Colors.red, fontSize: 10.h),
-              ),
+            Text(
+              'Por favor ingrese un número de placa',
+              style: TextStyle(color: Colors.red, fontSize: 10.h),
             ),
         ],
       ),

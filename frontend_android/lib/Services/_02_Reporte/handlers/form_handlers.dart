@@ -90,8 +90,7 @@ class FormHandlers {
       final locationService = LocationService();
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        showDialog(
-            'Location Service Disabled Please enable location services.');
+        showDialog('Por favor, Activar la ubicacions.');
         return;
       }
 
@@ -101,7 +100,7 @@ class FormHandlers {
         longitude = position.longitude.toString();
       } else {
         logger.e('Error Fatal! Localization');
-        showDialog('Error Could not retrieve current location.');
+        showDialog('Por favor, Aceptar los Permisos de Ubicacion');
       }
     } catch (e) {
       logger.e('Error Fatal! Current Locations');

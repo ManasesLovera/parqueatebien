@@ -87,14 +87,15 @@ class ReportScreenState extends State<ReportScreen> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 2.w),
+          padding: EdgeInsets.symmetric(horizontal: 0.h),
           child: SingleChildScrollView(
             child: Form(
               key: _formKey,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 20.h),
+                  if (_formHandlers.latitude != null &&
+                      _formHandlers.longitude != null)
+                    SizedBox(height: 20.h),
                   const TittleText(),
                   SizedBox(height: 10.h),
                   const DatosdelVehiculo(),
@@ -110,7 +111,7 @@ class ReportScreenState extends State<ReportScreen> {
                       });
                     },
                   ),
-                  SizedBox(height: 12.h),
+                  const SizedBox(height: 10),
                   const TipodeVehiculo(),
                   VehicleTypeWidget(
                     selectedValue: _formHandlers.selectedVehicleType,
@@ -125,7 +126,7 @@ class ReportScreenState extends State<ReportScreen> {
                     touched: _formHandlers.vehicleTypeTouched,
                     onValidate: _onValidate,
                   ),
-                  SizedBox(height: 12.h),
+                  const SizedBox(height: 10),
                   const ColorText(),
                   ColorWidget(
                     selectedValue: _formHandlers.selectedColor,
@@ -140,7 +141,7 @@ class ReportScreenState extends State<ReportScreen> {
                     touched: _formHandlers.colorTouched,
                     onValidate: _onValidate,
                   ),
-                  SizedBox(height: 12.h),
+                  const SizedBox(height: 10),
                   const Referencia(),
                   AddressWidget(
                     controller: _formHandlers.addressController,
@@ -153,15 +154,13 @@ class ReportScreenState extends State<ReportScreen> {
                     },
                     onValidate: _onValidate,
                   ),
-                  SizedBox(height: 1.h),
+                  const SizedBox(height: 1),
                   const DownTextVehiculoText(),
-                  if (_formHandlers.latitude != null &&
-                      _formHandlers.longitude != null)
-                 SizedBox(height: 140.h),
-                    NextButton(
-                      formHandlers: _formHandlers,
-                      onValidate: _onValidate,
-                    ),
+                  SizedBox(height: 150.spMax),
+                  NextButton(
+                    formHandlers: _formHandlers,
+                    onValidate: _onValidate,
+                  ),
                 ],
               ),
             ),
