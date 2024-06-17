@@ -26,7 +26,7 @@ class MapWidgetState extends State<MapWidget> {
     _getCurrentLocation();
   }
 
-Future<void> _getCurrentLocation() async {
+  Future<void> _getCurrentLocation() async {
     try {
       Position? position = await LocationService().getCurrentLocation();
       if (position != null) {
@@ -74,6 +74,7 @@ Future<void> _getCurrentLocation() async {
       debugPrint('Error fetching current location: $e');
     }
   }
+
   void _onMapCreated(GoogleMapController controller) {
     _controller = controller;
     if (_currentPosition != null) {
@@ -83,7 +84,8 @@ Future<void> _getCurrentLocation() async {
       )));
     }
   }
-void _addPolyline(Position start, Position end) async {
+
+  void _addPolyline(Position start, Position end) async {
     PolylinePoints polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       'AIzaSyAyvUbCqtP9uZRgb1k29tq2vQPuTc-C7lQ',
@@ -118,24 +120,26 @@ void _addPolyline(Position start, Position end) async {
     }
 
     return SizedBox(
-      height: 150.w,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 14.h),
-        child: GoogleMap(
-          onMapCreated: _onMapCreated,
-          initialCameraPosition: CameraPosition(
-            target: _currentPosition != null
-                ? LatLng(
-                    _currentPosition!.latitude, _currentPosition!.longitude)
-                : const LatLng(0, 0),
-            zoom: 13.0,
+        height: 150.w,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 14.h),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20.r),
+            child: GoogleMap(
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: CameraPosition(
+                target: _currentPosition != null
+                    ? LatLng(
+                        _currentPosition!.latitude, _currentPosition!.longitude)
+                    : const LatLng(0, 0),
+                zoom: 13.0,
+              ),
+              markers: _markers,
+              polylines: _polylines,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: true,
+            ),
           ),
-          markers: _markers,
-          polylines: _polylines,
-          myLocationEnabled: true,
-          myLocationButtonEnabled: true,
-        ),
-      ),
-    );
+        ));
   }
 }
