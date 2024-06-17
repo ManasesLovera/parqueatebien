@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class DownTextVehiculoText extends StatelessWidget {
-  const DownTextVehiculoText({
+class NumeroPlaca extends StatelessWidget {
+  const NumeroPlaca({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 14.w),
+      padding: EdgeInsets.symmetric(horizontal: 14.h),
       child: Align(
-        alignment: Alignment.center,
+        alignment: Alignment.centerLeft,
         child: Text(
-          'Dirección donde el vehículo está mal parqueado',
+          'Numero de placa',
           style: TextStyle(
-            color: Colors.grey,
+            color: Colors.blueAccent,
             fontSize: 10.h,
             fontWeight: FontWeight.bold,
           ),

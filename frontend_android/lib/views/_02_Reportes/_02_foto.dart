@@ -1,8 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'package:frontend_android/views/_02_Reportes/_03_confirmation_screen.dart';
+import 'package:frontend_android/views/_02_Reportes/_03_confirmation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

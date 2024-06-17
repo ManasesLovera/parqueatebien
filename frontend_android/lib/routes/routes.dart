@@ -6,8 +6,8 @@ import 'package:frontend_android/routes/screen_routes/photos/report_photo_screen
 import 'package:frontend_android/views/_00.1_Forgot/_01_forgot_.dart';
 import 'package:frontend_android/views/_00_Login/_00_login.dart';
 import 'package:frontend_android/views/_01_Reporte_O_Consulta/reporte_or_consult.dart';
-import 'package:frontend_android/views/_02_Reportes/_01_nuevo_reporte.dart';
-import 'package:frontend_android/views/_02_Reportes/_04_success_screen.dart';
+import 'package:frontend_android/views/_02_Reportes/_01_reporte.dart';
+import 'package:frontend_android/views/_02_Reportes/_04_success.dart';
 import 'package:frontend_android/views/_03_Consulta/_00_buscar_plate.dart';
 
 class AppRoutes {
