@@ -14,6 +14,7 @@ import 'package:frontend_android/Services/_02_Reporte/widgets/_08_referenciatext
 import 'package:frontend_android/Services/_02_Reporte/widgets/_09_reference_widget.dart';
 import 'package:frontend_android/Services/_02_Reporte/widgets/_10_referenciatextdown.dart';
 import 'package:frontend_android/Services/_02_Reporte/widgets/_12_nextbuttom.dart';
+import 'package:frontend_android/Services/_02_Reporte/widgets/_13_map.dart';
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
@@ -156,7 +157,8 @@ class ReportScreenState extends State<ReportScreen> {
                   ),
                   const SizedBox(height: 1),
                   const DownTextVehiculoText(),
-                  SizedBox(height: 150.spMax),
+                  const MapWidget(),
+                  SizedBox(height: 100.h),
                   NextButton(
                     formHandlers: _formHandlers,
                     onValidate: _onValidate,
