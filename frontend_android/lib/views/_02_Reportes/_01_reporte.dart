@@ -157,8 +157,9 @@ class ReportScreenState extends State<ReportScreen> {
                   ),
                   const SizedBox(height: 1),
                   const DownTextVehiculoText(),
+                  const SizedBox(height: 5),
                   const MapWidget(),
-                  SizedBox(height: 100.h),
+                  SizedBox(height: 10.h),
                   NextButton(
                     formHandlers: _formHandlers,
                     onValidate: _onValidate,

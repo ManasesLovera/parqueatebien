@@ -26,7 +26,7 @@ class MapWidgetState extends State<MapWidget> {
     _getCurrentLocation();
   }
 
-  Future<void> _getCurrentLocation() async {
+Future<void> _getCurrentLocation() async {
     try {
       Position? position = await LocationService().getCurrentLocation();
       if (position != null) {
@@ -51,6 +51,14 @@ class MapWidgetState extends State<MapWidget> {
           altitudeAccuracy: 0.0,
           headingAccuracy: 0.0,
         );
+
+        setState(() {
+          _markers.add(Marker(
+            markerId: const MarkerId('destination'),
+            position: LatLng(destination.latitude, destination.longitude),
+          ));
+        });
+
         _addPolyline(position, destination);
       } else {
         setState(() {
@@ -66,7 +74,6 @@ class MapWidgetState extends State<MapWidget> {
       debugPrint('Error fetching current location: $e');
     }
   }
-
   void _onMapCreated(GoogleMapController controller) {
     _controller = controller;
     if (_currentPosition != null) {
@@ -76,8 +83,7 @@ class MapWidgetState extends State<MapWidget> {
       )));
     }
   }
-
-  void _addPolyline(Position start, Position end) async {
+void _addPolyline(Position start, Position end) async {
     PolylinePoints polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       'AIzaSyAyvUbCqtP9uZRgb1k29tq2vQPuTc-C7lQ',
@@ -112,7 +118,7 @@ class MapWidgetState extends State<MapWidget> {
     }
 
     return SizedBox(
-      height: 100.h,
+      height: 150.w,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 14.h),
         child: GoogleMap(
