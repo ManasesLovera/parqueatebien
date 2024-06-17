@@ -18,6 +18,8 @@ dependencies:
   logger: ^2.2.0
   shared_preferences: ^2.2.3
   flutter_svg: ^2.0.10+1
+  google_maps_flutter: ^2.7.0
+  flutter_polyline_points: ^2.0.0
 
 
 dev_dependencies:
