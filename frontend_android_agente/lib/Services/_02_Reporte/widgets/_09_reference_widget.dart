@@ -54,11 +54,11 @@ class _AddressWidgetState extends State<AddressWidget> {
               onChanged: widget.onChanged,
             ),
           ),
-          if (widget.touched && widget.controller.text.isEmpty)
-            Text(
-              'Por favor ingrese una dirección',
-              style: TextStyle(color: Colors.red, fontSize: 10.h),
-            ),
+          // if (widget.touched && widget.controller.text.isEmpty)
+          //   Text(
+          //     'Por favor ingrese una dirección',
+          //     style: TextStyle(color: Colors.red, fontSize: 10.h),
+          //   ),
         ],
       ),
     );

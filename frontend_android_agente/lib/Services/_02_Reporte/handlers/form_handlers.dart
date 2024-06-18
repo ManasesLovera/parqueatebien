@@ -34,8 +34,8 @@ class FormHandlers {
     isFormValid = (formKey.currentState?.validate() ?? false) &&
         selectedVehicleType != null &&
         selectedColor != null &&
-        plateController.text.isNotEmpty &&
-        addressController.text.isNotEmpty;
+        plateController.text.isNotEmpty;
+        // addressController.text.isNotEmpty;
   }
 
   String? getValidationMessage() {
@@ -51,9 +51,9 @@ class FormHandlers {
     if (selectedColor == null) {
       return 'Seleccione un color';
     }
-    if (addressController.text.isEmpty) {
-      return 'Por favor ingrese una dirección';
-    }
+    // if (addressController.text.isEmpty) {
+    //   return 'Por favor ingrese una dirección';
+    // }
     return null;
   }
 
