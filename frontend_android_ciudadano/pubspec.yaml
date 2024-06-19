@@ -1,21 +1,23 @@
 name: frontend_android_ciudadano
-description: "A new Flutter project."
+description: "ciudadano_parqueatebien"
 publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: ">=3.4.3 <4.0.0"
+  sdk: ">=3.3.3 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
+  flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.4.0
+  
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
-
+ 
 flutter:
   uses-material-design: true
 
