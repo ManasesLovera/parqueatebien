@@ -18,7 +18,7 @@ class MainApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               home: BlocProvider(
                 create: (context) => LoginBloc(),
-                child: const Login(),
+                child: Login(),
               ));
         });
   }
