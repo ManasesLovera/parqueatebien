@@ -1,8 +1,8 @@
-import 'package:frontend_android_ciudadano/models/photo_model.dart';
-import 'package:frontend_android_ciudadano/entities/car.dart';
+import '../entities/car.dart';
+import 'photo_model.dart';
 
 class CarModel extends Car {
-  CarModel({
+  const CarModel({
     required super.licensePlate,
     required super.status,
     required super.vehicleType,

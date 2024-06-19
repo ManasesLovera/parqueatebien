@@ -1,6 +1,7 @@
-import 'package:frontend_android_ciudadano/entities/photo.dart';
+import 'package:equatable/equatable.dart';
+import 'photo.dart';
 
-class Car {
+abstract class Car extends Equatable {
   final String licensePlate;
   final String status;
   final String vehicleType;
@@ -10,7 +11,7 @@ class Car {
   final String? arrivalAtParkingLot;
   final List<Photo> photos;
 
-  Car({
+  const Car({
     required this.licensePlate,
     required this.status,
     required this.vehicleType,
@@ -20,4 +21,16 @@ class Car {
     this.arrivalAtParkingLot,
     required this.photos,
   });
+
+  @override
+  List<Object?> get props => [
+        licensePlate,
+        status,
+        vehicleType,
+        vehicleColor,
+        currentAddress,
+        reportedDate,
+        arrivalAtParkingLot,
+        photos,
+      ];
 }

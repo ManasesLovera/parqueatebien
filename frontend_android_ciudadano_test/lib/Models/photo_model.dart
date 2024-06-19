@@ -1,4 +1,4 @@
-import 'package:frontend_android_ciudadano/entities/photo.dart';
+import '../entities/photo.dart';
 
 class PhotoModel extends Photo {
   PhotoModel({required super.file});

@@ -1,5 +1,5 @@
-import 'package:frontend_android_ciudadano/entities/car.dart';
 import 'package:frontend_android_ciudadano/repositories/vehicle_repository.dart';
+import 'package:frontend_android_ciudadano/entities/car.dart';
 
 class FetchVehicleDetails {
   final VehicleRepository repository;
