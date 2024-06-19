@@ -1,4 +1,4 @@
-import 'package:frontend_android_ciudadano/Models/photo_model.dart';
+import 'package:frontend_android_ciudadano/models/photo_model.dart';
 import 'package:frontend_android_ciudadano/entities/car.dart';
 
 class CarModel extends Car {

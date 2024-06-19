@@ -1,5 +1,5 @@
 name: frontend_android_ciudadano
-description: "A new Flutter project."
+description: "ciudadano_parqueatebien"
 publish_to: 'none'
 version: 0.1.0
 
@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+ 
 
 dev_dependencies:
   flutter_test:
