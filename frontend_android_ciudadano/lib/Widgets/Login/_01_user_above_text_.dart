@@ -7,14 +7,14 @@ class Usertext extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 14.h),
+      padding: EdgeInsets.symmetric(horizontal: 14.h, vertical: 2.h),
       child: Align(
         alignment: Alignment.centerLeft,
         child: Text(
-          'Usuario',
+          'Correo electronico',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 10.h,
+            fontSize: 12.h,
             fontWeight: FontWeight.bold,
           ),
         ),

@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android_ciudadano/Blocs/_00_login_event.dart';
 import 'package:frontend_android_ciudadano/Blocs/_01_login_state.dart';
 import 'package:frontend_android_ciudadano/Blocs/_02_login_bloc.dart';
-import 'package:frontend_android_ciudadano/Widgets/Login/_05_sign_in_button.dart';
+import 'package:frontend_android_ciudadano/Widgets/Login/_05_sign_in_button%20copy.dart';
 
 class SignInBlocBuilder extends StatelessWidget {
   final TextEditingController iD;
@@ -35,11 +35,12 @@ class SignInBlocBuilder extends StatelessWidget {
                       );
                 },
               ),
+              SizedBox(height: 4.h),
               Text(
                 state.error,
                 style: TextStyle(
                     color: Colors.red,
-                    fontSize: 13.h,
+                    fontSize: 16.h,
                     fontWeight: FontWeight.bold),
               ),
             ],
