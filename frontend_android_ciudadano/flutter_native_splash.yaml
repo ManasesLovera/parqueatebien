@@ -1,0 +1,25 @@
+# flutter_native_splash-production.yaml
+flutter_native_splash:
+  android: true
+  web: false
+  ios: false
+  background_image_android: "assets/splash/back.png"
+  background_image_dark_android: "assets/splash/back.png"
+  image: "assets/splash/main.png"
+  branding: "assets/splash/bottom.png"
+  branding_android: "assets/splash/bottom.png"
+  branding_mode: bottom
+  fullscreen: true
+
+  android_12:
+    android: true
+    web: false
+    ios: false
+    image: "assets/launcher_android_12+/main_splash.png"
+    background_image_android: "assets/splash/back.png"
+    background_image_dark_android: "assets/splash/back.png"
+    branding: "assets/splash/bottom.png"
+    branding_android: "assets/splash/bottom.png"
+    branding_mode: bottom
+    color: "#099DD2"
+    fullscreen: true
