@@ -20,7 +20,7 @@ class LoginSendData {
               'Password': password,
             }),
           )
-          .timeout(const Duration(seconds: 5));
+          .timeout(const Duration(seconds: 60));
 
       switch (response.statusCode) {
         case 200:

@@ -11,10 +11,10 @@ class Passwordtext extends StatelessWidget {
       child: Align(
         alignment: Alignment.centerLeft,
         child: Text(
-          'Password',
+          'Contraseña',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 10.h,
+            fontSize: 12.h,
             fontWeight: FontWeight.bold,
           ),
         ),
