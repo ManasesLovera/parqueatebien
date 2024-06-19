@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() => runApp(const MainApp());
 
@@ -7,6 +8,12 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return ScreenUtilInit(
+        designSize: const Size(360, 640),
+        builder: (context, child) {
+          return const MaterialApp(
+            debugShowCheckedModeBanner: false,
+          );
+        });
   }
 }
