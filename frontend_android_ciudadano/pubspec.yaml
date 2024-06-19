@@ -1,14 +1,15 @@
 name: frontend_android_ciudadano
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: '>=3.4.3 <4.0.0'
+  sdk: ">=3.4.3 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
+  flutter_native_splash: ^2.4.0
 
 dev_dependencies:
   flutter_test:
@@ -17,3 +18,15 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/splash/back.png
+    - assets/splash/bottom.png
+    - assets/splash/main.png
+    - assets/launcher_android_12+/main_splash.png
+    - assets/launcher_android_-11/ic_icon.png
+    - assets/whiteback/main_w.png
+    - assets/icons/photo.svg
+    - assets/icons/add.svg
+    - assets/icons/car.svg
+    - assets/icons/create.svg
