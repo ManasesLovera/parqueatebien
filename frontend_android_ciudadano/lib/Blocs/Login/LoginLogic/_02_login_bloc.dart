@@ -1,7 +1,9 @@
 import 'package:frontend_android_ciudadano/Api/Login/_00_api.dart';
-import 'package:frontend_android_ciudadano/Blocs/LoginLogic/_00_login_event.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend_android_ciudadano/Blocs/LoginLogic/_01_login_state.dart';
+import 'package:frontend_android_ciudadano/Blocs/Login/LoginLogic/_00_login_event.dart';
+import 'package:frontend_android_ciudadano/Blocs/Login/LoginLogic/_01_login_state.dart';
+
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(LoginInitial()) {

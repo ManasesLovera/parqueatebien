@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android_ciudadano/Blocs/ButtomLoginState/button_state_bloc.dart';
-import 'package:frontend_android_ciudadano/Blocs/ButtomLoginState/sign_in_bloc_builder.dart';
-import 'package:frontend_android_ciudadano/Blocs/LoginLogic/_02_login_bloc.dart';
+import 'package:frontend_android_ciudadano/Blocs/Login/ButtomLoginState/button_state_bloc.dart';
+import 'package:frontend_android_ciudadano/Blocs/Login/ButtomLoginState/sign_in_bloc_builder.dart';
+import 'package:frontend_android_ciudadano/Blocs/Login/LoginLogic/_02_login_bloc.dart';
+import 'package:frontend_android_ciudadano/Views/NuevoRegistro/_00.1_nuevo_registro.dart';
 import 'package:frontend_android_ciudadano/Widgets/Login/_00_main_image.dart';
 import 'package:frontend_android_ciudadano/Widgets/Login/_01_user_above_text_.dart';
 import 'package:frontend_android_ciudadano/Widgets/Login/_02_government_id_text_field.dart';
 import 'package:frontend_android_ciudadano/Widgets/Login/_03_password_above_text.dart';
 import 'package:frontend_android_ciudadano/Widgets/Login/_04_password_text_field.dart';
-import 'package:frontend_android_ciudadano/Widgets/Login/_06_forgot_password_tex.dart';
+import 'package:frontend_android_ciudadano/Widgets/Login/_05_forgot_password_tex.dart';
 import 'package:frontend_android_ciudadano/Widgets/Login/_06_not_account_text.dart';
 import 'package:frontend_android_ciudadano/Widgets/Login/_09_registrate_now.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
 
-  final TextEditingController iD = TextEditingController();
-  final TextEditingController pass = TextEditingController();
+  final iD = TextEditingController();
+  final pass = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +66,13 @@ class Login extends StatelessWidget {
                           const DontAccount(),
                           SizedBox(height: 8.h),
                           RegisterNow(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => RegisterView(),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       );
