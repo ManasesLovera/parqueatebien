@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android_ciudadano/Blocs/ButtomLoginState/button_state_bloc.dart';
-import 'package:frontend_android_ciudadano/Blocs/LoginLogic/_00_login_event.dart';
-import 'package:frontend_android_ciudadano/Blocs/LoginLogic/_01_login_state.dart';
-import 'package:frontend_android_ciudadano/Blocs/LoginLogic/_02_login_bloc.dart';
+import 'package:frontend_android_ciudadano/Blocs/Login/ButtomLoginState/button_state_bloc.dart';
+import 'package:frontend_android_ciudadano/Blocs/Login/LoginLogic/_00_login_event.dart';
+import 'package:frontend_android_ciudadano/Blocs/Login/LoginLogic/_01_login_state.dart';
+import 'package:frontend_android_ciudadano/Blocs/Login/LoginLogic/_02_login_bloc.dart';
+
 import 'package:frontend_android_ciudadano/Widgets/Login/_08_sign_in_button.dart';
 
 class SignInBlocBuilder extends StatelessWidget {

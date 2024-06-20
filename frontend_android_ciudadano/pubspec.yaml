@@ -14,7 +14,7 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.4.0
   flutter_screenutil: ^5.9.3
-  flutter_statusbarcolor_ns: ^0.5.0
+  flutter_svg: ^2.0.10+1
   http: ^1.2.1
   logger: ^2.3.0
   shared_preferences: ^2.2.3
@@ -39,3 +39,4 @@ flutter:
     - assets/icons/add.svg
     - assets/icons/car.svg
     - assets/icons/create.svg
+    - assets/icons/back.svg
