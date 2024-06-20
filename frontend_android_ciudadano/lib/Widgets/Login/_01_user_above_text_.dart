@@ -14,8 +14,8 @@ class Usertext extends StatelessWidget {
           'Correo electronico',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 12.h,
-            fontWeight: FontWeight.bold,
+            fontSize: 11.h,
+            // fontWeight: FontWeight.bold,
           ),
         ),
       ),

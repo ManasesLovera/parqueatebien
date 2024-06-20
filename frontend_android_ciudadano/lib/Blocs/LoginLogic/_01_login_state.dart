@@ -11,3 +11,5 @@ class LoginFailure extends LoginState {
 
   LoginFailure(this.error);
 }
+
+class LoginErrorCleared extends LoginState {}

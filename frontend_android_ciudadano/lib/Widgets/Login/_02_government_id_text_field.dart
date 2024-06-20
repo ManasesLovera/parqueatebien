@@ -11,21 +11,21 @@ class GovernmentIDTextField extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 14.h, vertical: 1.w),
       child: SizedBox(
-        height: 30.h,
+        height: 32.h,
         child: TextField(
           controller: controller,
           decoration: InputDecoration(
             hintText: 'Ingresar correo electronico',
-            hintStyle: TextStyle(color: Colors.grey, fontSize: 10.h),
+            hintStyle: TextStyle(color: Colors.grey, fontSize: 11.h),
             filled: true,
             fillColor: Colors.white,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(7.r)),
-              borderSide: const BorderSide(color: Colors.white),
+             borderSide: const BorderSide(color: Colors.transparent),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(7.r)),
-              borderSide: const BorderSide(color: Colors.white),
+          borderSide: const BorderSide(color: Colors.transparent),
             ),
           ),
           style: const TextStyle(color: Colors.grey),
