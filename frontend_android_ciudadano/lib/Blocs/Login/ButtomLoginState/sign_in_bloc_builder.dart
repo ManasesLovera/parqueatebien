@@ -5,8 +5,7 @@ import 'package:frontend_android_ciudadano/Blocs/Login/ButtomLoginState/button_s
 import 'package:frontend_android_ciudadano/Blocs/Login/LoginLogic/_00_login_event.dart';
 import 'package:frontend_android_ciudadano/Blocs/Login/LoginLogic/_01_login_state.dart';
 import 'package:frontend_android_ciudadano/Blocs/Login/LoginLogic/_02_login_bloc.dart';
-
-import 'package:frontend_android_ciudadano/Widgets/Login/_08_sign_in_button.dart';
+import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_02_custom_buttom_.dart';
 
 class SignInBlocBuilder extends StatelessWidget {
   final TextEditingController iD;
@@ -29,7 +28,7 @@ class SignInBlocBuilder extends StatelessWidget {
             else
               BlocBuilder<ButtonStateBloc, ButtonState>(
                 builder: (context, buttonState) {
-                  return SignInButton(
+                  return RegistroButtom(
                     onPressed: buttonState.isEnabled
                         ? () {
                             context.read<LoginBloc>().add(
@@ -41,6 +40,7 @@ class SignInBlocBuilder extends StatelessWidget {
                           }
                         : null,
                     isEnabled: buttonState.isEnabled,
+                    text: 'Ingresar',
                   );
                 },
               ),

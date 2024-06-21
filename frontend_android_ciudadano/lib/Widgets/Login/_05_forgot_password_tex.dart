@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ForgotPasswordText extends StatelessWidget {
-  const ForgotPasswordText({super.key});
+  const ForgotPasswordText({super.key, this.text});
+  final String? text;
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +12,7 @@ class ForgotPasswordText extends StatelessWidget {
         Navigator.of(context).pushNamed('/forgot');
       },
       child: Text(
-        '¿Olvidaste tu Contraseña?',
+       text?? '',
         style: TextStyle(
           color: Colors.white,
           fontSize: 12.h,

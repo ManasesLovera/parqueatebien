@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Usertext extends StatelessWidget {
-  const Usertext({super.key});
+  const Usertext({super.key, this.text});
+  final String? text;
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +12,7 @@ class Usertext extends StatelessWidget {
       child: Align(
         alignment: Alignment.centerLeft,
         child: Text(
-          'Correo electronico',
+           text??'',
           style: TextStyle(
             color: Colors.white,
             fontSize: 11.h,

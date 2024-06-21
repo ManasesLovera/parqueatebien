@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android_ciudadano/Blocs/Login/LoginLogic/_02_login_bloc.dart';
-import 'package:frontend_android_ciudadano/Views/Login/_00_login.dart';
+import 'package:frontend_android_ciudadano/Views/Welcome/_00_welcome.dart';
 
 void main() => runApp(const M());
 
@@ -23,9 +23,9 @@ class M extends StatelessWidget {
             //   create: (context) => StatusBarCubit(),
             // ),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             debugShowCheckedModeBanner: false,
-            home: Login(),
+            home: Welcome(),
           ),
         );
       },
