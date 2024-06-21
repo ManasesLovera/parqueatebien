@@ -112,6 +112,14 @@ Format for Agents and Admins:
 }
 ```
 
+#### User CRUD:
+
+- GET / -> `"/users"`: Returns a list of agents.
+- GET / -> `"/user/{governmentID}"`: Returns one agent with the following governmentID or 404 if not found.
+- POST / -> `"/user"`: Receive a user through the request.body and saves it.
+- PUT / -> `"/user/changePassword"`: Sets the password using the User from the request.body.
+- DELETE / -> `"/user/{governmentID}"`: Deletes the user using the governmentID from the route.
+
 #### Agents CRUD:
 
 - GET / -> `"/agentes"`: Returns a list of agents.
