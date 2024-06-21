@@ -3,29 +3,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android_ciudadano/Api/NuevoRegistro/_00.1_api_nuevo_registro.dart';
 import 'package:frontend_android_ciudadano/Blocs/NuevoRegistro/register_bloc.dart';
-import 'package:frontend_android_ciudadano/Blocs/NuevoRegistro/register_event.dart';
 import 'package:frontend_android_ciudadano/Blocs/NuevoRegistro/register_state.dart';
-import 'package:frontend_android_ciudadano/Models/NuevoRegistro/Users_Model/user_model.dart';
+import 'package:frontend_android_ciudadano/Models/NuevoRegistro/UserCars/car_model.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_00_app_bar.dart';
+// import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_00_app_bar.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_custom_textfield_.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_titlle_textfield_.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_02_custom_buttom_.dart';
+import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_03_dropdownselectitem.dart';
 
-class RegisterView extends StatelessWidget {
-  RegisterView({super.key});
+class RegisterCar extends StatelessWidget {
+  RegisterCar({super.key});
 
-  final cedulaController = TextEditingController();
-  final nombresController = TextEditingController();
-  final apellidosController = TextEditingController();
-  final correoController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-
+  final numplacaC = TextEditingController();
+  final modeloC = TextEditingController();
+  final yearC = TextEditingController();
+  final colorC = TextEditingController();
+  final matriculaC = TextEditingController();
+  final double progress = 170;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: const AppBarRegister(),
+        appBar: AppBarRegister(progress: progress),
         body: SafeArea(
             child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 0.h),
@@ -57,83 +57,61 @@ class RegisterView extends StatelessWidget {
                         ),
                         SizedBox(height: 25.h),
                         Text(
-                          'Datos del usuario',
+                          'Datos del vehiculo',
                           style: TextStyle(fontSize: 14.h),
                         ),
                         SizedBox(height: 15.h),
                         const CustomText(
-                          text: 'Cedula',
+                          text: 'Numero de placa',
                         ),
                         CustomTextField(
-                          controller: cedulaController,
-                          hintText: 'Ingresar numero de cedula sin guiones',
+                          controller: numplacaC,
+                          hintText: 'Ingresar numero',
                         ),
                         SizedBox(height: 16.h),
                         const CustomText(
-                          text: 'Nombres',
+                          text: 'Modelo',
                         ),
-                        CustomTextField(
-                          controller: cedulaController,
-                          hintText: 'Ingresar nombres',
-                        ),
-                        SizedBox(height: 16.h),
-                        const CustomText(
-                          text: 'Apellidos',
-                        ),
-                        CustomTextField(
-                          controller: cedulaController,
-                          hintText: 'Ingresar apellidos',
+                        CustomDropdownSelectItem(
+                          items: const [],
+                          onChanged: (CarModel? value) {},
+                          hintText: 'Seleccionar',
                         ),
                         SizedBox(height: 16.h),
                         const CustomText(
-                          text: 'Correo',
+                          text: 'Año',
                         ),
-                        CustomTextField(
-                          controller: cedulaController,
-                          hintText: 'Ingresar correo',
-                        ),
-                        SizedBox(height: 16.h),
-                        const CustomText(
-                          text: 'Contraseña',
-                        ),
-                        CustomTextField(
-                          controller: cedulaController,
-                          hintText: 'Contraseña',
+                        CustomDropdownSelectItem(
+                          items: const [],
+                          onChanged: (CarModel? value) {},
+                          hintText: 'Seleccionar',
                         ),
                         SizedBox(height: 16.h),
                         const CustomText(
-                          text: 'Confirmar contraseña',
+                          text: 'Color',
                         ),
-                        CustomTextField(
-                          controller: cedulaController,
-                          hintText: 'Confirmar contraseña',
+                        CustomDropdownSelectItem(
+                          items: const [],
+                          onChanged: (CarModel? value) {},
+                          hintText: 'Seleccionar',
                         ),
                         SizedBox(height: 16.h),
+                        const CustomText(
+                          text: 'Matricula',
+                        ),
+                        CustomTextField(
+                          controller: matriculaC,
+                          hintText: 'Ingresar numero de matricula',
+                        ),
+                        SizedBox(height: 80.h),
                         if (state is RegisterLoading)
                           const CircularProgressIndicator()
                         else
-                          RegistroButtom(
-                            onPressed: () {
-                              if (passwordController.text ==
-                                  confirmPasswordController.text) {
-                                final user = User(
-                                  cedula: cedulaController.text,
-                                  nombres: nombresController.text,
-                                  apellidos: apellidosController.text,
-                                  correo: correoController.text,
-                                  password: passwordController.text,
-                                );
-                                context
-                                    .read<RegisterBloc>()
-                                    .add(RegisterSubmitted(user));
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content:
-                                          Text('Las contraseñas no coinciden')),
-                                );
-                              }
-                            },
+                          SizedBox(
+                            child: RegistroButtom(
+                              onPressed: () {},
+                              text: 'Registrarse',
+                            ),
                           ),
                       ],
                     );
@@ -145,3 +123,23 @@ class RegisterView extends StatelessWidget {
         )));
   }
 }
+
+   // if (passwordController.text ==
+                              //     confirmPasswordController.text) {
+                              //   final user = User(
+                              //     cedula: cedulaController.text,
+                              //     nombres: nombresController.text,
+                              //     apellidos: apellidosController.text,
+                              //     correo: correoController.text,
+                              //     password: passwordController.text,
+                              //   );
+                              //   context
+                              //       .read<RegisterBloc>()
+                              //       .add(RegisterSubmitted(user));
+                              // } else {
+                              //   ScaffoldMessenger.of(context).showSnackBar(
+                              //     const SnackBar(
+                              //         content:
+                              //             Text('Las contraseñas no coinciden')),
+                              //   );
+                              // }
