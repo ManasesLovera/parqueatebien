@@ -6,7 +6,6 @@ import 'package:frontend_android_ciudadano/Blocs/NuevoRegistro/register_bloc.dar
 import 'package:frontend_android_ciudadano/Blocs/NuevoRegistro/register_state.dart';
 import 'package:frontend_android_ciudadano/Models/NuevoRegistro/UserCars/car_model.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_00_app_bar.dart';
-// import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_00_app_bar.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_custom_textfield_.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_titlle_textfield_.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_02_custom_buttom_.dart';

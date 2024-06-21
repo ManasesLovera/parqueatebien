@@ -3,8 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RegisterNow extends StatelessWidget {
   final VoidCallback onPressed;
+  final String? text;
 
-  const RegisterNow({super.key, required this.onPressed});
+  const RegisterNow({super.key, required this.onPressed, this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class RegisterNow extends StatelessWidget {
               ),
             ),
             child: Text(
-              'Registrate ahora',
+              text ?? '',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 13.h,
