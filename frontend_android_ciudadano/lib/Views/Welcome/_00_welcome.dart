@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:frontend_android_ciudadano/Views/Welcome/_01_consulta_.dart';
 import 'package:frontend_android_ciudadano/Widgets/Welcome/_00_main_image.dart';
 import 'package:frontend_android_ciudadano/Widgets/Welcome/_01_welcometext.dart';
 import 'package:frontend_android_ciudadano/Widgets/Welcome/_02_subtituloreport.dart';
@@ -28,7 +29,9 @@ class Welcome extends StatelessWidget {
               svgPath: 'assets/icons/car.svg',
               title: 'Consulta de vehiculo',
               subtitle: 'Consulta si tu vehiculo ha sido incautado',
-              onTap: () {},
+              onTap: () {
+                showVehicleDialog(context);
+              },
             ),
             ReportConsultButtom(
               svgPath: 'assets/icons/create.svg',
