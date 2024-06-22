@@ -12,7 +12,7 @@ class Usertext extends StatelessWidget {
       child: Align(
         alignment: Alignment.centerLeft,
         child: Text(
-           text??'',
+          text ?? '',
           style: TextStyle(
             color: Colors.white,
             fontSize: 11.h,
