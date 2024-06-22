@@ -5,6 +5,7 @@ import 'package:frontend_android_ciudadano/Blocs/Login/ButtomLoginState/button_s
 import 'package:frontend_android_ciudadano/Blocs/Login/LoginLogic/_00_login_event.dart';
 import 'package:frontend_android_ciudadano/Blocs/Login/LoginLogic/_01_login_state.dart';
 import 'package:frontend_android_ciudadano/Blocs/Login/LoginLogic/_02_login_bloc.dart';
+import 'package:frontend_android_ciudadano/Views/Welcome/_00_welcome.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_02_custom_buttom_.dart';
 
 class SignInBlocBuilder extends StatelessWidget {
@@ -19,7 +20,15 @@ class SignInBlocBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(
+    return BlocListener<LoginBloc, LoginState>(listener: (context, state) {
+      if (state is LoginSuccess) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const Welcome(),
+          ),
+        );
+      }
+    }, child: BlocBuilder<LoginBloc, LoginState>(
       builder: (context, state) {
         return Column(
           children: [
@@ -70,6 +79,6 @@ class SignInBlocBuilder extends StatelessWidget {
           ],
         );
       },
-    );
+    ));
   }
 }

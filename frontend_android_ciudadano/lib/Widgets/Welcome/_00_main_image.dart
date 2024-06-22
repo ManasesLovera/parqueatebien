@@ -6,11 +6,22 @@ class ImageReportConsult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: Image.asset(
-        'assets/whiteback/main_w.png',
-        height: 50.h,
-      ),
+    return const SizedBox(
+      child: Imagen(),
+    );
+  }
+}
+
+class Imagen extends StatelessWidget {
+  const Imagen({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      'assets/whiteback/main_w.png',
+      height: 50.h,
     );
   }
 }
