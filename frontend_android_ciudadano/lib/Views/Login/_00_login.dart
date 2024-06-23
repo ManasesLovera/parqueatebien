@@ -5,9 +5,8 @@ import 'package:frontend_android_ciudadano/Blocs/Login/ButtomLoginState/button_s
 import 'package:frontend_android_ciudadano/Blocs/Login/ButtomLoginState/sign_in_bloc_builder.dart';
 import 'package:frontend_android_ciudadano/Blocs/Login/LoginLogic/_02_login_bloc.dart';
 import 'package:frontend_android_ciudadano/Views/NuevoRegistro/_00.0_user.dart';
-import 'package:frontend_android_ciudadano/Widgets/Login/_00_main_image.dart';
-import 'package:frontend_android_ciudadano/Widgets/Login/_01_user_above_text_.dart';
-
+import 'package:frontend_android_ciudadano/Widgets/GlobalsWidgets/_00_logo_image.dart';
+import 'package:frontend_android_ciudadano/Widgets/Login/_01_user_text_for_textfield_.dart';
 import 'package:frontend_android_ciudadano/Widgets/Login/_05_forgot_password_tex.dart';
 import 'package:frontend_android_ciudadano/Widgets/Login/_06_not_account_text.dart';
 import 'package:frontend_android_ciudadano/Widgets/Login/_09_custom_registrate_now.dart';
@@ -30,9 +29,11 @@ class Login extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: 50.h),
-                const MainImage(),
+                const CustomImageLogo(img: 'assets/splash/main.png', altura:100),
                 SizedBox(height: 50.h),
-                 const Usertext(text: 'Correo electronico' ,),
+                const Usertext(
+                  text: 'Correo electronico',
+                ),
                 BlocProvider(
                   create: (_) => ButtonStateBloc(),
                   child: Builder(
@@ -50,21 +51,31 @@ class Login extends StatelessWidget {
 
                       return Column(
                         children: [
-                          CustomTextField(controller: iD, hintText: 'Ingresar correo electronico',),
+                          CustomTextField(
+                            controller: iD,
+                            hintText: 'Ingresar correo electronico',
+                          ),
                           SizedBox(height: 20.h),
-                           const Usertext(
+                          const Usertext(
                             text: 'Contraseña',
                           ),
-                          CustomTextField(controller: pass, hintText: 'Ingresar la contraseña',),
+                          CustomTextField(
+                            controller: pass,
+                            hintText: 'Ingresar la contraseña',
+                          ),
                           SizedBox(height: 16.h),
                           BlocProvider(
                             create: (_) => LoginBloc(),
                             child: SignInBlocBuilder(iD: iD, pass: pass),
                           ),
                           SizedBox(height: 15.h),
-                          const ForgotPasswordText(text: '¿Olvidaste tu Contraseña?',),
+                          const ForgotPasswordText(
+                            text: '¿Olvidaste tu Contraseña?',
+                          ),
                           SizedBox(height: 80.h),
-                          const DontAccount(text: '¿No tienes una cuenta?',),
+                          const DontAccount(
+                            text: '¿No tienes una cuenta?',
+                          ),
                           SizedBox(height: 8.h),
                           SizedBox(
                             child: RegisterNow(

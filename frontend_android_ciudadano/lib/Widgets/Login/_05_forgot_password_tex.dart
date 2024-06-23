@@ -8,11 +8,9 @@ class ForgotPasswordText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.of(context).pushNamed('/forgot');
-      },
+      onTap: () {},
       child: Text(
-       text?? '',
+        text ?? '',
         style: TextStyle(
           color: Colors.white,
           fontSize: 12.h,
