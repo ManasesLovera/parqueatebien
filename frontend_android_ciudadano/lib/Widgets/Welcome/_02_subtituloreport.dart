@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SubtituloReport extends StatelessWidget {
+  final String? sub;
   const SubtituloReport({
+    this.sub,
     super.key,
   });
 
@@ -13,7 +15,7 @@ class SubtituloReport extends StatelessWidget {
       child: Align(
         alignment: Alignment.topCenter,
         child: Text(
-          '¿Que deseas realizar hoy?',
+          sub ?? '',
           style: TextStyle(
             color: Colors.grey,
             fontSize: 13.h,
