@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,25 +23,50 @@ class CarDetails extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline, color: Colors.black),
+            onPressed: () {
+              // Handle info action
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.refresh, color: Colors.black),
+            onPressed: () {
+              // Handle refresh action
+            },
+          ),
+        ],
+        centerTitle: true,
+        title: const CustomImageLogo(
+          img: 'assets/whiteback/main_w.png',
+          altura: 20,
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.h),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 30.h),
-                const Center(
-                  child: CustomImageLogo(
-                    img: 'assets/whiteback/main_w.png',
-                    altura: 20,
-                  ),
-                ),
-                SizedBox(height: 20.h),
                 Text(
                   'Datos del vehículo',
-                  style: TextStyle(fontSize: 18.h, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 18.h,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+                SizedBox(height: 10.h),
                 BlocBuilder<VehicleBloc, VehicleState>(
                   builder: (context, state) {
                     if (state is VehicleDetailsLoaded) {
@@ -50,28 +76,31 @@ class CarDetails extends StatelessWidget {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 10.h),
-                          Text('Número de placa',
-                              style: TextStyle(
-                                  fontSize: 16.h, fontWeight: FontWeight.bold)),
-                          Text(details['LicensePlate'],
-                              style: TextStyle(fontSize: 16.h)),
-                          SizedBox(height: 10.h),
-                          Text('Tipo de vehículo',
-                              style: TextStyle(
-                                  fontSize: 16.h, fontWeight: FontWeight.bold)),
-                          Text(details['VehicleType'],
-                              style: TextStyle(fontSize: 16.h)),
-                          SizedBox(height: 10.h),
-                          Text('Color',
-                              style: TextStyle(
-                                  fontSize: 16.h, fontWeight: FontWeight.bold)),
-                          Text(details['VehicleColor'],
-                              style: TextStyle(fontSize: 16.h)),
+                          Center(
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              child: const Text('Vehículo retenido',
+                                  style: TextStyle(color: Colors.white)),
+                            ),
+                          ),
                           SizedBox(height: 20.h),
-                          Text('Ubicación de la retención',
-                              style: TextStyle(
-                                  fontSize: 16.h, fontWeight: FontWeight.bold)),
+                          _buildDetailRow(
+                              'Número de placa', details['LicensePlate']),
+                          _buildDetailRow(
+                              'Tipo de vehículo', details['VehicleType']),
+                          _buildDetailRow('Color', details['VehicleColor']),
+                          SizedBox(height: 20.h),
+                          Text(
+                            'Ubicación de la retención',
+                            style: TextStyle(
+                                fontSize: 16.sp, fontWeight: FontWeight.bold),
+                          ),
                           FutureBuilder(
                             future: _getAddressFromLatLng(
                                 double.parse(details['Lat']),
@@ -80,19 +109,19 @@ class CarDetails extends StatelessWidget {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
                                 return Text('Cargando dirección...',
-                                    style: TextStyle(fontSize: 16.h));
+                                    style: TextStyle(fontSize: 16.sp));
                               } else if (snapshot.hasError) {
                                 return Text('Error al obtener la dirección',
-                                    style: TextStyle(fontSize: 16.h));
+                                    style: TextStyle(fontSize: 16.sp));
                               } else {
-                                return Text(' ${snapshot.data}',
-                                    style: TextStyle(fontSize: 16.h));
+                                return Text('${snapshot.data}',
+                                    style: TextStyle(fontSize: 16.sp));
                               }
                             },
                           ),
                           SizedBox(height: 10.h),
                           SizedBox(
-                            height: 100.h,
+                            height: 200.h,
                             child: GoogleMap(
                               initialCameraPosition: CameraPosition(
                                 target: LatLng(double.parse(details['Lat']),
@@ -109,9 +138,11 @@ class CarDetails extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 20.h),
-                          Text('Fotos del vehículo',
-                              style: TextStyle(
-                                  fontSize: 16.h, fontWeight: FontWeight.bold)),
+                          Text(
+                            'Fotos del vehículo',
+                            style: TextStyle(
+                                fontSize: 16.sp, fontWeight: FontWeight.bold),
+                          ),
                           SizedBox(height: 10.h),
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
@@ -119,11 +150,14 @@ class CarDetails extends StatelessWidget {
                               children: photos.map((photo) {
                                 return Padding(
                                   padding: EdgeInsets.only(right: 8.w),
-                                  child: Image.memory(
-                                    base64Decode(photo['File']),
-                                    height: 100.h,
-                                    width: 100.w,
-                                    fit: BoxFit.cover,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Image.memory(
+                                      base64Decode(photo['File']),
+                                      height: 100.h,
+                                      width: 100.w,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 );
                               }).toList(),
@@ -144,6 +178,25 @@ class CarDetails extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(String title, String value) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 5.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            value,
+            style: TextStyle(fontSize: 16.sp),
+          ),
+        ],
       ),
     );
   }
