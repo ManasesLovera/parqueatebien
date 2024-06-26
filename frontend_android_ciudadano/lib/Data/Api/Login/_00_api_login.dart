@@ -7,13 +7,8 @@ class LoginSendData {
   static final Logger _logger = Logger();
 
   Future<bool> signIn(String username, String password) async {
-<<<<<<< HEAD
-    // const url = 'https://parqueatebiendemo.azurewebsites.net/users/login';
     const url = 'https://parqueatebiendemo.azurewebsites.net/users/login';
-=======
-    const url = 'https://parqueatebiendemo.azurewebsites.net/users/login';
-    // const url = 'http://192.168.0.209:8089/users/login';
->>>>>>> e1683d22c4ffec8a8beeac7085206058093cf0df
+
     try {
       final response = await http
           .post(

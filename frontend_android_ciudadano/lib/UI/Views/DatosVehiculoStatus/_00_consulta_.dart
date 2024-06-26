@@ -5,7 +5,6 @@ import 'package:frontend_android_ciudadano/Data/Api/ConsultaDePlacas/_00_api_con
 import 'package:frontend_android_ciudadano/Data/Blocs/Vehiculo/_00_vehicle_event.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Vehiculo/_01_vehicle_state.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Vehiculo/_02_vehicle_bloc.dart';
-
 import 'package:frontend_android_ciudadano/UI/Views/DatosVehiculoStatus/_01_vehiculo_data.dart';
 
 void showVehicleDialog(BuildContext context) {
