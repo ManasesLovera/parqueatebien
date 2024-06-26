@@ -122,13 +122,13 @@ class CarDetails extends StatelessWidget {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
                                 return Text('Cargando dirección...',
-                                    style: TextStyle(fontSize: 16.sp));
+                                    style: TextStyle(fontSize: 16.h));
                               } else if (snapshot.hasError) {
                                 return Text('Error al obtener la dirección',
-                                    style: TextStyle(fontSize: 16.sp));
+                                    style: TextStyle(fontSize: 16.h));
                               } else {
                                 return Text('${snapshot.data}',
-                                    style: TextStyle(fontSize: 16.sp));
+                                    style: TextStyle(fontSize: 16.h));
                               }
                             },
                           ),

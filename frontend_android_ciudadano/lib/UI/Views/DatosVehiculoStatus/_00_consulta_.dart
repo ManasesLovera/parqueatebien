@@ -100,13 +100,7 @@ void showVehicleDialog(BuildContext context) {
                                 ),
                               ),
                             );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text(
-                                      'Seleccione una placa antes de consultar')),
-                            );
-                          }
+                          } 
                         },
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
