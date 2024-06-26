@@ -19,4 +19,6 @@ class RegisterApi {
       return false;
     }
   }
+
+  registerVehicle(String licensePlate, String vehicleType, String vehicleColor, String model, String year, String matricula) {}
 }
