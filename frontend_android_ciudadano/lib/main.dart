@@ -5,7 +5,8 @@ import 'package:frontend_android_ciudadano/Data/Api/ConsultaDePlacas/_00_api_con
 import 'package:frontend_android_ciudadano/Data/Blocs/Login/LoginLogic/_02_login_bloc.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Vehiculo/_00_vehicle_event.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Vehiculo/_02_vehicle_bloc.dart';
-import 'package:frontend_android_ciudadano/UI/Views/Login/_00_login.dart';
+
+import 'package:frontend_android_ciudadano/UI/Views/Welcome/_00_welcome.dart';
 
 void main() => runApp(const M());
 
@@ -25,11 +26,12 @@ class M extends StatelessWidget {
             BlocProvider<VehicleBloc>(
               create: (context) =>
                   VehicleBloc(ConsultaPlaca())..add(FetchLicencePlates()),
+                
             )
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             debugShowCheckedModeBanner: false,
-            home: Login(),
+            home: Welcome(),
           ),
         );
       },

@@ -28,3 +28,12 @@ class VehicleError extends VehicleState {
   @override
   List<Object> get props => [error];
 }
+
+class VehicleDetailsLoaded extends VehicleState {
+  final Map<String, dynamic> vehicleDetails;
+
+  const VehicleDetailsLoaded(this.vehicleDetails);
+
+  @override
+  List<Object> get props => [vehicleDetails];
+}

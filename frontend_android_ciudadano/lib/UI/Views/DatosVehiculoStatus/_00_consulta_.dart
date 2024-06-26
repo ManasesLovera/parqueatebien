@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:frontend_android_ciudadano/Data/Blocs/Vehiculo/_00_vehicle_event.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Vehiculo/_01_vehicle_state.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Vehiculo/_02_vehicle_bloc.dart';
 
 void showVehicleDialog(BuildContext context) {
+  String? selectedPlate;
+
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -41,10 +44,12 @@ void showVehicleDialog(BuildContext context) {
                   if (state is VehicleLoading) {
                     return const CircularProgressIndicator();
                   } else if (state is VehicleLoaded) {
+                    if (selectedPlate == null &&
+                        state.licencePlates.isNotEmpty) {
+                      selectedPlate = state.licencePlates[0];
+                    }
                     return DropdownButtonFormField<String>(
-                      value: state.licencePlates.isNotEmpty
-                          ? state.licencePlates[0]
-                          : null,
+                      value: selectedPlate,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.r),
@@ -56,7 +61,11 @@ void showVehicleDialog(BuildContext context) {
                           child: Text(value),
                         );
                       }).toList(),
-                      onChanged: (String? newValue) {},
+                      onChanged: (String? newValue) {
+                        selectedPlate = newValue;
+                        BlocProvider.of<VehicleBloc>(context)
+                            .add(SelectLicencePlate(newValue!));
+                      },
                     );
                   } else if (state is VehicleError) {
                     return Text('Error: ${state.error}');
@@ -69,7 +78,18 @@ void showVehicleDialog(BuildContext context) {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (selectedPlate != null) {
+                      BlocProvider.of<VehicleBloc>(context)
+                          .add(FetchVehicleDetails(selectedPlate!));
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text(
+                                'Seleccione una placa antes de consultar')),
+                      );
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: Colors.blue,
