@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geocoding/geocoding.dart';
 
 class ReportInfoScreen extends StatelessWidget {
   final Map<String, dynamic> vehicleData;
@@ -17,6 +18,15 @@ class ReportInfoScreen extends StatelessWidget {
         return Colors.green;
       default:
         return Colors.grey;
+    }
+  }
+
+  Future<String> _getAddressFromLatLng(double lat, double lon) async {
+    List<Placemark> placemarks = await placemarkFromCoordinates(lat, lon);
+    if (placemarks.isNotEmpty) {
+      return '${placemarks.first.street}, ${placemarks.first.locality}, ${placemarks.first.country}';
+    } else {
+      return 'Dirección no encontrada';
     }
   }
 
@@ -106,12 +116,31 @@ class ReportInfoScreen extends StatelessWidget {
                   title: 'Fecha y hora de incautación por grúa:',
                   content: vehicleData['ReportedDate'] ?? 'Desconocido',
                 ),
-                _buildDetailItem(
-                  title: 'Ubicación actual',
-                  content: vehicleData['CurrentAddress'] ?? 'Desconocido',
+                FutureBuilder(
+                  future: _getAddressFromLatLng(
+                      double.parse(vehicleData['Lat']),
+                      double.parse(vehicleData['Lon'])),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return _buildDetailItem(
+                        title: 'Ubicación actual:',
+                        content: 'Cargando dirección...',
+                      );
+                    } else if (snapshot.hasError) {
+                      return _buildDetailItem(
+                        title: 'Ubicación actual:',
+                        content: 'Error al obtener la dirección',
+                      );
+                    } else {
+                      return _buildDetailItem(
+                        title: 'Ubicación actual:',
+                        content: snapshot.data as String,
+                      );
+                    }
+                  },
                 ),
                 _buildDetailItem(
-                  title: 'Fecha y hora de llegada al centro',
+                  title: 'Fecha y hora de llegada al centro:',
                   content: vehicleData['ArrivalAtParkinglot'] ?? 'Desconocido',
                 ),
                 SizedBox(height: 50.h),

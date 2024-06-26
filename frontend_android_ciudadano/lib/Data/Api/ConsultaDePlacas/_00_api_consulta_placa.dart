@@ -4,9 +4,9 @@ import 'package:logger/logger.dart';
 
 class ConsultaPlaca {
   final String apiUrlList =
-      'https://parqueatebiendemo.azurewebsites.net/ciudadanos/ciudadanos';
+      'http://192.168.0.209:8089/ciudadanos/ciudadanos';
   final String apiUrlDetails =
-      'https://parqueatebiendemo.azurewebsites.net/ciudadanos/';
+      'http://192.168.0.209:8089/ciudadanos/';
   final Logger _logger = Logger();
 
   Future<List<String>> fetchLicencePlates() async {
