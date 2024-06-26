@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Vehiculo/_01_vehicle_state.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Vehiculo/_02_vehicle_bloc.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/GlobalsWidgets/_00_logo_image.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class CarDetails extends StatelessWidget {
@@ -46,28 +47,43 @@ class CarDetails extends StatelessWidget {
                           SizedBox(height: 10.h),
                           Text('Número de placa',
                               style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.bold)),
+                                  fontSize: 16.h, fontWeight: FontWeight.bold)),
                           Text(details['LicensePlate'],
                               style: TextStyle(fontSize: 16.h)),
                           SizedBox(height: 10.h),
                           Text('Tipo de vehículo',
                               style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.bold)),
+                                  fontSize: 16.h, fontWeight: FontWeight.bold)),
                           Text(details['VehicleType'],
                               style: TextStyle(fontSize: 16.h)),
                           SizedBox(height: 10.h),
                           Text('Color',
                               style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.bold)),
+                                  fontSize: 16.h, fontWeight: FontWeight.bold)),
                           Text(details['VehicleColor'],
                               style: TextStyle(fontSize: 16.h)),
                           SizedBox(height: 20.h),
                           Text('Ubicación de la retención',
                               style: TextStyle(
                                   fontSize: 16.h, fontWeight: FontWeight.bold)),
+                          FutureBuilder(
+                            future: _getAddressFromLatLng(
+                                double.parse(details['Lat']),
+                                double.parse(details['Lon'])),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Text('Cargando dirección...',
+                                    style: TextStyle(fontSize: 16.h));
+                              } else if (snapshot.hasError) {
+                                return Text('Error al obtener la dirección',
+                                    style: TextStyle(fontSize: 16.h));
+                              } else {
+                                return Text(' ${snapshot.data}',
+                                    style: TextStyle(fontSize: 16.h));
+                              }
+                            },
+                          ),
                           SizedBox(height: 10.h),
                           SizedBox(
                             height: 100.h,
@@ -124,5 +140,14 @@ class CarDetails extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<String> _getAddressFromLatLng(double lat, double lon) async {
+    List<Placemark> placemarks = await placemarkFromCoordinates(lat, lon);
+    if (placemarks.isNotEmpty) {
+      return '${placemarks.first.street}, ${placemarks.first.locality}, ${placemarks.first.country}';
+    } else {
+      return 'Dirección no encontrada';
+    }
   }
 }
