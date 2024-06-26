@@ -1,14 +1,18 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:frontend_android_ciudadano/Data/Api/ConsultaDePlacas/_00_api_consulta_placa.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoFetch/_00_vehicle_event.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoFetch/_01_vehicle_state.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoFetch/_02_vehicle_bloc.dart';
-import 'package:frontend_android_ciudadano/UI/Views/DatosVehiculoStatus/_02_detalles_info.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/GlobalsWidgets/_00_logo_image.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/Vehiculo/down_field.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/Vehiculo/map_vehiculo.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/Vehiculo/photos_vehiculo.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/Vehiculo/status_button_label.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/Vehiculo/subtext.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/Vehiculo/upfieldtext.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class CarDetails extends StatelessWidget {
   final String licensePlate;
@@ -17,199 +21,122 @@ class CarDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Fetch details when the page is opened
-    BlocProvider.of<VehicleBloc>(context)
-        .add(FetchVehicleDetails(licensePlate));
-
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+    // Agregar el BlocProvider en la parte superior del árbol de widgets para asegurar que el Bloc esté disponible.
+    return BlocProvider(
+      create: (context) =>
+          VehicleBloc(ConsultaPlaca())..add(FetchVehicleDetails(licensePlate)),
+      child: Scaffold(
         backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        actions: [
-          BlocBuilder<VehicleBloc, VehicleState>(
-            builder: (context, state) {
-              if (state is VehicleDetailsLoaded) {
-                return IconButton(
-                  icon: const Icon(Icons.info_outline, color: Colors.black),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            ReportInfoScreen(vehicleData: state.vehicleDetails),
-                      ),
-                    );
-                  },
-                );
-              } else {
-                return Container();
-              }
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.refresh, color: Colors.black),
-            onPressed: () {
-              // Handle refresh action
-            },
-          ),
-        ],
-        centerTitle: true,
-        title: const CustomImageLogo(
-          img: 'assets/whiteback/main_w.png',
-          altura: 20,
-        ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Datos del vehículo',
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.h),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 15.h,
                   ),
-                ),
-                SizedBox(height: 10.h),
-                BlocBuilder<VehicleBloc, VehicleState>(
-                  builder: (context, state) {
-                    if (state is VehicleDetailsLoaded) {
-                      final details = state.vehicleDetails;
-                      final List<dynamic> photos = details['Photos'];
-
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Center(
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
-                              child: Text(details['Status'],
-                                  style: const TextStyle(color: Colors.white)),
+                  const CustomImageLogo(
+                    img: 'assets/whiteback/main_w.png',
+                    altura: 50,
+                  ),
+                  SizedBox(height: 40.h),
+                  const VehiculoSubText(sub: 'Datos del vehiculo'),
+                  SizedBox(height: 5.h),
+                  BlocBuilder<VehicleBloc, VehicleState>(
+                    builder: (context, state) {
+                      if (state is VehicleDetailsLoaded) {
+                        final details = state.vehicleDetails;
+                        final List<dynamic> photos = details['Photos'];
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 22.h,
+                              child: SatusButtom(details: details),
                             ),
-                          ),
-                          SizedBox(height: 20.h),
-                          _buildDetailRow(
-                              'Número de placa', details['LicensePlate']),
-                          _buildDetailRow(
-                              'Tipo de vehículo', details['VehicleType']),
-                          _buildDetailRow('Color', details['VehicleColor']),
-                          SizedBox(height: 20.h),
-                          Text(
-                            'Ubicación de la retención',
-                            style: TextStyle(
-                                fontSize: 16.sp, fontWeight: FontWeight.bold),
-                          ),
-                          FutureBuilder(
-                            future: _getAddressFromLatLng(
+                            SizedBox(height: 20.h),
+                            const Upfields(text: 'Numero de placa'),
+                            Downfield(
+                              details: details,
+                              detailKey: 'LicensePlate',
+                            ),
+                            const Divider(),
+                            const Upfields(text: 'Tipo de vehículo'),
+                            SizedBox(height: 1.h),
+                            Downfield(
+                              details: details,
+                              detailKey: 'VehicleType',
+                            ),
+                            const Divider(),
+                            const Upfields(text: 'Color'),
+                            SizedBox(height: 1.h),
+                            Downfield(
+                              details: details,
+                              detailKey: 'VehicleColor',
+                            ),
+                            const Divider(),
+                            const Upfields(text: 'Ubicacion de la retencion'),
+                            FutureBuilder<String>(
+                              future: _getAddressFromLatLng(
                                 double.parse(details['Lat']),
-                                double.parse(details['Lon'])),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Text('Cargando dirección...',
-                                    style: TextStyle(fontSize: 16.h));
-                              } else if (snapshot.hasError) {
-                                return Text('Error al obtener la dirección',
-                                    style: TextStyle(fontSize: 16.h));
-                              } else {
-                                return Text('${snapshot.data}',
-                                    style: TextStyle(fontSize: 16.h));
-                              }
-                            },
-                          ),
-                          SizedBox(height: 10.h),
-                          SizedBox(
-                            height: 200.h,
-                            child: GoogleMap(
-                              initialCameraPosition: CameraPosition(
-                                target: LatLng(double.parse(details['Lat']),
-                                    double.parse(details['Lon'])),
-                                zoom: 14.0,
+                                double.parse(details['Lon']),
                               ),
-                              markers: {
-                                Marker(
-                                  markerId: const MarkerId('Location'),
-                                  position: LatLng(double.parse(details['Lat']),
-                                      double.parse(details['Lon'])),
-                                ),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Text(
+                                    'Cargando dirección...',
+                                    style: TextStyle(fontSize: 10.h),
+                                  );
+                                } else if (snapshot.hasError) {
+                                  return Text(
+                                    'Error al obtener la dirección',
+                                    style: TextStyle(fontSize: 10.h),
+                                  );
+                                } else {
+                                  return Text(
+                                    snapshot.data ?? 'Dirección no encontrada',
+                                    style: TextStyle(
+                                        fontSize: 8.h, color: Colors.grey),
+                                  );
+                                }
                               },
                             ),
-                          ),
-                          SizedBox(height: 20.h),
-                          Text(
-                            'Fotos del vehículo',
-                            style: TextStyle(
-                                fontSize: 16.sp, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 10.h),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: photos.map((photo) {
-                                return Padding(
-                                  padding: EdgeInsets.only(right: 8.w),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Image.memory(
-                                      base64Decode(photo['File']),
-                                      height: 100.h,
-                                      width: 100.w,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
+                            SizedBox(height: 5.h),
+                            MapVehiculo(details: details),
+                            SizedBox(
+                              height: 11.h,
                             ),
-                          ),
-                        ],
-                      );
-                    } else if (state is VehicleLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (state is VehicleError) {
-                      return Center(child: Text('Error: ${state.error}'));
-                    } else {
-                      return Container();
-                    }
-                  },
-                ),
-              ],
+                            const Divider(),
+                            SizedBox(
+                              height: 2.h,
+                            ),
+                            const Upfields(text: 'Fotos del vehículo'),
+                            SizedBox(
+                              height: 6.h,
+                            ),
+                            FotosVehiculo(photos: photos),
+                          ],
+                        );
+                      } else if (state is VehicleLoading) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (state is VehicleError) {
+                        return Center(
+                          child: Text('Error: ${state.error}'),
+                        );
+                      } else {
+                        return Container();
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(String title, String value) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 5.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            value,
-            style: TextStyle(fontSize: 16.sp),
-          ),
-        ],
       ),
     );
   }

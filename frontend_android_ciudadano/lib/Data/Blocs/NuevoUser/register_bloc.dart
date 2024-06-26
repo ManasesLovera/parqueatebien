@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend_android_ciudadano/Data/Api/NuevoRegistro/_00.1_api_nuevo_registro.dart';
-import 'package:frontend_android_ciudadano/Data/Blocs/NuevoRegistro/register_state.dart';
+import 'package:frontend_android_ciudadano/Data/Blocs/NuevoUser/register_state.dart';
 
 import 'register_event.dart';
 
