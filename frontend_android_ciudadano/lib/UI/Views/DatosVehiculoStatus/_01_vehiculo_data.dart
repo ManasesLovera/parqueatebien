@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -62,7 +61,7 @@ class CarDetails extends StatelessWidget {
                 Text(
                   'Datos del vehículo',
                   style: TextStyle(
-                    fontSize: 18.h,
+                    fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -85,8 +84,8 @@ class CarDetails extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                               ),
-                              child: const Text('Vehículo retenido',
-                                  style: TextStyle(color: Colors.white)),
+                              child: Text(details['Status'],
+                                  style: const TextStyle(color: Colors.white)),
                             ),
                           ),
                           SizedBox(height: 20.h),
