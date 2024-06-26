@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android_ciudadano/Api/NuevoRegistro/_00.1_api_nuevo_registro.dart';
+import 'package:frontend_android_ciudadano/Data/Api/NuevoRegistro/_00.1_api_nuevo_registro.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/NuevoRegistro/register_bloc.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/NuevoRegistro/register_state.dart';
 import 'package:frontend_android_ciudadano/Data/Models/NuevoRegistro/UserCars/car_model.dart';
-import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_00_app_bar.dart';
-import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_custom_textfield_.dart';
-import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_titlle_textfield_.dart';
-import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_02_custom_buttom_.dart';
-import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_03_dropdownselectitem.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_00_app_bar.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_01_custom_textfield_.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_01_titlle_textfield_.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_02_custom_buttom_.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_03_dropdownselectitem.dart';
 
 class RegisterCar extends StatelessWidget {
   RegisterCar({super.key});

@@ -4,13 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Login/ButtomLoginState/button_state_bloc.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Login/ButtomLoginState/sign_in_bloc_builder.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Login/LoginLogic/_02_login_bloc.dart';
-import 'package:frontend_android_ciudadano/Views/NuevoRegistro/_00.0_user.dart';
-import 'package:frontend_android_ciudadano/Widgets/GlobalsWidgets/_00_logo_image.dart';
-import 'package:frontend_android_ciudadano/Widgets/Login/_01_user_text_for_textfield_.dart';
-import 'package:frontend_android_ciudadano/Widgets/Login/_05_forgot_password_tex.dart';
-import 'package:frontend_android_ciudadano/Widgets/Login/_06_not_account_text.dart';
-import 'package:frontend_android_ciudadano/Widgets/Login/_09_custom_registrate_now.dart';
-import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_custom_textfield_.dart';
+import 'package:frontend_android_ciudadano/UI/Views/NuevoRegistro/_00.0_user.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/GlobalsWidgets/_00_logo_image.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/Login/_01_user_text_for_textfield_.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/Login/_05_forgot_password_tex.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/Login/_06_not_account_text.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/Login/_09_custom_registrate_now.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_01_custom_textfield_.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});

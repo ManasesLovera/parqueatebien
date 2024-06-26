@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android_ciudadano/Views/DatosVehiculoStatus/_00_consulta_.dart';
-import 'package:frontend_android_ciudadano/Widgets/GlobalsWidgets/_00_logo_image.dart';
-import 'package:frontend_android_ciudadano/Widgets/Welcome/_01_welcometext.dart';
-import 'package:frontend_android_ciudadano/Widgets/Welcome/_02_subtituloreport.dart';
-import 'package:frontend_android_ciudadano/Widgets/Welcome/_04_report_buttom.dart';
+import 'package:frontend_android_ciudadano/UI/Views/DatosVehiculoStatus/_00_consulta_.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/GlobalsWidgets/_00_logo_image.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/Welcome/_01_welcometext.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/Welcome/_02_subtituloreport.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/Welcome/_04_report_buttom.dart';
 
 class Welcome extends StatelessWidget {
   const Welcome({super.key});

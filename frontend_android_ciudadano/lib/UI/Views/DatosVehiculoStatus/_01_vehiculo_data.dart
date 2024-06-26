@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android_ciudadano/Widgets/GlobalsWidgets/_00_logo_image.dart';
+import 'package:frontend_android_ciudadano/UI/Widgets/GlobalsWidgets/_00_logo_image.dart';
 
 class CarDetails extends StatelessWidget {
   const CarDetails({super.key});
