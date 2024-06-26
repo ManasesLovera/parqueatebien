@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Vehiculo/_00_vehicle_event.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Vehiculo/_01_vehicle_state.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Vehiculo/_02_vehicle_bloc.dart';
+import 'package:frontend_android_ciudadano/UI/Views/DatosVehiculoStatus/_02_detalles_info.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/GlobalsWidgets/_00_logo_image.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -32,10 +33,23 @@ class CarDetails extends StatelessWidget {
           },
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.info_outline, color: Colors.black),
-            onPressed: () {
-              // Handle info action
+          BlocBuilder<VehicleBloc, VehicleState>(
+            builder: (context, state) {
+              if (state is VehicleDetailsLoaded) {
+                return IconButton(
+                  icon: const Icon(Icons.info_outline, color: Colors.black),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ReportInfoScreen(vehicleData: state.vehicleDetails),
+                      ),
+                    );
+                  },
+                );
+              } else {
+                return Container();
+              }
             },
           ),
           IconButton(
