@@ -1,8 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:frontend_android_ciudadano/Data/Blocs/Vehiculo/_00_vehicle_event.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Vehiculo/_01_vehicle_state.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Vehiculo/_02_vehicle_bloc.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/GlobalsWidgets/_00_logo_image.dart';
@@ -10,10 +10,16 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class CarDetails extends StatelessWidget {
-  const CarDetails({super.key});
+  final String licensePlate;
+
+  const CarDetails({super.key, required this.licensePlate});
 
   @override
   Widget build(BuildContext context) {
+    // Fetch details when the page is opened
+    BlocProvider.of<VehicleBloc>(context)
+        .add(FetchVehicleDetails(licensePlate));
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(

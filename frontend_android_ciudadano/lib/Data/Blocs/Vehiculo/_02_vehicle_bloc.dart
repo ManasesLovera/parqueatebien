@@ -20,9 +20,7 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
       }
     });
 
-    on<SelectLicencePlate>((event, emit) {
-      // Puedes agregar lógica específica para seleccionar una placa si es necesario
-    });
+    on<SelectLicencePlate>((event, emit) {});
 
     on<FetchVehicleDetails>((event, emit) async {
       emit(VehicleLoading());
