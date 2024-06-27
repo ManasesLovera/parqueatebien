@@ -112,7 +112,7 @@ class ReportScreenState extends State<ReportScreen> {
                       });
                     },
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   const TipodeVehiculo(),
                   VehicleTypeWidget(
                     selectedValue: _formHandlers.selectedVehicleType,
@@ -127,7 +127,7 @@ class ReportScreenState extends State<ReportScreen> {
                     touched: _formHandlers.vehicleTypeTouched,
                     onValidate: _onValidate,
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   const ColorText(),
                   ColorWidget(
                     selectedValue: _formHandlers.selectedColor,
@@ -142,7 +142,7 @@ class ReportScreenState extends State<ReportScreen> {
                     touched: _formHandlers.colorTouched,
                     onValidate: _onValidate,
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   const Referencia(),
                   AddressWidget(
                     controller: _formHandlers.addressController,
@@ -155,11 +155,11 @@ class ReportScreenState extends State<ReportScreen> {
                     },
                     onValidate: _onValidate,
                   ),
-                  const SizedBox(height: 1),
+                  const SizedBox(height: 2),
                   const DownTextVehiculoText(),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 20),
                   const MapWidget(),
-                  SizedBox(height: 10.h),
+                  const SizedBox(height: 20),
                   NextButton(
                     formHandlers: _formHandlers,
                     onValidate: _onValidate,
