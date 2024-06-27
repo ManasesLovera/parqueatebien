@@ -26,17 +26,23 @@ class SatusButtom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          backgroundColor: _getStatusColor(details['Status']),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 2.h, vertical: 0.w),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 60.w, vertical: 0.h),
+        child: Center(
+          child: ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: _getStatusColor(details['Status']),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            child: Text(details['Status'],
+                style: TextStyle(color: Colors.white, fontSize: 10.h)),
           ),
         ),
-        child: Text(details['Status'],
-            style: TextStyle(color: Colors.white, fontSize: 10.h)),
       ),
     );
   }

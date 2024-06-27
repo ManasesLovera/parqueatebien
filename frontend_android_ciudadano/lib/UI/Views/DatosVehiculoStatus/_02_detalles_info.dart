@@ -95,7 +95,7 @@ class ReportInfoScreen extends StatelessWidget {
                   child: Center(
                     child: Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 60.w, vertical: 2.h),
+                          EdgeInsets.symmetric(horizontal: 30.w, vertical: 2.h),
                       decoration: BoxDecoration(
                         color: _getStatusColor(
                             vehicleData['Status'] ?? 'Desconocido'),
