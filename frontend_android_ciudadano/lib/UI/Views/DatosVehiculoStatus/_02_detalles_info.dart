@@ -4,17 +4,18 @@ import 'package:geocoding/geocoding.dart';
 
 class ReportInfoScreen extends StatelessWidget {
   final Map<String, dynamic> vehicleData;
+
   const ReportInfoScreen({super.key, required this.vehicleData});
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
-      case 'reportado':
+      case 'Reportado':
         return Colors.grey;
-      case 'incautado por grua':
+      case 'Incautado por grua':
         return Colors.orange;
-      case 'retenido':
+      case 'Retenido':
         return Colors.red;
-      case 'liberado':
+      case 'Liberado':
         return Colors.green;
       default:
         return Colors.grey;
@@ -118,8 +119,9 @@ class ReportInfoScreen extends StatelessWidget {
                 ),
                 FutureBuilder(
                   future: _getAddressFromLatLng(
-                      double.parse(vehicleData['Lat']),
-                      double.parse(vehicleData['Lon'])),
+                    double.parse(vehicleData['Lat']),
+                    double.parse(vehicleData['Lon']),
+                  ),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return _buildDetailItem(
