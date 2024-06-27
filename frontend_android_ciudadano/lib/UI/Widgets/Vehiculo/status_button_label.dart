@@ -11,13 +11,13 @@ class SatusButtom extends StatelessWidget {
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
-      case 'reportado':
+      case 'Reportado':
         return Colors.grey;
-      case 'retenido':
+      case 'Retenido':
         return Colors.red;
-      case 'liberado':
+      case 'Liberado':
         return Colors.green;
-      case 'incautado por grua':
+      case 'Incautado por grua':
         return Colors.orange;
       default:
         return Colors.grey;
