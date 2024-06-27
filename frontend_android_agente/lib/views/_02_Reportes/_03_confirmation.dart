@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/Services/_02_Reporte/widgets/_13_map.dart';
 import 'package:frontend_android/Services/_02_Reporte/widgets/_13_map_C.dart';
 import 'package:frontend_android/Services/add_licence/_api_.dart';
 import 'package:image_picker/image_picker.dart';

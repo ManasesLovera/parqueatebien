@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/views/_03_Consulta/_01_detalles_vehiculo.dart';
+import 'package:frontend_android/views/_03_Consulta/_01_detalles_vehiculo_consulta.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -34,7 +34,7 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
 
   Future<void> _searchVehicle() async {
     const String baseUrl =
-        'https://parqueatebiendemo.azurewebsites.net/ciudadanos/';
+        'http://192.168.0.209:8089/ciudadanos/';
     final String endpoint = _plateController.text;
     final Uri url = Uri.parse('$baseUrl$endpoint');
 
