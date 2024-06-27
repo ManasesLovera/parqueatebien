@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:frontend_android/Services/_02_Reporte/widgets/_13_map_consulta.dart';
 import 'package:frontend_android/Services/update_status/_api_updatestatus.dart';
 import 'dart:convert';
 
 import 'package:frontend_android/views/_03_Consulta/_02_report_info.dart';
-
 
 class VehicleDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> vehicleData;
@@ -89,9 +89,13 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                   alignment: Alignment.center,
                   children: [
                     Center(
-                      child: Image.asset(
-                        'assets/whiteback/main_w.png',
-                        height: 50.h,
+                      child: Text(
+                        'Resultado de consulta',
+                        style: TextStyle(
+                          fontSize: 16.h,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
                       ),
                     ),
                     Positioned(
@@ -110,14 +114,14 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 40.h),
+                SizedBox(height: 20.h),
                 Center(
                   child: Text(
                     'Datos del vehículo',
                     style: TextStyle(
                       fontSize: 16.h,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue,
+                      color: Colors.grey,
                     ),
                   ),
                 ),
@@ -145,153 +149,82 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                   ),
                 ),
                 SizedBox(height: 20.h),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0.h, vertical: 0.h),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Número de placa',
-                      style: TextStyle(
-                        color: Colors.blueAccent,
-                        fontSize: 14.h,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0.h, vertical: 0.h),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      widget.vehicleData['LicensePlate'] ?? 'Desconocido',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 11.h,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 6.h,
-                ),
-                Divider(
-                  height: 10.h,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0.h, vertical: 0.h),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Tipo de vehículo',
-                      style: TextStyle(
-                        color: Colors.blueAccent,
-                        fontSize: 14.h,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0.h, vertical: 0.h),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      widget.vehicleData['VehicleType'] ?? 'Desconocido',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 11.h,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 6.h,
-                ),
-                Divider(
-                  height: 10.h,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0.h, vertical: 0.h),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Color',
-                      style: TextStyle(
-                        color: Colors.blueAccent,
-                        fontSize: 14.h,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0.h, vertical: 0.h),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      widget.vehicleData['VehicleColor'] ?? 'Desconocido',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 11.h,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 6.h,
-                ),
-                Divider(
-                  height: 10.h,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0.h, vertical: 0.h),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Ubicación de la retención',
-                      style: TextStyle(
-                        color: Colors.blueAccent,
-                        fontSize: 14.h,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0.h, vertical: 0.h),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      widget.vehicleData['CurrentAddress'] ?? 'Desconocido',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 11.h,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 6.h,
-                ),
-                Divider(
-                  height: 10.h,
-                ),
-                SizedBox(height: 10.h),
-                SizedBox(height: 2.h),
                 Text(
-                  'Fotos del vehículo',
+                  'Numero de placa',
                   style: TextStyle(
-                    fontSize: 14.h,
-                    fontWeight: FontWeight.bold,
                     color: Colors.blue,
+                    fontSize: 11.h,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 2.h),
+                Text(
+                  widget.vehicleData['LicensePlate'] ?? 'Desconocido',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 10.h,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Divider(
+                  height: 10.h,
+                ),
+                Text(
+                  'Tipo de vehículo',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 11.h,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  widget.vehicleData['VehicleType'] ?? 'Desconocido',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 10.h,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Divider(
+                  height: 10.h,
+                ),
+                Text(
+                  'Color',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 11.h,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  widget.vehicleData['VehicleColor'] ?? 'Desconocido',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 10.h,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Divider(),
+                //     widget.vehicleData['CurrentAddress'] ?? 'Desconocido',
+                Text(
+                  'Referencia',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 11.h,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  widget.vehicleData['CurrentAddress'] ?? 'Desconocido',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 10.h,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const MapWidgetConsulta(),
+                SizedBox(height: 8.h),
+                const Divider(),
+                SizedBox(height: 4.h),
                 SizedBox(
                   height: 65.h,
                   child: ListView.builder(
@@ -304,14 +237,15 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                             borderRadius: BorderRadius.circular(10.0),
                             child: Image.memory(
                               base64Decode(photos[index]['File']!),
-                              width: 100.w,
+                              height: 55.h,
+                              width: 70.h,
                               fit: BoxFit.cover,
                             ),
                           ));
                     },
                   ),
                 ),
-                SizedBox(height: 15.h),
+                SizedBox(height: 10.h),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
