@@ -23,11 +23,15 @@ class ReportInfoScreen extends StatelessWidget {
   }
 
   Future<String> _getAddressFromLatLng(double lat, double lon) async {
-    List<Placemark> placemarks = await placemarkFromCoordinates(lat, lon);
-    if (placemarks.isNotEmpty) {
-      return '${placemarks.first.street}, ${placemarks.first.locality}, ${placemarks.first.country}';
-    } else {
-      return 'Dirección no encontrada';
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(lat, lon);
+      if (placemarks.isNotEmpty) {
+        return '${placemarks.first.street}, ${placemarks.first.locality}, ${placemarks.first.country}';
+      } else {
+        return 'Dirección no encontrada';
+      }
+    } catch (e) {
+      return 'Error al obtener la dirección';
     }
   }
 
