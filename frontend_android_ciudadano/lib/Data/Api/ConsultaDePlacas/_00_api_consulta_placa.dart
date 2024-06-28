@@ -3,10 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
 class ConsultaPlaca {
-  final String apiUrlList =
-      'http://192.168.0.209:8089/ciudadanos/ciudadanos';
-  final String apiUrlDetails =
-      'http://192.168.0.209:8089/ciudadanos/';
+  final String apiUrlList = 'http://192.168.0.209:8089/ciudadanos/ciudadanos';
+  final String apiUrlDetails = 'http://192.168.0.209:8089/ciudadanos/';
   final Logger _logger = Logger();
 
   Future<List<String>> fetchLicencePlates() async {
