@@ -8,7 +8,8 @@ var logger = Logger();
 
 class ApiService {
   static const String baseUrl =
-      'https://parqueatebiendemo.azurewebsites.net/ciudadanos';
+      // 'https://parqueatebiendemo.azurewebsites.net/ciudadanos';
+      'http://192.168.0.209:8089/ciudadanos';
 
   static Future<http.Response> createReport(
       Map<String, dynamic> reportData, List<File> images) async {

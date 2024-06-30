@@ -5,14 +5,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
-class MapWidget extends StatefulWidget {
-  const MapWidget({super.key});
+class MapWidgetConsulta extends StatefulWidget {
+  const MapWidgetConsulta({super.key});
 
   @override
   MapWidgetState createState() => MapWidgetState();
 }
 
-class MapWidgetState extends State<MapWidget> {
+class MapWidgetState extends State<MapWidgetConsulta> {
   GoogleMapController? _controller;
   Position? _currentPosition;
   final Set<Marker> _markers = {};
@@ -120,25 +120,22 @@ class MapWidgetState extends State<MapWidget> {
     }
 
     return SizedBox(
-        height: 150.w,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 14.h),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(0.r),
-            child: GoogleMap(
-              onMapCreated: _onMapCreated,
-              initialCameraPosition: CameraPosition(
-                target: _currentPosition != null
-                    ? LatLng(
-                        _currentPosition!.latitude, _currentPosition!.longitude)
-                    : const LatLng(0, 0),
-                zoom: 13.0,
-              ),
-              markers: _markers,
-              polylines: _polylines,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: true,
+        height: 140.w,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(0.r),
+          child: GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: CameraPosition(
+              target: _currentPosition != null
+                  ? LatLng(
+                      _currentPosition!.latitude, _currentPosition!.longitude)
+                  : const LatLng(0, 0),
+              zoom: 13.0,
             ),
+            markers: _markers,
+            polylines: _polylines,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: true,
           ),
         ));
   }

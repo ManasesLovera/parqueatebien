@@ -18,6 +18,8 @@ dependencies:
   http: ^1.2.1
   logger: ^2.3.0
   shared_preferences: ^2.2.3
+  google_maps_flutter: ^2.7.0
+  geocoding: ^3.0.0
   
   
 dev_dependencies:

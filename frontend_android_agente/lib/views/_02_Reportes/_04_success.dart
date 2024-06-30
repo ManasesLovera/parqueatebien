@@ -36,7 +36,7 @@ class SuccessScreen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.pushNamedAndRemoveUntil(
-                        context, '/WelcomeNewReport', (route) => false);
+                        context, '/report_or_consult', (route) => false);
                   },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 12.h),

@@ -18,6 +18,7 @@ class NextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 14.h),
+      
       child: SizedBox(
         width: double.infinity,
         child: Container(
@@ -47,7 +48,7 @@ class NextButton extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.r),
               ),
-   //           padding: EdgeInsets.symmetric(horizontal: 0.h),
+              //
             ),
             child: const SiguienteText(),
           ),
