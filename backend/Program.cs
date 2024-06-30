@@ -145,7 +145,7 @@ app.MapPost("/api/reporte", async (
         }
         var existingReports = await context.Reports
             .Where(r => r.LicensePlate == reportDto.LicensePlate &&
-                  (r.Status != "Liberado" || r.Active))
+                  ((r.Status != "Liberado" && r.Active) || !r.Active))
             .AnyAsync();
 
         if (existingReports)
@@ -233,6 +233,7 @@ app.MapPut("/api/reporte/actualizarEstado", async (ApplicationDbContext context,
             else if (changeStatusDTO.NewStatus == "Liberado" && report.Status == "Retenido")
             {
                 report.Status = "Liberado";
+                report.ReleasedBy = changeStatusDTO.Username;
                 report.ReleaseDate = DateTime.Now.ToString("g");
             }
             else
