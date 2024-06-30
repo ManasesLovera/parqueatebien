@@ -189,6 +189,8 @@ app.MapDelete("/api/reporte/{licensePlate}", async (ApplicationDbContext context
         {
             return Results.NotFound();
         }
+        var pictures = await context.Pictures.Where(p => p.LicensePlate == licensePlate).ToListAsync();
+        context.Pictures.RemoveRange(pictures);
         context.Reports.Remove(report);
         await context.SaveChangesAsync();
         return Results.Ok();

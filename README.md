@@ -7,16 +7,26 @@ Demo para la aplicacion que estamos haciendo de incautacion de vehiculos.
 
 > Validation for LicensePlate: It can only contain uppercase letters, numbers and dashes.
 
-1. GET / -> `"/ciudadanos/ciudadanos"`:
+1. GET / -> `"/api/reportes"`:
     - This will return an array of objects with the whole data with this format:
 ```json
 [
     {
+        "registrationNumber": string,
         "licensePlate": string,
+        "registrationDocument": string,
         "vehicleType": string,
         "vehicleColor": string,
-        "address": string,
+        "model": string,
+        "year": string,
+        "reference": string,
         "status": string,
+        "reportedBy": string,
+        "reportedDate": string,
+        "towedByCraneDate": string | null,
+        "arrivalAtParkinglot": string | null,
+        "releaseDate": string | null,
+        "releaseBy": string | null,
         "lat": string,
         "lon": string,
         "photos": [
