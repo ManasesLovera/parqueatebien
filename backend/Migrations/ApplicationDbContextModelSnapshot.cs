@@ -74,7 +74,7 @@ namespace backend.Migrations
 
                     b.HasIndex("CitizenId");
 
-                    b.ToTable("CitizenVehicle");
+                    b.ToTable("CitizenVehicles");
                 });
 
             modelBuilder.Entity("backend.Models.CraneCompany", b =>
@@ -107,18 +107,20 @@ namespace backend.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("File")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FileType")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LicensePlate")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("ReportId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ReportId");
 
                     b.ToTable("Pictures");
                 });
@@ -231,9 +233,21 @@ namespace backend.Migrations
                         .HasForeignKey("CitizenId");
                 });
 
+            modelBuilder.Entity("backend.Models.Picture", b =>
+                {
+                    b.HasOne("backend.Models.Report", null)
+                        .WithMany("Photos")
+                        .HasForeignKey("ReportId");
+                });
+
             modelBuilder.Entity("backend.Models.Citizen", b =>
                 {
                     b.Navigation("Vehicles");
+                });
+
+            modelBuilder.Entity("backend.Models.Report", b =>
+                {
+                    b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
         }

@@ -20,4 +20,5 @@ public class Report
     public string? ReleasedBy { get; set; } = null;
     public string? Lat { get; set; }
     public string? Lon { get; set; }
+    public List<Picture>? Photos { get; set; }
 }

@@ -45,21 +45,6 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Pictures",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    File = table.Column<string>(type: "TEXT", nullable: false),
-                    FileType = table.Column<string>(type: "TEXT", nullable: false),
-                    LicensePlate = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Pictures", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Reports",
                 columns: table => new
                 {
@@ -110,7 +95,7 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CitizenVehicle",
+                name: "CitizenVehicles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -124,25 +109,51 @@ namespace backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CitizenVehicle", x => x.Id);
+                    table.PrimaryKey("PK_CitizenVehicles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CitizenVehicle_Citizens_CitizenId",
+                        name: "FK_CitizenVehicles_Citizens_CitizenId",
                         column: x => x.CitizenId,
                         principalTable: "Citizens",
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Pictures",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    LicensePlate = table.Column<string>(type: "TEXT", nullable: true),
+                    File = table.Column<string>(type: "TEXT", nullable: true),
+                    FileType = table.Column<string>(type: "TEXT", nullable: true),
+                    ReportId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pictures", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Pictures_Reports_ReportId",
+                        column: x => x.ReportId,
+                        principalTable: "Reports",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
-                name: "IX_CitizenVehicle_CitizenId",
-                table: "CitizenVehicle",
+                name: "IX_CitizenVehicles_CitizenId",
+                table: "CitizenVehicles",
                 column: "CitizenId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pictures_ReportId",
+                table: "Pictures",
+                column: "ReportId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CitizenVehicle");
+                name: "CitizenVehicles");
 
             migrationBuilder.DropTable(
                 name: "CraneCompanies");
@@ -151,13 +162,13 @@ namespace backend.Migrations
                 name: "Pictures");
 
             migrationBuilder.DropTable(
-                name: "Reports");
-
-            migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Citizens");
+
+            migrationBuilder.DropTable(
+                name: "Reports");
         }
     }
 }

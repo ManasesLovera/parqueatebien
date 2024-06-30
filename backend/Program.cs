@@ -163,6 +163,7 @@ app.MapPost("/api/reporte", async (
             photo.LicensePlate = report.LicensePlate!;
             context.Pictures.Add(photo);
         }
+        report.Photos = photos;
         context.Reports.Add(report);
         await context.SaveChangesAsync();
         return Results.Created("/api/report/" + reportDto.LicensePlate,

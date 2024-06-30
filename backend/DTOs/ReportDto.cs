@@ -1,4 +1,6 @@
-﻿namespace backend.DTOs;
+﻿using backend.Models;
+
+namespace backend.DTOs;
 
 public class ReportDto
 {
@@ -11,6 +13,6 @@ public class ReportDto
     public string? Reference { get; set; }
     public string? Lat { get; set; }
     public string? Lon { get; set; }
-    public List<PictureDto>? Photos { get; set; }
     public string? ReportedBy { get; set; }
+    public List<PictureDto>? Photos { get; set; }
 }
