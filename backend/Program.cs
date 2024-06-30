@@ -1,17 +1,23 @@
-using Services;
 using System.Text.Json;
-using Models;
+using backend.Models;
+using backend.DTOs;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using System.Text;
-using db;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http;
-
-// multiples si ya fueron liberados
+using backend.Services;
+using backend.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using backend;
+using AutoMapper;
+using FluentValidation;
+using backend.Validations;
+using System.Text.RegularExpressions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
@@ -26,298 +32,444 @@ builder.Services.AddCors(options =>
         });
 });
 
-var app = builder.Build();
-app.UseCors();
+// Database connection EF
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlite(connectionString));
 
-CitizensService citizens = new CitizensService();
-UsersCRUD users = new UsersCRUD();
+//Token Generator
+builder.Services.AddScoped<TokenService>();
+
+// Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+        };
+    });
+
+// Authorization
+builder.Services.AddAuthorization();
+
+// AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingConfig));
+
+// Validation
+builder.Services.AddScoped<IValidator<ReportDto>, ReportDtoValidator>();
+builder.Services.AddScoped<IValidator<UserDto>, UserDtoValidator>();
+builder.Services.AddScoped<IValidator<CitizenDto>, CitizenDtoValidator>();
+builder.Services.AddScoped<IValidator<CitizenVehicle>, CitizenVehicleValidator>();
+
+var app = builder.Build();
+
+app.UseCors();
+app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Endpoints for citizens
 
-app.MapGet("/", async (HttpContext context) =>
+app.MapGet("/", () =>
 {
-    await context.Response.WriteAsync("Nothing available here");
+    return Results.Ok("Nothing available here");
 });
 
-app.MapGet("/ciudadanos/ciudadanos", () => DbConnection.GetAllCitizens());
-
-app.MapGet("/ciudadanos/{licensePlate}", async (HttpContext context, [FromRoute] string licensePlate) =>
+app.MapGet("/api/reportes", async (IMapper _mapper, ApplicationDbContext context) =>
 {
-    try
-    {
-        var Validation = citizens.ValidateCitizenRequest(licensePlate);
-        if (Validation.Result == null)
+    var reportsQuery = context.Reports
+        .Select(report => new
         {
-            context.Response.StatusCode = 400;
-            await context.Response.WriteAsJsonAsync(Validation.ErrorMessages);
-        }
-        Citizen? citizen = DbConnection.GetByLicensePlate(Validation.Result!);
-        if (citizen == null)
-        {
-            context.Response.StatusCode = 404;
-        }
-        else
-        {
-            string citizenJson = System.Text.Json.JsonSerializer.Serialize(citizen);
-            context.Response.StatusCode = 200;
-            await context.Response.WriteAsync(citizenJson);
-        }
-    }
-    catch (Exception ex)
-    {
-        context.Response.StatusCode = 500;
-        await context.Response.WriteAsync(ex.Message);
-    }
-});
+            Report = report,
+            Pictures = context.Pictures.Where(p => p.LicensePlate == report.LicensePlate).ToList()
+        });
 
-app.MapPost("/ciudadanos", async (HttpContext httpContext, [FromBody] CitizenRequest citizen) =>
+    var reportsData = await reportsQuery.ToListAsync();
+
+    List<ReportResponseDto> reports = new List<ReportResponseDto>();
+    foreach (var reportData in reportsData)
+    {
+        ReportResponseDto reportDto = _mapper.Map<ReportResponseDto>(reportData.Report);
+        reportDto.Photos = _mapper.Map<List<PictureDto>>(reportData.Pictures);
+        reports.Add(reportDto);
+    }
+
+    return Results.Ok(reports);
+})
+    .WithName("GetAllReports")
+    .Produces<List<ReportResponseDto>>(200)
+    .RequireAuthorization();
+
+app.MapGet("/api/reporte/{licensePlate}", async (IMapper _mapper, ApplicationDbContext context,[FromRoute] string licensePlate) =>
 {
-    try
-    {
-        if (citizen == null || !citizens.ValidateCitizenBody(citizen))
+    var reportData = await context.Reports
+        .OrderByDescending(r => r.Id)
+        .Where(r => r.LicensePlate == licensePlate)
+        .Select(report => new
         {
-            httpContext.Response.StatusCode = 400;
-            await httpContext.Response.WriteAsync("Missing info or Invalid data");
-        }
-        else
-        {
-            DbConnection.AddCitizen(citizen);
-            httpContext.Response.StatusCode = 200;
-            await httpContext.Response.WriteAsync("Citizen added successfully!");
-        }
-    }
-    catch (Exception ex)
-    {
-        httpContext.Response.StatusCode = 500;
-        await httpContext.Response.WriteAsync(ex.Message);
-    }
-});
+            Report = report,
+            Pictures = context.Pictures.Where(p => p.LicensePlate == report.LicensePlate).ToList()
+        })
+        .FirstOrDefaultAsync();
 
-app.MapPut("/ciudadanos", async (HttpContext httpContext, [FromBody] Citizen citizen) =>
+    if (reportData == null)
+    {
+        return Results.NotFound();
+    }
+
+    ReportResponseDto reportDto = _mapper.Map<ReportResponseDto>(reportData.Report);
+    reportDto.Photos = _mapper.Map<List<PictureDto>>(reportData.Pictures);
+
+    return Results.Ok(reportDto);
+})
+    .WithName("GetReport")
+    .Produces<ReportResponseDto>(200);
+
+app.MapPost("/api/reporte", async (
+    IValidator<ReportDto> validator, IMapper _mapper,
+    ApplicationDbContext context, [FromBody] ReportDto reportDto) =>
 {
     try
     {
-        if (citizen == null)
+        var validationResult = await validator.ValidateAsync(reportDto);
+        if (!validationResult.IsValid)
         {
-            httpContext.Response.StatusCode = 400;
-            await httpContext.Response.WriteAsync("Missing info or Invalid data");
+            return Results.BadRequest(validationResult.Errors);
+        }
+        var existingReports = await context.Reports
+            .Where(r => r.LicensePlate == reportDto.LicensePlate &&
+                  (r.Status != "Liberado" || r.Active))
+            .AnyAsync();
 
-        }
-        if (DbConnection.GetByLicensePlate(citizen!.LicensePlate) == null)
+        if (existingReports)
         {
-            httpContext.Response.StatusCode = 404;
-            await httpContext.Response.WriteAsync("Not Found");
+            return Results.Conflict("Ya existe un reporte activo para esta placa que no está liberado.");
         }
-        else
+        var report = _mapper.Map<Report>(reportDto);
+        report.ReportedDate = DateTime.Now.ToString("g");
+        var lastReport = await context.Reports.OrderByDescending(r => r.Id).FirstOrDefaultAsync();
+        int id = lastReport != null ? lastReport.Id + 1 : 1;
+        report.RegistrationNumber = $"PB-{DateTime.Now.Year}-{DateTime.Now.Month}{DateTime.Now.Day}-{id}";
+        var photos = _mapper.Map<List<Picture>>(reportDto.Photos);
+        foreach (var photo in photos)
         {
-            citizens.UpdateCitizen(citizen);
-            httpContext.Response.StatusCode = 200;
-            await httpContext.Response.WriteAsync("Updated successfully");
+            photo.LicensePlate = report.LicensePlate!;
+            context.Pictures.Add(photo);
         }
+        context.Reports.Add(report);
+        await context.SaveChangesAsync();
+        return Results.Created("/api/report/" + reportDto.LicensePlate,
+            _mapper.Map<ReportResponseDto>(context.Reports.FirstOrDefault(r => r.LicensePlate == report.LicensePlate)));
     }
     catch (Exception ex)
     {
-        httpContext.Response.StatusCode = 500;
-        await httpContext.Response.WriteAsync(ex.Message);
+        return Results.Problem(ex.Message, statusCode: 500);
     }
-});
+})
+    .RequireAuthorization();
 
-app.MapDelete("/ciudadanos/{licensePlate}", async (HttpContext httpContext, [FromRoute] string licensePlate) =>
+app.MapDelete("/api/reporte/{licensePlate}", async (ApplicationDbContext context, [FromRoute] string licensePlate) =>
 {
     try
     {
-        var validation = citizens.ValidateCitizenRequest(licensePlate);
-        if (validation.Result == null)
+        if (licensePlate == null || !Regex.IsMatch(licensePlate, @"^[A-Z]{1,2}[0-9]{6}$"))
         {
-            httpContext.Response.StatusCode = 400;
-            await httpContext.Response.WriteAsJsonAsync(validation.ErrorMessages);
+            return Results.BadRequest("La placa no es valida");
         }
-        else if (DbConnection.GetByLicensePlate(validation.Result!) == null)
+        var report = await context.Reports.FirstOrDefaultAsync(r => r.LicensePlate == licensePlate);
+        if (report == null)
         {
-            httpContext.Response.StatusCode = 404;
-            await httpContext.Response.WriteAsync("Citizen was not found");
+            return Results.NotFound();
         }
-        else
-        {
-            string responseMessage = DbConnection.DeleteCitizen(licensePlate);
-            httpContext.Response.StatusCode = 200;
-            await httpContext.Response.WriteAsync(responseMessage);
-        }
+        context.Reports.Remove(report);
+        await context.SaveChangesAsync();
+        return Results.Ok();
     }
     catch (Exception ex)
     {
-        httpContext.Response.StatusCode = 500;
-        await httpContext.Response.WriteAsync(ex.Message);
+        return Results.Problem(ex.Message, statusCode: 500);
     }
-});
+})
+    .RequireAuthorization();
 
-app.MapPut("/ciudadanos/updateStatus", async (HttpContext httpContext, [FromBody] ChangeStatusDTO changeStatusDTO) =>
+app.MapPut("/api/reporte/actualizarEstado", async (ApplicationDbContext context, [FromBody] ChangeStatusDTO changeStatusDTO, ClaimsPrincipal user) =>
 {
     try
     {
         if (!changeStatusDTO.Validate())
         {
-            httpContext.Response.StatusCode = 400;
-            await httpContext.Response.WriteAsJsonAsync("Esta informacion no es valida");
-            return;
+            return Results.BadRequest("Esta informacion no es valida");
         }
-        if (DbConnection.GetByLicensePlate(changeStatusDTO.LicensePlate) == null)
+        var report = context.Reports.Where(r => r.LicensePlate == changeStatusDTO.LicensePlate 
+                                    && (r.Status != "Liberado" && r.Active))
+                                    .ToList().FirstOrDefault();
+        if(report == null)
         {
-            httpContext.Response.StatusCode = 404;
-            await httpContext.Response.WriteAsync("No se encontro vehiculo con esta matricula");
-            return;
+            return Results.NotFound();
         }
         else
         {
-            var user = DbConnection.GetByLicensePlate(changeStatusDTO.LicensePlate);
-            if (changeStatusDTO.NewStatus == "Incautado por grua" && user!.Status == "Reportado")
-                DbConnection.SetDateTime(changeStatusDTO.LicensePlate, "TowedByCraneDate", "Incautado");
+            if (changeStatusDTO.NewStatus == "Incautado por grua" && report.Status == "Reportado")
+            {
+                report.Status = changeStatusDTO.NewStatus;
+                report.TowedByCraneDate = DateTime.Now.ToString("g");
+            }
 
-            else if (changeStatusDTO.NewStatus == "Retenido" && user!.Status == "Incautado por grua")
-                DbConnection.SetDateTime(changeStatusDTO.LicensePlate, "ArrivalAtParkinglot", "Retenido");
-
-            else if (changeStatusDTO.NewStatus == "Liberado" && user!.Status == "Retenido")
-                DbConnection.SetDateTime(changeStatusDTO.LicensePlate, "ReleaseDate", "Liberado");
-
+            else if (changeStatusDTO.NewStatus == "Retenido" && report.Status == "Incautado por grua")
+            {
+                report.Status = "Retenido";
+                report.ArrivalAtParkinglot = DateTime.Now.ToString("g");
+            }
+            else if (changeStatusDTO.NewStatus == "Liberado" && report.Status == "Retenido")
+            {
+                report.Status = "Liberado";
+                report.ReleaseDate = DateTime.Now.ToString("g");
+            }
             else
             {
-                httpContext.Response.StatusCode = 409;
-                await httpContext.Response.WriteAsync("409 Conflict - No puede ser modificado a ese estado");
-                return;
+                return Results.Conflict("No puede ser modificado a ese estado");
             }
-            DbConnection.UpdateCitizenStatus(changeStatusDTO);
-            httpContext.Response.StatusCode = 200;
-            await httpContext.Response.WriteAsync("El estatus fue actualizado");
+            await context.SaveChangesAsync();
+            return Results.Ok("El estatus fue actualizado");
         }
     }
     catch (Exception ex)
     {
-        httpContext.Response.StatusCode = 500;
-        await httpContext.Response.WriteAsync(ex.Message);
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+})
+    .RequireAuthorization();
+
+app.MapGet("/api/reportes/estadisticas", (ApplicationDbContext context) =>
+{
+    int reportados = context.Reports.Where(r => r.Status == "Reportado").ToList().Count;
+    int incautados = context.Reports.Where(r => r.Status == "Incautado por grua").ToList().Count;
+    int retenidos = context.Reports.Where(r => r.Status == "Retenido").ToList().Count;
+    int liberados = context.Reports.Where(r => r.Status == "Liberado").ToList().Count;
+
+    return Results.Ok(new { reportados, incautados, retenidos, liberados });
+})
+    .RequireAuthorization();
+
+// USUARIOS
+
+app.MapPost("/api/user/register", async (IValidator<UserDto> validator, IMapper _mapper,
+    UserDto userDto, ApplicationDbContext context) =>
+{
+    var validationResult = await validator.ValidateAsync(userDto);
+    if (!validationResult.IsValid)
+    {
+        return Results.BadRequest(validationResult.Errors);
+    }
+    bool existUser = context.Users.FirstOrDefault(u => u.EmployeeCode == userDto.EmployeeCode || u.Username == userDto.Username)
+                != null ? true : false;
+    
+    if (existUser)
+    {
+        return Results.Conflict("Este usuario ya existe existe");
+    }
+    if (!String.IsNullOrEmpty(userDto.CraneCompany) && userDto.Role == "Grua")
+    {
+        var craneCompany = context.CraneCompanies.FirstOrDefault(c => c.CompanyName == userDto.CraneCompany);
+        if(craneCompany == null)
+        {
+            return Results.Conflict("Compañia de grua no existe");
+        }
+        var user = _mapper.Map<User>(userDto);
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
+        context.Users.Add(user);
+        craneCompany.AmountCraneAgents += 1;
+        await context.SaveChangesAsync();
+        return Results.Created("/api/user/"+ user.EmployeeCode, user);
+    }
+    else if( (userDto.Role == "Admin" || userDto.Role == "Agente") && String.IsNullOrEmpty(userDto.CraneCompany))
+    {
+        var user = _mapper.Map<User>(userDto);
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+
+        return Results.Ok(new { Message = "User registered successfully" });
+    }
+    else
+    {
+        return Results.BadRequest("Rol no es valido");
     }
 });
 
-app.MapGet("/ciudadanos/estadisticas", () => citizens.VehicleStatus());
-
-// Endpoints for users
-
-app.MapPost("/users/login", async (HttpContext httpContext, [FromBody] User user) =>
+app.MapPost("/api/user/login", ([FromBody] UserLoginDto userDto, ApplicationDbContext context, TokenService tokenService) =>
 {
     try
     {
-        if (users.IsValid(user.GovernmentID!, user.Password!))
+        if(userDto.Role == "Grua" || userDto.Role == "Admin" || userDto.Role == "Agente")
         {
-            httpContext.Response.StatusCode = 200;
-            await httpContext.Response.WriteAsync("OK");
-        }
-        else if (users.GetByGovernmentIDWithRole(user.GovernmentID!, user.Role!) != null)
-        {
-            httpContext.Response.StatusCode = 401;
-            await httpContext.Response.WriteAsync("Unathorized - Wrong Password");
+            var user = context.Users.FirstOrDefault(u => u.Username == userDto.Username
+                                                    && u.Role == userDto.Role);
+
+            if (user == null || !BCrypt.Net.BCrypt.Verify(userDto.Password, user!.PasswordHash))
+            {
+                return Results.Conflict(new { Message = "Usuario y/o contraseña incorrectos" });
+            }
+            var token = tokenService.GenerateToken(user);
+            return Results.Ok(token);
         }
         else
         {
-            httpContext.Response.StatusCode = 404;
-            await httpContext.Response.WriteAsync("Not Found");
+            return Results.BadRequest(new { Message = "Rol no existe." });
         }
     }
-    catch (Exception ex)
+    catch(Exception ex)
     {
-        httpContext.Response.StatusCode = 500;
-        await httpContext.Response.WriteAsync(ex.Message);
+        return Results.Problem(ex.Message, statusCode: 500);
     }
 });
 
-app.MapGet("/users", () =>
-    users.GetAll());
+app.MapGet("/api/users", (IMapper _mapper, ApplicationDbContext context) => 
+{ 
+    try
+    {
+        var users = _mapper.Map<List<UserResponseDto>>(context.Users.ToList());
+        return Results.Ok(users);
+    }
+    catch(Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+})
+    .RequireAuthorization();
 
-app.MapGet("/users/{role}", ([FromBody] string role) =>
-users.GetAllByRole(role));
-
-app.MapGet("/user/{governmentID}", ([FromRoute] string governmentID) =>
-    users.GetByGovernmentID(governmentID));
-
-app.MapPost("/user", async (HttpContext httpContext, [FromBody] User user) =>
+app.MapGet("/user/{employeeCode}", ([FromRoute] string employeeCode, ApplicationDbContext context) =>
 {
     try
     {
-        if ((user == null || user.GovernmentID == null || user.Password == null || user.Role == null) && citizens.ValidateRole(user!.Role))
+        var user = context.Users.FirstOrDefault(u => u.EmployeeCode == employeeCode);
+        if (user == null)
         {
-            httpContext.Response.StatusCode = 400;
-            await httpContext.Response.WriteAsync("Faltan datos o informacion invalida!");
+            return Results.NotFound();
         }
-        else if (users.GetByGovernmentID(user!.GovernmentID!) != null)
-        {
-            httpContext.Response.StatusCode = 409;
-            await httpContext.Response.WriteAsync("409 Conflict: Ya existe");
-        }
-        else
-        {
-            users.Add(user);
-            httpContext.Response.StatusCode = 200;
-            await httpContext.Response.WriteAsync("Usuario agregado!");
-        }
+        return Results.Ok(user);
     }
     catch (Exception ex)
     {
-        httpContext.Response.StatusCode = 500;
-        await httpContext.Response.WriteAsync(ex.Message);
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+})
+    .RequireAuthorization();
+
+app.MapPut("/users/changePassword", async ([FromBody] ChangePasswordDto CPDto, ApplicationDbContext context) =>
+{
+    try
+    {
+        var user = context.Users.FirstOrDefault(u => u.Username == CPDto.Username);
+        if(user == null)
+        {
+            return Results.NotFound();
+        }
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(CPDto.Password);
+        await context.SaveChangesAsync();
+        return Results.Ok();
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+})
+    .RequireAuthorization();
+
+app.MapDelete("/users/{employeeCode}", async ([FromRoute] string employeeCode, ApplicationDbContext context) =>
+{
+    try
+    {
+        var user = context.Users.FirstOrDefault(u => u.EmployeeCode == employeeCode);
+        if(user == null)
+        {
+            return Results.NotFound();
+        }
+        context.Users.Remove(user);
+        await context.SaveChangesAsync();
+        return Results.Ok(new { Message = "Se borro correctamente"} );
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+})
+    .RequireAuthorization();
+
+// CIUDADANOS
+
+app.MapPost("/api/citizen/register", ([FromBody] CitizenDto citizenDto, ApplicationDbContext context, TokenService tokenService,
+    IValidator<CitizenDto> validatorCitizen, IValidator<CitizenVehicle> validatorCitizenVehicle, IMapper _mapper) =>
+{
+    try
+    {
+        var citizen = context.Citizens.FirstOrDefault(c => c.GovernmentId == citizenDto.GovernmentId);
+        if (citizen != null)
+        {
+            return Results.Conflict(new { Message = "Este ciudadano ya existe" });
+        }
+        return Results.Ok();
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
     }
 });
 
-app.MapPut("/users/changePassword", async (HttpContext httpContext, [FromBody] User user) =>
+app.MapPost("/api/citizen/login", ([FromBody] CitizenLoginDto user, ApplicationDbContext context, TokenService tokenService) =>
 {
     try
     {
-        if (user == null || user.GovernmentID == null || user.Password == null)
+        var citizen = context.Citizens.FirstOrDefault(c => c.GovernmentId == user.GovernmentId);
+        if (citizen == null || BCrypt.Net.BCrypt.Verify(user.Password, citizen.PasswordHash))
         {
-            httpContext.Response.StatusCode = 400;
-            await httpContext.Response.WriteAsync("Faltan datos o informacion invalida!");
+            return Results.Conflict(new { Message = "Cedula y/o contraseña incorrectos" });
         }
-        if (users.GetByGovernmentID(user!.GovernmentID!) == null)
-        {
-            httpContext.Response.StatusCode = 404;
-            await httpContext.Response.WriteAsync("No se encontro!");
-        }
-        else
-        {
-            users.ChangePassword(user);
-            httpContext.Response.StatusCode = 200;
-            await httpContext.Response.WriteAsync("Actualizado!");
-        }
+        var token = tokenService.GenerateToken(user);
+        return Results.Ok(token);
     }
     catch (Exception ex)
     {
-        httpContext.Response.StatusCode = 500;
-        await httpContext.Response.WriteAsync(ex.Message);
+        return Results.Problem(ex.Message, statusCode: 500);
     }
 });
 
-app.MapDelete("/users/{governmentID}", async (HttpContext httpContext, [FromRoute] string governmentID) =>
+app.MapGet("/api/craneCompanies", (ApplicationDbContext context) =>
 {
     try
     {
-        //if (governmentID.Trim().Length != 11)
-        //{
-        //    httpContext.Response.StatusCode = 400;
-        //    await httpContext.Response.WriteAsync("La c�dula debe contener 11 caracteres");
-        //}
-        if (users.GetByGovernmentID(governmentID!) == null)
-        {
-            httpContext.Response.StatusCode = 404;
-            await httpContext.Response.WriteAsync("El usuario no existe");
-        }
-        else
-        {
-            users.Delete(governmentID!);
-            httpContext.Response.StatusCode = 200;
-            await httpContext.Response.WriteAsync("Se elimin� correctamente!");
-        }
+        var craneCompanies = context.CraneCompanies.ToList();
+        return Results.Ok(craneCompanies);
     }
     catch (Exception ex)
     {
-        httpContext.Response.StatusCode = 500;
-        await httpContext.Response.WriteAsync(ex.Message);
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+});
+
+app.MapPost("/api/craneCompanies", async ([FromBody] CraneCompany craneCompany, ApplicationDbContext context) =>
+{
+    try
+    {
+        if(String.IsNullOrEmpty(craneCompany.RNC) || String.IsNullOrEmpty(craneCompany.CompanyName) || String.IsNullOrEmpty(craneCompany.PhoneNumber))
+        {
+            return Results.BadRequest("Se debe recibir RNC, CompanyName y PhoneNumber");
+        }
+        craneCompany.AmountCraneAgents = 0;
+        context.CraneCompanies.Add(craneCompany);
+        await context.SaveChangesAsync();
+        return Results.Ok(new { Message = "Se agrego correctamente" } );
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
     }
 });
 

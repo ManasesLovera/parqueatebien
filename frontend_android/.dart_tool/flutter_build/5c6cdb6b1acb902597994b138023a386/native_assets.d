@@ -1,0 +1,1 @@
+ C:\\Users\\Manases\\Desktop\\demo-orion-tek\\frontend_android\\.dart_tool\\flutter_build\\5c6cdb6b1acb902597994b138023a386\\native_assets.yaml: 

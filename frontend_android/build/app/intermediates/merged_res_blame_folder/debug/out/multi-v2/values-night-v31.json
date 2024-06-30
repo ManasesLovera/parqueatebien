@@ -1,0 +1,28 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.example.frontend_android.app-mergeDebugResources-22:/values-night-v31/values-night-v31.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Manases\\Desktop\\demo-orion-tek\\frontend_android\\android\\app\\src\\main\\res\\values-night-v31\\styles.xml",
+                    "from": {
+                        "startLines": "3,18",
+                        "startColumns": "4,4",
+                        "startOffsets": "176,1159",
+                        "endLines": "11,20",
+                        "endColumns": "12,12",
+                        "endOffsets": "801,1325"
+                    },
+                    "to": {
+                        "startLines": "2,11",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,677",
+                        "endLines": "10,13",
+                        "endColumns": "12,12",
+                        "endOffsets": "672,841"
+                    }
+                }
+            ]
+        }
+    ]
+}
