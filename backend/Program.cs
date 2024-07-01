@@ -425,7 +425,8 @@ app.MapPost("/api/citizen/register", ([FromBody] CitizenDto citizenDto, Applicat
     {
         return Results.Problem(ex.Message, statusCode: 500);
     }
-});
+})
+    .RequireAuthorization();
 
 app.MapPost("/api/citizen/login", ([FromBody] CitizenLoginDto user, ApplicationDbContext context, TokenService tokenService) =>
 {
@@ -443,8 +444,35 @@ app.MapPost("/api/citizen/login", ([FromBody] CitizenLoginDto user, ApplicationD
     {
         return Results.Problem(ex.Message, statusCode: 500);
     }
-});
+})
+    .RequireAuthorization();
 
+app.MapDelete("/api/citizen/{governmentId}", async (ApplicationDbContext context, [FromRoute] string governmentId) => 
+{
+    try
+    {
+        governmentId = governmentId.Replace("-", "");
+
+        if (Regex.IsMatch(governmentId, @"^[0-9]{11}$"))
+            return Results.BadRequest("La cedula no es valida");
+
+        var citizen = context.Citizens.FirstOrDefault(c => c.GovernmentId == governmentId);
+
+        if (citizen == null)
+            return Results.NotFound();
+
+        var citizenVehicles = citizen.Vehicles;
+        context.CitizenVehicles.RemoveRange(citizenVehicles!);
+        context.Citizens.Remove(citizen);
+        await context.SaveChangesAsync();
+        return Results.Ok();
+    }
+    catch(Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+})
+    .RequireAuthorization();
 app.MapGet("/api/craneCompanies", (ApplicationDbContext context) =>
 {
     try
