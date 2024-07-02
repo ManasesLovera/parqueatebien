@@ -454,11 +454,25 @@ app.MapDelete("/api/user/{employeeCode}", async ([FromRoute] string employeeCode
 
 // CIUDADANOS
 
-app.MapPost("/api/citizen/register", ([FromBody] CitizenDto citizenDto, ApplicationDbContext context, TokenService tokenService,
+// GET ALL CITIZENS ENDPOINT
+
+app.MapPost("/api/citizen/register", ([FromBody] CitizenDto citizenDto, ApplicationDbContext context,
     IValidator<CitizenDto> validatorCitizen, IValidator<CitizenVehicle> validatorCitizenVehicle, IMapper _mapper) =>
 {
     try
     {
+        var validationResult = validatorCitizen.Validate(citizenDto);
+        if (!validationResult.IsValid)
+        {
+            return Results.BadRequest(validationResult.Errors);
+        }
+        foreach (var citizenVehicle in citizenDto.Vehicles!)
+        {
+            var validation = validatorCitizenVehicle.Validate(citizenVehicle);
+            if (!validation.IsValid)
+                return Results.BadRequest(validation.Errors);
+            
+        }
         var citizen = context.Citizens.FirstOrDefault(c => c.GovernmentId == citizenDto.GovernmentId);
         if (citizen != null)
         {
@@ -519,6 +533,8 @@ app.MapDelete("/api/citizen/{governmentId}", async (ApplicationDbContext context
 })
     .RequireAuthorization();
 
+// UPDATE STATUS CITIZEN ENDPOINT
+
 // Crane company
 
 app.MapGet("/api/craneCompanies/", (ApplicationDbContext context) =>
@@ -555,6 +571,9 @@ app.MapPost("/api/craneCompany/", async ([FromBody] CraneCompany craneCompany, A
 {
     try
     {
+        var exist = context.CraneCompanies.FirstOrDefault(c => c.RNC == craneCompany.RNC);
+        if (exist != null)
+            return Results.Conflict(new {Message = "ya existe"});
         if(String.IsNullOrEmpty(craneCompany.RNC) || String.IsNullOrEmpty(craneCompany.CompanyName) || String.IsNullOrEmpty(craneCompany.PhoneNumber))
         {
             return Results.BadRequest("Se debe recibir RNC, CompanyName y PhoneNumber");

@@ -27,6 +27,6 @@ public class CitizenDtoValidator : AbstractValidator<CitizenDto>
             .NotEmpty().NotEmpty().NotNull().WithMessage("Falta la contraseña");
 
         RuleFor(x => x.Vehicles)
-            .NotNull().WithMessage("Falta el vehiculo.");
+            .NotNull() .WithMessage("Falta el vehiculo.");
     }
 }
