@@ -394,11 +394,11 @@ app.MapGet("/api/users", (IMapper _mapper, ApplicationDbContext context) =>
 })
     .RequireAuthorization();
 
-app.MapGet("api/user/{employeeCode}", ([FromRoute] string employeeCode, ApplicationDbContext context) =>
+app.MapGet("api/user/{username}", ([FromRoute] string username, ApplicationDbContext context) =>
 {
     try
     {
-        var user = context.Users.FirstOrDefault(u => u.EmployeeCode == employeeCode);
+        var user = context.Users.FirstOrDefault(u => u.Username == username);
         if (user == null)
         {
             return Results.NotFound();
@@ -432,11 +432,11 @@ app.MapPut("/api/user/changePassword", async ([FromBody] ChangePasswordDto CPDto
 })
     .RequireAuthorization();
 
-app.MapDelete("/api/user/{employeeCode}", async ([FromRoute] string employeeCode, ApplicationDbContext context) =>
+app.MapDelete("/api/user/{username}", async ([FromRoute] string username, ApplicationDbContext context) =>
 {
     try
     {
-        var user = context.Users.FirstOrDefault(u => u.EmployeeCode == employeeCode);
+        var user = context.Users.FirstOrDefault(u => u.Username == username);
         if(user == null)
         {
             return Results.NotFound();

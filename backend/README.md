@@ -197,8 +197,8 @@
     }
 ]
 ```
-4. GET / -> `/api/users/{employeeCode}`:
-    - Returns a single user with the employeeCode.
+4. GET / -> `/api/users/{username}`:
+    - Returns a single user with the username.
     - 200 Ok, 404 NotFound
 ```json
 {
@@ -222,8 +222,8 @@
 }
 
 ```
-6. DELETE / -> `/api/user/{employeeCode}`:
-    - Deletes user with employeeCode
+6. DELETE / -> `/api/user/{username}`:
+    - Deletes user with username
     - 200 Ok, 404 NotFound
 
 ### Empresas de grua
