@@ -70,6 +70,28 @@ builder.Services.AddScoped<IValidator<CitizenVehicle>, CitizenVehicleValidator>(
 
 var app = builder.Build();
 
+// Aplicar migraciones y sembrar la base de datos al arrancar la aplicación
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+    ApplicationDbContext.Seed(db); // Llamada al Seed Method
+}
+
+// Middleware para captura de errores
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (Exception ex)
+    {
+        context.Response.StatusCode = 500;
+        await context.Response.WriteAsJsonAsync(new { error = ex.Message });
+    }
+});
+
 app.UseCors();
 app.UseHttpsRedirection();
 app.UseAuthentication();
@@ -84,24 +106,32 @@ app.MapGet("/", () =>
 
 app.MapGet("/api/reportes", async (IMapper _mapper, ApplicationDbContext context) =>
 {
-    var reportsQuery = context.Reports
+    try
+    {
+        var reportsQuery = context.Reports
         .Select(report => new
         {
             Report = report,
             Pictures = context.Pictures.Where(p => p.LicensePlate == report.LicensePlate).ToList()
         });
 
-    var reportsData = await reportsQuery.ToListAsync();
+        var reportsData = await reportsQuery.ToListAsync();
 
-    List<ReportResponseDto> reports = new List<ReportResponseDto>();
-    foreach (var reportData in reportsData)
-    {
-        ReportResponseDto reportDto = _mapper.Map<ReportResponseDto>(reportData.Report);
-        reportDto.Photos = _mapper.Map<List<PictureDto>>(reportData.Pictures);
-        reports.Add(reportDto);
+        List<ReportResponseDto> reports = new List<ReportResponseDto>();
+        foreach (var reportData in reportsData)
+        {
+            ReportResponseDto reportDto = _mapper.Map<ReportResponseDto>(reportData.Report);
+            reportDto.Photos = _mapper.Map<List<PictureDto>>(reportData.Pictures);
+            reports.Add(reportDto);
+        }
+
+        return Results.Ok(reports);
     }
-
-    return Results.Ok(reports);
+    catch(Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+    
 })
     .WithName("GetAllReports")
     .Produces<List<ReportResponseDto>>(200)
@@ -109,7 +139,9 @@ app.MapGet("/api/reportes", async (IMapper _mapper, ApplicationDbContext context
 
 app.MapGet("/api/reporte/{licensePlate}", async (IMapper _mapper, ApplicationDbContext context,[FromRoute] string licensePlate) =>
 {
-    var reportData = await context.Reports
+    try
+    {
+        var reportData = await context.Reports
         .OrderByDescending(r => r.Id)
         .Where(r => r.LicensePlate == licensePlate)
         .Select(report => new
@@ -119,15 +151,20 @@ app.MapGet("/api/reporte/{licensePlate}", async (IMapper _mapper, ApplicationDbC
         })
         .FirstOrDefaultAsync();
 
-    if (reportData == null)
-    {
-        return Results.NotFound();
+        if (reportData == null)
+        {
+            return Results.NotFound();
+        }
+
+        ReportResponseDto reportDto = _mapper.Map<ReportResponseDto>(reportData.Report);
+        reportDto.Photos = _mapper.Map<List<PictureDto>>(reportData.Pictures);
+
+        return Results.Ok(reportDto);
     }
-
-    ReportResponseDto reportDto = _mapper.Map<ReportResponseDto>(reportData.Report);
-    reportDto.Photos = _mapper.Map<List<PictureDto>>(reportData.Pictures);
-
-    return Results.Ok(reportDto);
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
 })
     .WithName("GetReport")
     .Produces<ReportResponseDto>(200);
@@ -267,45 +304,53 @@ app.MapGet("/api/reportes/estadisticas", (ApplicationDbContext context) =>
 app.MapPost("/api/user/register", async (IValidator<UserDto> validator, IMapper _mapper,
     UserDto userDto, ApplicationDbContext context) =>
 {
-    var validationResult = await validator.ValidateAsync(userDto);
-    if (!validationResult.IsValid)
+    try
     {
-        return Results.BadRequest(validationResult.Errors);
-    }
-    bool existUser = context.Users.FirstOrDefault(u => u.EmployeeCode == userDto.EmployeeCode || u.Username == userDto.Username)
-                != null ? true : false;
-    
-    if (existUser)
-    {
-        return Results.Conflict("Este usuario ya existe existe");
-    }
-    if (!String.IsNullOrEmpty(userDto.CraneCompany) && userDto.Role == "Grua")
-    {
-        var craneCompany = context.CraneCompanies.FirstOrDefault(c => c.CompanyName == userDto.CraneCompany);
-        if(craneCompany == null)
+        var validationResult = await validator.ValidateAsync(userDto);
+        if (!validationResult.IsValid)
         {
-            return Results.Conflict("Compañia de grua no existe");
+            return Results.BadRequest(validationResult.Errors);
         }
-        var user = _mapper.Map<User>(userDto);
-        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
-        context.Users.Add(user);
-        craneCompany.AmountCraneAgents += 1;
-        await context.SaveChangesAsync();
-        return Results.Created("/api/user/"+ user.EmployeeCode, user);
-    }
-    else if( (userDto.Role == "Admin" || userDto.Role == "Agente") && String.IsNullOrEmpty(userDto.CraneCompany))
-    {
-        var user = _mapper.Map<User>(userDto);
-        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
-        context.Users.Add(user);
-        await context.SaveChangesAsync();
+        bool existUser = context.Users.FirstOrDefault(u => u.EmployeeCode == userDto.EmployeeCode || u.Username == userDto.Username)
+                    != null ? true : false;
 
-        return Results.Ok(new { Message = "User registered successfully" });
+        if (existUser)
+        {
+            return Results.Conflict("Este usuario ya existe existe");
+        }
+        if (!String.IsNullOrEmpty(userDto.CraneCompany) && userDto.Role == "Grua")
+        {
+            var craneCompany = context.CraneCompanies.FirstOrDefault(c => c.CompanyName == userDto.CraneCompany);
+            if (craneCompany == null)
+            {
+                return Results.Conflict("Compañia de grua no existe");
+            }
+            var user = _mapper.Map<User>(userDto);
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
+            context.Users.Add(user);
+            craneCompany.AmountCraneAgents += 1;
+            await context.SaveChangesAsync();
+            return Results.Created("/api/user/" + user.EmployeeCode, user);
+        }
+        else if ((userDto.Role == "Admin" || userDto.Role == "Agente") && String.IsNullOrEmpty(userDto.CraneCompany))
+        {
+            var user = _mapper.Map<User>(userDto);
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
+            context.Users.Add(user);
+            await context.SaveChangesAsync();
+
+            return Results.Ok(new { Message = "User registered successfully" });
+        }
+        else
+        {
+            return Results.BadRequest("Rol no es valido");
+        }
     }
-    else
+    catch (Exception ex)
     {
-        return Results.BadRequest("Rol no es valido");
+        return Results.Problem(ex.Message, statusCode: 500);
     }
+    
 });
 
 app.MapPost("/api/user/login", ([FromBody] UserLoginDto userDto, ApplicationDbContext context, TokenService tokenService) =>
@@ -349,7 +394,7 @@ app.MapGet("/api/users", (IMapper _mapper, ApplicationDbContext context) =>
 })
     .RequireAuthorization();
 
-app.MapGet("/user/{employeeCode}", ([FromRoute] string employeeCode, ApplicationDbContext context) =>
+app.MapGet("api/user/{employeeCode}", ([FromRoute] string employeeCode, ApplicationDbContext context) =>
 {
     try
     {
@@ -367,7 +412,7 @@ app.MapGet("/user/{employeeCode}", ([FromRoute] string employeeCode, Application
 })
     .RequireAuthorization();
 
-app.MapPut("/users/changePassword", async ([FromBody] ChangePasswordDto CPDto, ApplicationDbContext context) =>
+app.MapPut("/api/user/changePassword", async ([FromBody] ChangePasswordDto CPDto, ApplicationDbContext context) =>
 {
     try
     {
@@ -387,7 +432,7 @@ app.MapPut("/users/changePassword", async ([FromBody] ChangePasswordDto CPDto, A
 })
     .RequireAuthorization();
 
-app.MapDelete("/users/{employeeCode}", async ([FromRoute] string employeeCode, ApplicationDbContext context) =>
+app.MapDelete("/api/user/{employeeCode}", async ([FromRoute] string employeeCode, ApplicationDbContext context) =>
 {
     try
     {
@@ -473,7 +518,10 @@ app.MapDelete("/api/citizen/{governmentId}", async (ApplicationDbContext context
     }
 })
     .RequireAuthorization();
-app.MapGet("/api/craneCompanies", (ApplicationDbContext context) =>
+
+// Crane company
+
+app.MapGet("/api/craneCompanies/", (ApplicationDbContext context) =>
 {
     try
     {
@@ -484,9 +532,26 @@ app.MapGet("/api/craneCompanies", (ApplicationDbContext context) =>
     {
         return Results.Problem(ex.Message, statusCode: 500);
     }
-});
+})
+    .RequireAuthorization();
 
-app.MapPost("/api/craneCompanies", async ([FromBody] CraneCompany craneCompany, ApplicationDbContext context) =>
+app.MapGet("/api/craneCompany/{rnc}", (ApplicationDbContext context, [FromRoute] string rnc) =>
+{
+    try
+    {
+        var craneCompany = context.CraneCompanies.FirstOrDefault(c => c.RNC == rnc);
+        return craneCompany == null ?
+        Results.NotFound() : 
+        Results.Ok(craneCompany);
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+})
+    .RequireAuthorization();
+
+app.MapPost("/api/craneCompany/", async ([FromBody] CraneCompany craneCompany, ApplicationDbContext context) =>
 {
     try
     {
@@ -503,6 +568,27 @@ app.MapPost("/api/craneCompanies", async ([FromBody] CraneCompany craneCompany, 
     {
         return Results.Problem(ex.Message, statusCode: 500);
     }
-});
+})
+    .RequireAuthorization();
+
+app.MapDelete("/api/craneCompany/{rnc}", async (ApplicationDbContext context, [FromRoute] string rnc) =>
+{
+    try
+    {
+        var craneCompany = context.CraneCompanies.FirstOrDefault(c => c.RNC == rnc);
+
+        if (craneCompany == null)
+            return Results.NotFound();
+
+        context.CraneCompanies.Remove(craneCompany);
+        await context.SaveChangesAsync();
+        return Results.Ok();
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+})
+    .RequireAuthorization();
 
 app.Run();
