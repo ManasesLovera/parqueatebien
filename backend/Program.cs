@@ -456,7 +456,7 @@ app.MapDelete("/api/user/{username}", async ([FromRoute] string username, Applic
 
 // GET ALL CITIZENS ENDPOINT
 
-app.MapPost("/api/citizen/register", ([FromBody] CitizenDto citizenDto, ApplicationDbContext context,
+app.MapPost("/api/citizen/register", async ([FromBody] CitizenDto citizenDto, ApplicationDbContext context,
     IValidator<CitizenDto> validatorCitizen, IValidator<CitizenVehicle> validatorCitizenVehicle, IMapper _mapper) =>
 {
     try
@@ -473,12 +473,16 @@ app.MapPost("/api/citizen/register", ([FromBody] CitizenDto citizenDto, Applicat
                 return Results.BadRequest(validation.Errors);
             
         }
-        var citizen = context.Citizens.FirstOrDefault(c => c.GovernmentId == citizenDto.GovernmentId);
-        if (citizen != null)
+        var citizenExist = context.Citizens.FirstOrDefault(c => c.GovernmentId == citizenDto.GovernmentId);
+        if (citizenExist != null)
         {
             return Results.Conflict(new { Message = "Este ciudadano ya existe" });
         }
-        return Results.Ok();
+        var citizen = _mapper.Map<Citizen>(citizenDto);
+        citizen.PasswordHash = BCrypt.Net.BCrypt.HashPassword(citizenDto.Password);
+        context.Citizens.Add(citizen);
+        await context.SaveChangesAsync();
+        return Results.Ok(new {Message = "Ciudadano creado"});
     }
     catch (Exception ex)
     {
@@ -491,9 +495,13 @@ app.MapPost("/api/citizen/login", ([FromBody] CitizenLoginDto user, ApplicationD
     try
     {
         var citizen = context.Citizens.FirstOrDefault(c => c.GovernmentId == user.GovernmentId);
-        if (citizen == null || BCrypt.Net.BCrypt.Verify(user.Password, citizen.PasswordHash))
+        if(citizen == null)
         {
-            return Results.Conflict(new { Message = "Cedula y/o contraseña incorrectos" });
+            return Results.NotFound();
+        }
+        if (!BCrypt.Net.BCrypt.Verify(user.Password, citizen.PasswordHash))
+        {
+            return Results.Conflict(new { Message = "Cedula y/o contraseña incorrectos: " + user.Password + " " + citizen!.PasswordHash });
         }
         var token = tokenService.GenerateToken(user);
         return Results.Ok(token);
