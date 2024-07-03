@@ -20,6 +20,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final _iD = TextEditingController();
   final _pass = TextEditingController();
+  final String role = 'Agente';
 
   @override
   void dispose() {
@@ -47,7 +48,7 @@ class _LoginState extends State<Login> {
                 const Passwordtext(),
                 PasswordTextField(controller: _pass),
                 SizedBox(height: 16.h),
-                SignInButton(onPressed: () => sign(context, _iD, _pass)),
+                SignInButton(onPressed: () => sign(context, _iD, _pass, role)),
                 SizedBox(height: 20.h),
                 const ForgotPasswordText(),
                 SizedBox(height: 140.h),
