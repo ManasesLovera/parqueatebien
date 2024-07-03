@@ -484,8 +484,7 @@ app.MapPost("/api/citizen/register", ([FromBody] CitizenDto citizenDto, Applicat
     {
         return Results.Problem(ex.Message, statusCode: 500);
     }
-})
-    .RequireAuthorization();
+});
 
 app.MapPost("/api/citizen/login", ([FromBody] CitizenLoginDto user, ApplicationDbContext context, TokenService tokenService) =>
 {
@@ -503,8 +502,7 @@ app.MapPost("/api/citizen/login", ([FromBody] CitizenLoginDto user, ApplicationD
     {
         return Results.Problem(ex.Message, statusCode: 500);
     }
-})
-    .RequireAuthorization();
+});
 
 app.MapDelete("/api/citizen/{governmentId}", async (ApplicationDbContext context, [FromRoute] string governmentId) => 
 {
