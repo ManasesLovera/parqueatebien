@@ -9,7 +9,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(LoginLoading());
       try {
         final result =
-            await LoginSendData().signIn(event.username, event.password);
+            await LoginSendData().signIn(event.username, event.password, event.role);
         if (result) {
           emit(LoginSuccess());
         } else {
