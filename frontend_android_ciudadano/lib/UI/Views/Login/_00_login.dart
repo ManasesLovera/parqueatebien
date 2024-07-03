@@ -67,7 +67,11 @@ class Login extends StatelessWidget {
                           SizedBox(height: 16.h),
                           BlocProvider(
                             create: (_) => LoginBloc(),
-                            child: SignInBlocBuilder(iD: iD, pass: pass),
+                            child: SignInBlocBuilder(
+                              iD: iD,
+                              pass: pass,
+                              role: 'Agente',
+                            ),
                           ),
                           SizedBox(height: 15.h),
                           const ForgotPasswordText(

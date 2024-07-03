@@ -11,11 +11,13 @@ import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_02_custom_b
 class SignInBlocBuilder extends StatelessWidget {
   final TextEditingController iD;
   final TextEditingController pass;
+  final String role;
 
   const SignInBlocBuilder({
     required this.iD,
     required this.pass,
     super.key,
+    required this.role,
   });
 
   @override
@@ -41,10 +43,7 @@ class SignInBlocBuilder extends StatelessWidget {
                     onPressed: buttonState.isEnabled
                         ? () {
                             context.read<LoginBloc>().add(
-                                  LoginSubmitted(
-                                    iD.text,
-                                    pass.text,
-                                  ),
+                                  LoginSubmitted(iD.text, pass.text, role),
                                 );
                           }
                         : null,
