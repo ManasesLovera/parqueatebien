@@ -22,7 +22,7 @@ class FotosVehiculo extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.memory(
-                base64Decode(photo['File']),
+                base64Decode(photo['file']),
                 height: 60.h,
                 width: 75.h,
                 fit: BoxFit.cover,
