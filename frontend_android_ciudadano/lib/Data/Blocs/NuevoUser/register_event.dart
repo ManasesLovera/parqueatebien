@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:frontend_android_ciudadano/Data/Models/NuevoRegistro/Users_Model/user_model.dart';
+import 'package:frontend_android_ciudadano/Data/Models/NuevoRegistro/Users/user_model.dart';
 
 abstract class RegisterEvent extends Equatable {
   const RegisterEvent();

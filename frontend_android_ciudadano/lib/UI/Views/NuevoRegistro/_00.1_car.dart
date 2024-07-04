@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android_ciudadano/Data/Api/NuevoRegistro/_00.1_api_nuevo_registro.dart';
+import 'package:frontend_android_ciudadano/Data/Api/NuevoRegistro/_00.1_new_registro.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/NuevoUser/register_bloc.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/NuevoUser/register_state.dart';
-import 'package:frontend_android_ciudadano/Data/Models/NuevoRegistro/UserCars/car_model.dart';
+import 'package:frontend_android_ciudadano/Data/Models/NuevoRegistro/Cars/car_model.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_00_app_bar.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_01_custom_textfield_.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_01_titlle_textfield_.dart';
@@ -19,6 +19,7 @@ class RegisterCar extends StatelessWidget {
   final yearC = TextEditingController();
   final colorC = TextEditingController();
   final matriculaC = TextEditingController();
+
   final double progress = 170;
   @override
   Widget build(BuildContext context) {
@@ -64,16 +65,14 @@ class RegisterCar extends StatelessWidget {
                           text: 'Numero de placa',
                         ),
                         CustomTextField(
-                          controller: numplacaC,
-                          hintText: 'Ingresar numero',
-                        ),
+                            controller: numplacaC, hintText: 'Ingresar numero'),
                         SizedBox(height: 16.h),
                         const CustomText(
                           text: 'Modelo',
                         ),
                         CustomDropdownSelectItem(
                           items: const [],
-                          onChanged: (CarModel? value) {},
+                          onChanged: (Vehicle? value) {},
                           hintText: 'Seleccionar',
                         ),
                         SizedBox(height: 16.h),
@@ -82,7 +81,7 @@ class RegisterCar extends StatelessWidget {
                         ),
                         CustomDropdownSelectItem(
                           items: const [],
-                          onChanged: (CarModel? value) {},
+                          onChanged: (Vehicle? value) {},
                           hintText: 'Seleccionar',
                         ),
                         SizedBox(height: 16.h),
@@ -91,7 +90,7 @@ class RegisterCar extends StatelessWidget {
                         ),
                         CustomDropdownSelectItem(
                           items: const [],
-                          onChanged: (CarModel? value) {},
+                          onChanged: (Vehicle? value) {},
                           hintText: 'Seleccionar',
                         ),
                         SizedBox(height: 16.h),
@@ -99,9 +98,8 @@ class RegisterCar extends StatelessWidget {
                           text: 'Matricula',
                         ),
                         CustomTextField(
-                          controller: matriculaC,
-                          hintText: 'Ingresar numero de matricula',
-                        ),
+                            controller: matriculaC,
+                            hintText: 'Ingresar numero de matricula'),
                         SizedBox(height: 80.h),
                         if (state is RegisterLoading)
                           const CircularProgressIndicator()
