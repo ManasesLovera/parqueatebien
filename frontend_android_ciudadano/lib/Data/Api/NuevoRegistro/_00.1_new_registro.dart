@@ -1,12 +1,11 @@
 import 'dart:convert';
-import 'package:frontend_android_ciudadano/Data/Models/NuevoRegistro/User_Extention/user_extensions.dart';
-import 'package:frontend_android_ciudadano/Data/Models/NuevoRegistro/Users_Model/user_model.dart';
+import 'package:frontend_android_ciudadano/Data/Models/NuevoRegistro/Users/user_model.dart';
 import 'package:http/http.dart' as http;
 
 class RegisterApi {
   Future<bool> register(User user) async {
     final response = await http.post(
-      Uri.parse('https://api.tuapp.com/register'),
+      Uri.parse('http://192.168.0.168:8089/api/citizen/register'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -19,6 +18,4 @@ class RegisterApi {
       return false;
     }
   }
-
-  registerVehicle(String licensePlate, String vehicleType, String vehicleColor, String model, String year, String matricula) {}
 }

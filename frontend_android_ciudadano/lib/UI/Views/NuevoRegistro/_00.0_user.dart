@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android_ciudadano/Data/Api/NuevoRegistro/_00.1_api_nuevo_registro.dart';
+import 'package:frontend_android_ciudadano/Data/Api/NuevoRegistro/_00.1_new_registro.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/NuevoUser/register_bloc.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/NuevoUser/register_state.dart';
 import 'package:frontend_android_ciudadano/UI/Views/NuevoRegistro/_00.1_car.dart';
@@ -21,6 +22,10 @@ class RegisterUser extends StatelessWidget {
   final confirmPassC = TextEditingController();
 
   final double progress = 50;
+  final bool isButtonEnabled = false;
+  final RegExp emailRegex = RegExp(
+    r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +73,10 @@ class RegisterUser extends StatelessWidget {
                         CustomTextField(
                           controller: cedulaC,
                           hintText: 'Ingresar numero de cedula sin guiones',
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            CedulaFormatter(),
+                          ],
                         ),
                         SizedBox(height: 16.h),
                         const CustomText(
@@ -76,6 +85,10 @@ class RegisterUser extends StatelessWidget {
                         CustomTextField(
                           controller: nombresC,
                           hintText: 'Ingresar nombres',
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'[a-zA-Z\s]')),
+                          ],
                         ),
                         SizedBox(height: 16.h),
                         const CustomText(
@@ -84,6 +97,10 @@ class RegisterUser extends StatelessWidget {
                         CustomTextField(
                           controller: apellidosC,
                           hintText: 'Ingresar apellidos',
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'[a-zA-Z\s]')),
+                          ],
                         ),
                         SizedBox(height: 16.h),
                         const CustomText(
@@ -92,6 +109,7 @@ class RegisterUser extends StatelessWidget {
                         CustomTextField(
                           controller: correoC,
                           hintText: 'Ingresar correo',
+                          keyboardType: TextInputType.emailAddress,
                         ),
                         SizedBox(height: 16.h),
                         const CustomText(
@@ -115,11 +133,13 @@ class RegisterUser extends StatelessWidget {
                         else
                           RegistroButtom(
                             onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => RegisterCar(),
-                                ),
-                              );
+                              if (_validateFields(context)) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => RegisterCar(),
+                                  ),
+                                );
+                              }
                             },
                             text: 'Siguiente',
                           ),
@@ -131,5 +151,80 @@ class RegisterUser extends StatelessWidget {
             ),
           ),
         )));
+  }
+
+  bool _validateFields(BuildContext context) {
+    if (cedulaC.text.isEmpty ||
+        nombresC.text.isEmpty ||
+        apellidosC.text.isEmpty ||
+        correoC.text.isEmpty ||
+        passC.text.isEmpty ||
+        confirmPassC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Todos los campos son obligatorios')),
+      );
+      return false;
+    }
+    if (!RegExp(r"^[a-zA-Z\s]+$").hasMatch(nombresC.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Nombres solo debe contener letras')),
+      );
+      return false;
+    }
+    if (!RegExp(r"^[a-zA-Z\s]+$").hasMatch(apellidosC.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Apellidos solo debe contener letras')),
+      );
+      return false;
+    }
+    if (!RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+        .hasMatch(correoC.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, ingrese un correo válido')),
+      );
+      return false;
+    }
+    if (passC.text.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('La contraseña debe tener al menos 8 caracteres')),
+      );
+      return false;
+    }
+
+    if (passC.text != confirmPassC.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Las contraseñas no coinciden')),
+      );
+      return false;
+    }
+    return true;
+  }
+}
+
+class CedulaFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    String text = newValue.text.replaceAll('-', ''); // Remove existing dashes
+    if (text.length > 11) {
+      return oldValue; // Limit to 11 characters
+    }
+
+    StringBuffer buffer = StringBuffer();
+    for (int i = 0; i < text.length; i++) {
+      if (i == 3 || i == 10) {
+        buffer.write('-');
+      }
+      buffer.write(text[i]);
+    }
+
+    return TextEditingValue(
+      text: buffer.toString(),
+      selection: newValue.selection.copyWith(
+        baseOffset: buffer.length,
+        extentOffset: buffer.length,
+      ),
+    );
   }
 }
