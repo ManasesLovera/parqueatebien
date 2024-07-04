@@ -270,6 +270,10 @@
 
 ### Ciudadanos
 
+1. GET / -> `/api/citizens`:
+    - Get all citizens
+    - 200 Ok
+
 1. POST / -> `/api/citizen/register`:
     - Register citizen
     - 200 Ok, 409 Conflict({message}) already exists, 400 BadRequest (Invalid data)
