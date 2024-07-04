@@ -450,11 +450,22 @@ app.MapDelete("/api/user/{username}", async ([FromRoute] string username, Applic
         return Results.Problem(ex.Message, statusCode: 500);
     }
 })
-    .RequireAuthorization(); 
+    .RequireAuthorization();
 
 // CIUDADANOS
 
-// GET ALL CITIZENS ENDPOINT
+app.MapGet("/api/citizens", (ApplicationDbContext context) =>
+{
+    try
+    {
+        var citizens = context.Citizens.ToList();
+        return Results.Ok(citizens);
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+});
 
 app.MapPost("/api/citizen/register", async ([FromBody] CitizenDto citizenDto, ApplicationDbContext context,
     IValidator<CitizenDto> validatorCitizen, IValidator<CitizenVehicle> validatorCitizenVehicle, IMapper _mapper) =>
