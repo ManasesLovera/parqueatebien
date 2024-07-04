@@ -75,7 +75,7 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     db.Database.Migrate();
-    ApplicationDbContext.Seed(db); // Llamada al Seed Method
+    ApplicationDbContext.Seed(db);
 }
 
 // Middleware para captura de errores
@@ -443,14 +443,14 @@ app.MapDelete("/api/user/{username}", async ([FromRoute] string username, Applic
         }
         context.Users.Remove(user);
         await context.SaveChangesAsync();
-        return Results.Ok(new { Message = "Se borro correctamente"} );
+        return Results.Ok(new { Message = "Se borro correctamente" } );
     }
     catch (Exception ex)
     {
         return Results.Problem(ex.Message, statusCode: 500);
     }
 })
-    .RequireAuthorization();
+    .RequireAuthorization(); 
 
 // CIUDADANOS
 
