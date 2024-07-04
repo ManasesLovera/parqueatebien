@@ -17,8 +17,8 @@ class MapVehiculo extends StatelessWidget {
       child: GoogleMap(
         initialCameraPosition: CameraPosition(
           target: LatLng(
-            double.parse(details['Lat']),
-            double.parse(details['Lon']),
+            double.parse(details['lat']),
+            double.parse(details['lon']),
           ),
           zoom: 16,
         ),
@@ -26,8 +26,8 @@ class MapVehiculo extends StatelessWidget {
           Marker(
             markerId: const MarkerId('Location'),
             position: LatLng(
-              double.parse(details['Lat']),
-              double.parse(details['Lon']),
+              double.parse(details['lat']),
+              double.parse(details['lon']),
             ),
           ),
         },

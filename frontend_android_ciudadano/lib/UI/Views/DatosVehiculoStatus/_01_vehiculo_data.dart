@@ -35,7 +35,7 @@ class CarDetails extends StatelessWidget {
                 builder: (context, state) {
                   if (state is VehicleDetailsLoaded) {
                     final details = state.vehicleDetails;
-                    final List<dynamic> photos = details['Photos'];
+                    final List<dynamic> photos = details['photos'];
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -80,28 +80,28 @@ class CarDetails extends StatelessWidget {
                         const Upfields(text: 'Numero de placa'),
                         Downfield(
                           details: details,
-                          detailKey: 'LicensePlate',
+                          detailKey: 'licensePlate',
                         ),
                         const Divider(),
                         const Upfields(text: 'Tipo de vehículo'),
                         SizedBox(height: 1.h),
                         Downfield(
                           details: details,
-                          detailKey: 'VehicleType',
+                          detailKey: 'vehicleType',
                         ),
                         const Divider(),
                         const Upfields(text: 'Color'),
                         SizedBox(height: 1.h),
                         Downfield(
                           details: details,
-                          detailKey: 'VehicleColor',
+                          detailKey: 'vehicleColor',
                         ),
                         const Divider(),
                         const Upfields(text: 'Ubicacion de la retencion'),
                         FutureBuilder<String>(
                           future: _getAddressFromLatLng(
-                            double.parse(details['Lat']),
-                            double.parse(details['Lon']),
+                            double.parse(details['lat']),
+                            double.parse(details['lon']),
                           ),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
