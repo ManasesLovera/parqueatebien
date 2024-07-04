@@ -34,12 +34,12 @@ class SatusButtom extends StatelessWidget {
           child: ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: _getStatusColor(details['Status']),
+              backgroundColor: _getStatusColor(details['status']),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
-            child: Text(details['Status'],
+            child: Text(details['status'],
                 style: TextStyle(color: Colors.white, fontSize: 10.h)),
           ),
         ),

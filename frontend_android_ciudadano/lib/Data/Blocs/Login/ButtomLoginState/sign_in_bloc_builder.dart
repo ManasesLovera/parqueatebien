@@ -43,7 +43,7 @@ class SignInBlocBuilder extends StatelessWidget {
                     onPressed: buttonState.isEnabled
                         ? () {
                             context.read<LoginBloc>().add(
-                                  LoginSubmitted(iD.text, pass.text, role),
+                                  LoginSubmitted(iD.text, pass.text),
                                 );
                           }
                         : null,

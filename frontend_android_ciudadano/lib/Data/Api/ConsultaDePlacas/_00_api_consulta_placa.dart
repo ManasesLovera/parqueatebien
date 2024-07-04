@@ -1,14 +1,32 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ConsultaPlaca {
-  final String apiUrlList = 'http://192.168.0.209:8089/ciudadanos/ciudadanos';
-  final String apiUrlDetails = 'http://192.168.0.209:8089/ciudadanos/';
+  final String apiUrlList = 'http://192.168.0.168:8089/api/reportes';
+  final String apiUrlDetails = 'http://192.168.0.168:8089/api/reporte/';
   final Logger _logger = Logger();
 
+  Future<String?> _getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
   Future<List<String>> fetchLicencePlates() async {
-    final response = await http.get(Uri.parse(apiUrlList));
+    final token = await _getToken();
+    if (token == null) {
+      _logger.e('No token found. Please login first.');
+      throw Exception('No token found');
+    }
+        _logger.i('Using token: $token');
+
+    final response = await http.get(
+      Uri.parse(apiUrlList),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
     _logger.i('Fetching licence plates from $apiUrlList');
 
     if (response.statusCode == 200) {
@@ -25,7 +43,18 @@ class ConsultaPlaca {
   }
 
   Future<Map<String, dynamic>> fetchVehicleDetails(String licensePlate) async {
-    final response = await http.get(Uri.parse('$apiUrlDetails$licensePlate'));
+    final token = await _getToken();
+    if (token == null) {
+      _logger.e('No token found. Please login first.');
+      throw Exception('No token found');
+    }
+
+    final response = await http.get(
+      Uri.parse('$apiUrlDetails$licensePlate'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
     _logger.i(
         'Fetching details for plate: $licensePlate from $apiUrlDetails$licensePlate');
 

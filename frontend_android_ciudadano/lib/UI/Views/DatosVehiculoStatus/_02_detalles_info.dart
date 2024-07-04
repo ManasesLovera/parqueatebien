@@ -102,11 +102,11 @@ class ReportInfoScreen extends StatelessWidget {
                           EdgeInsets.symmetric(horizontal: 30.w, vertical: 2.h),
                       decoration: BoxDecoration(
                         color: _getStatusColor(
-                            vehicleData['Status'] ?? 'Desconocido'),
+                            vehicleData['status'] ?? 'Desconocido'),
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Text(
-                        vehicleData['Status'] ?? 'Desconocido',
+                        vehicleData['status'] ?? 'Desconocido',
                         style: TextStyle(
                           fontSize: 12.h,
                           fontWeight: FontWeight.bold,
@@ -123,8 +123,8 @@ class ReportInfoScreen extends StatelessWidget {
                 ),
                 FutureBuilder(
                   future: _getAddressFromLatLng(
-                    double.parse(vehicleData['Lat']),
-                    double.parse(vehicleData['Lon']),
+                    double.parse(vehicleData['lat']),
+                    double.parse(vehicleData['lon']),
                   ),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
