@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -12,6 +13,7 @@ class CustomTextField extends StatelessWidget {
   final double fontSize;
   final double borderRadius;
   final Color borderColor;
+   final List<TextInputFormatter>? inputFormatters;
 
   const CustomTextField({
     super.key,
@@ -25,6 +27,7 @@ class CustomTextField extends StatelessWidget {
     this.fontSize = 11.0,
     this.borderRadius = 7.0,
     this.borderColor = Colors.grey,
+    this.inputFormatters,
   });
 
   @override
@@ -37,6 +40,7 @@ class CustomTextField extends StatelessWidget {
           controller: controller,
           obscureText: obscureText,
           keyboardType: keyboardType,
+          inputFormatters: inputFormatters,
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: TextStyle(color: hintTextColor, fontSize: fontSize.h),
