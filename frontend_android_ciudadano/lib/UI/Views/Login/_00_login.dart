@@ -68,6 +68,7 @@ class Login extends StatelessWidget {
                           CustomTextField(
                             controller: pass,
                             hintText: 'Ingresar la contraseña',
+                            obscureText: true,
                           ),
                           SizedBox(height: 16.h),
                           BlocProvider(
