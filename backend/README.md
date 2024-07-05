@@ -298,6 +298,7 @@
 2. POST / -> `/api/citizen/login`:
     - Login citizen
     - 200 Ok(token), 409 Conflict({message})
+    - The message it returns will be: "Cedula y/o contraseña incorrectos." or "Ciudadano aun no esta activo, espere a ser aceptado."
 ```json
 {
     "governmentId": string,

@@ -77,7 +77,17 @@ Future<bool?> showVehicleDialog(BuildContext context, String governmentId) {
                             },
                           );
                         } else if (state is VehicleError) {
-                          return Text('Error: ${state.error}');
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            Navigator.of(context).pop();
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => ErrorScreen(
+                                  errorMessage: state.error,
+                                ),
+                              ),
+                            );
+                          });
+                          return Container(); // return an empty container to avoid UI error
                         } else {
                           return Container();
                         }
