@@ -11,9 +11,9 @@ class ChangeStatusDTO {
 
   Map<String, dynamic> toJson() {
     return {
-      'LicensePlate': licensePlate,
-      'NewStatus': newStatus,
-      'Username': username,
+      'licensePlate': licensePlate,
+      'newStatus': newStatus,
+      'username': username,
     };
   }
 }

@@ -23,12 +23,17 @@ class LoginSendData {
             }),
           )
           .timeout(const Duration(seconds: 5));
+      _logger.i('Response status: ${response.statusCode}');
+      _logger.i('Response body: ${response.body}');
 
       switch (response.statusCode) {
         case 200:
+          final rawToken = response.body;
+          final token = rawToken.replaceAll('"', '');
           _logger.i('Inicio de sesión exitoso');
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('loggedInUser', username);
+          await prefs.setString('token', token);
           return true;
         case 401:
           _logger.e('Unauthorized - Wrong Password');

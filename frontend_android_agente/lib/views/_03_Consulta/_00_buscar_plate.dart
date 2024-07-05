@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android/views/_03_Consulta/_01_detalles_vehiculo_consulta.dart';
-
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:logger/logger.dart';
@@ -33,8 +32,7 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
   }
 
   Future<void> _searchVehicle() async {
-    const String baseUrl =
-        'http://192.168.0.209:8089/ciudadanos/';
+    const String baseUrl = 'http://192.168.0.209:8089/api/reporte/';
     final String endpoint = _plateController.text;
     final Uri url = Uri.parse('$baseUrl$endpoint');
 
@@ -57,8 +55,10 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
             ),
           );
         }
+      } else if (response.statusCode == 404) {
+        _handleError('Vehicle not found.');
       } else {
-        _handleError('Vehicle not found or server error.');
+        _handleError('Server error.');
       }
     } catch (e) {
       _handleError('Failed to connect to the server: $e');
@@ -152,7 +152,7 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
                     ),
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(
-                          RegExp(r'^[A-Z][0-9]{0,6}$')),
+                          RegExp(r'^[A-Z0-9]{1,7}$')),
                       LengthLimitingTextInputFormatter(7),
                     ],
                     keyboardType: TextInputType.text,
