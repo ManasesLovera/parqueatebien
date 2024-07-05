@@ -9,7 +9,7 @@ public class ReportDtoValidator : AbstractValidator<ReportDto>
         RuleFor(x => x.LicensePlate)
             .NotNull().WithMessage("La placa es requerida.")
             .NotEmpty().WithMessage("La placa no puede estar vacía.")
-            .Matches(@"^[A-Z]{1,2}[0-9]{6}$").WithMessage("El formato de la placa es inválido. Debe ser de la forma AA123456.");
+            .Matches(@"^[A-Z]{1,2}[0-9]{6}$").WithMessage("El formato de la placa es inválido. Debe tener 1 a dos letras mayusculas y 6 numeros.");
 
         RuleFor(x => x.RegistrationDocument)
             .NotNull().WithMessage("La matricula es requerida.")

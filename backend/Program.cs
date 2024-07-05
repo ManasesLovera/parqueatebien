@@ -503,13 +503,29 @@ app.MapGet("/api/citizenVehicle/{governmentId}", (ApplicationDbContext context, 
     {
         var citizen = context.Citizens.FirstOrDefault(c => c.GovernmentId == governmentId);
         
-
         if (citizen == null)
             return Results.NotFound();
 
         var licensePlates = context.Vehicles.Select(v => v.LicensePlate).ToList();
 
         return Results.Ok(licensePlates);
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+});
+
+app.MapPost("/api/citizen/addVehicle", async (ApplicationDbContext context, [FromBody] CitizenVehicle vehicle, IValidator<CitizenVehicle> validator) =>
+{
+    try
+    {
+        var validationResult = validator.Validate(vehicle);
+        if (!validationResult.IsValid)
+            return Results.BadRequest(validationResult.Errors);
+        context.Vehicles.Add(vehicle);
+        await context.SaveChangesAsync();
+        return Results.Ok();
     }
     catch (Exception ex)
     {

@@ -8,8 +8,8 @@ public class CitizenDtoValidator : AbstractValidator<CitizenDto>
     public CitizenDtoValidator()
     {
         RuleFor(x => x.GovernmentId)
-            .NotNull().NotEmpty().WithMessage("Falta la placa")
-            .Matches(@"^[0-9]{11}$").WithMessage("La placa no es valida, debe contener 11 numeros");
+            .NotNull().NotEmpty().WithMessage("Falta la cedula")
+            .Matches(@"^[0-9]{11}$").WithMessage("La cedula no es valida, debe contener 11 numeros");
 
         RuleFor(x => x.Name)
             .NotEmpty().NotNull().WithMessage("Falta el nombre");
