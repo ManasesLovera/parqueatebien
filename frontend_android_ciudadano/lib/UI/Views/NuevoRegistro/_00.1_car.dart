@@ -1,11 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:logger/logger.dart';
-
 import 'package:frontend_android_ciudadano/Data/Api/NuevoRegistro/_00_register_.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Add_New_User/register_bloc.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Add_New_User/register_state.dart';
@@ -69,7 +67,7 @@ class _RegisterCarState extends State<RegisterCar> {
       );
       return false;
     }
-    if (matriculaC.text.length != 14) {
+    if (matriculaC.text.length != 9) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('La matrícula debe tener 14 caracteres')),
       );
@@ -81,12 +79,14 @@ class _RegisterCarState extends State<RegisterCar> {
   void _register() async {
     if (_validateFields()) {
       final vehicle = Vehicle(
+        governmentId: widget.governmentId,
         licensePlate: numplacaC.text,
         registrationDocument: matriculaC.text,
         model: modeloC.text,
         year: selectedYear!,
         color: selectedColor!,
       );
+
       final user = User(
         governmentId: widget.governmentId,
         name: widget.name,
@@ -205,7 +205,7 @@ class _RegisterCarState extends State<RegisterCar> {
                           controller: matriculaC,
                           hintText: 'Ingresar numero de matricula',
                           inputFormatters: [
-                            LengthLimitingTextInputFormatter(14),
+                            LengthLimitingTextInputFormatter(9),
                           ],
                         ),
                         SizedBox(height: 80.h),
