@@ -506,7 +506,7 @@ app.MapGet("/api/citizenVehicle/{governmentId}", (ApplicationDbContext context, 
         if (citizen == null)
             return Results.NotFound();
 
-        var licensePlates = context.Vehicles.Select(v => v.LicensePlate).ToList();
+        var licensePlates = context.Vehicles.Where(v => v.GovernmentId == citizen.GovernmentId).Select(v => v.LicensePlate).ToList();
 
         return Results.Ok(licensePlates);
     }
