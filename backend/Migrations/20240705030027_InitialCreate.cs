@@ -100,6 +100,7 @@ namespace backend.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    GovernmentId = table.Column<string>(type: "TEXT", nullable: true),
                     LicensePlate = table.Column<string>(type: "TEXT", nullable: true),
                     RegistrationDocument = table.Column<string>(type: "TEXT", nullable: true),
                     Model = table.Column<string>(type: "TEXT", nullable: true),

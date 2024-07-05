@@ -58,6 +58,9 @@ namespace backend.Migrations
                     b.Property<string>("Color")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("GovernmentId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("LicensePlate")
                         .HasColumnType("TEXT");
 

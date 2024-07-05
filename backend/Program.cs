@@ -476,12 +476,40 @@ app.MapDelete("/api/user/{username}", async ([FromRoute] string username, Applic
 
 // CIUDADANOS
 
-app.MapGet("/api/citizens", (ApplicationDbContext context) =>
+app.MapGet("/api/citizens", (ApplicationDbContext context, IMapper _mapper) =>
 {
     try
     {
         var citizens = context.Citizens.ToList();
-        return Results.Ok(citizens);
+
+        var citizenDtos = citizens.Select(c =>
+        {
+            var citizenDto = _mapper.Map<CitizenDto>(c);
+            citizenDto.Vehicles = context.Vehicles.Where(v => v.GovernmentId == citizenDto.GovernmentId).ToList();
+            return citizenDto;
+        }).ToList();
+
+        return Results.Ok(citizenDtos);
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+});
+
+app.MapGet("/api/citizenVehicle/{governmentId}", (ApplicationDbContext context, [FromRoute] string governmentId) =>
+{
+    try
+    {
+        var citizen = context.Citizens.FirstOrDefault(c => c.GovernmentId == governmentId);
+        
+
+        if (citizen == null)
+            return Results.NotFound();
+
+        var licensePlates = context.Vehicles.Select(v => v.LicensePlate).ToList();
+
+        return Results.Ok(licensePlates);
     }
     catch (Exception ex)
     {
@@ -512,6 +540,10 @@ app.MapPost("/api/citizen/register", async ([FromBody] CitizenDto citizenDto, Ap
         
         var citizen = _mapper.Map<Citizen>(citizenDto);
         citizen.PasswordHash = BCrypt.Net.BCrypt.HashPassword(citizenDto.Password);
+        foreach (var vehicle in citizen.Vehicles!)
+        {
+            context.Vehicles.Add(vehicle);
+        }
         context.Citizens.Add(citizen);
         await context.SaveChangesAsync();
         return Results.Ok(citizen);

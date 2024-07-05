@@ -15,6 +15,7 @@ public class MappingConfig : Profile
         CreateMap<UserDto, User>().ReverseMap();
         CreateMap<User, UserResponseDto>().ReverseMap();
         CreateMap<CitizenDto, Citizen>().ReverseMap();
+        CreateMap<Citizen, CitizenDto>().ReverseMap();
 
         // Code fixed for issue "Incorrect number of argument supplied for call to method"
         // Stackoverflow: https://stackoverflow.com/questions/77861262/incorrect-number-of-arguments-supplied-for-call-to-method

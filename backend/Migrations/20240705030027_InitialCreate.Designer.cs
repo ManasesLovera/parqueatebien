@@ -11,7 +11,7 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240705021205_InitialCreate")]
+    [Migration("20240705030027_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -59,6 +59,9 @@ namespace backend.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Color")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("GovernmentId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LicensePlate")
