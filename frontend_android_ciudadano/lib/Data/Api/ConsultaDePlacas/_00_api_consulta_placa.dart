@@ -4,7 +4,7 @@ import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ConsultaPlaca {
-  final String apiUrlCitizenVehicle =
+  final String apiUrlCitizenVehicles =
       'http://192.168.0.209:8089/api/citizenVehicle/';
   final String apiUrlDetails = 'http://192.168.0.209:8089/api/reporte/';
   final Logger _logger = Logger();
@@ -23,19 +23,19 @@ class ConsultaPlaca {
     _logger.i('Using token: $token');
 
     final response = await http.get(
-      Uri.parse('$apiUrlCitizenVehicle$governmentId'),
+      Uri.parse('$apiUrlCitizenVehicles$governmentId'),
       headers: {
         'Authorization': 'Bearer $token',
       },
     );
     _logger.i(
-        'Fetching licence plates for government ID: $governmentId from $apiUrlCitizenVehicle');
+        'Fetching licence plates for user $governmentId from $apiUrlCitizenVehicles');
 
     if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(response.body);
-      List<String> licensePlates = data.cast<String>();
-      _logger.i('Fetched licence plates: $licensePlates');
-      return licensePlates;
+      List<String> licencePlates =
+          List<String>.from(json.decode(response.body));
+      _logger.i('Fetched licence plates: $licencePlates');
+      return licencePlates;
     } else {
       _logger.e(
           'Failed to load licence plates with status code ${response.statusCode}');
