@@ -136,7 +136,13 @@ class RegisterUser extends StatelessWidget {
                               if (_validateFields(context)) {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) => RegisterCar(),
+                                    builder: (context) => RegisterCar(
+                                      governmentId: cedulaC.text,
+                                      name: nombresC.text,
+                                      lastname: apellidosC.text,
+                                      email: correoC.text,
+                                      password: passC.text,
+                                    ),
                                   ),
                                 );
                               }

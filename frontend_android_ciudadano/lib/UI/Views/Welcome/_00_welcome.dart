@@ -42,9 +42,9 @@ class Welcome extends StatelessWidget {
                 subtitle:
                     'Si posees otro vehiculo, añade los datos para futuras consultas',
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => RegisterCar()),
-                  );
+                  // Navigator.of(context).push(
+                  //   MaterialPageRoute(builder: (context) => RegisterCar()),
+                  // );
                 },
               ),
               ReportConsultButtom(
