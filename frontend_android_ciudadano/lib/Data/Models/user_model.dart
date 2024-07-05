@@ -1,4 +1,3 @@
-
 import 'package:frontend_android_ciudadano/Data/Models/car_model.dart';
 
 class User {

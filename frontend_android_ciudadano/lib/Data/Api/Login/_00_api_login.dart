@@ -5,10 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginSendData {
   static final Logger _logger = Logger();
-
   Future<bool> signIn(String username, String password) async {
     const url = 'http://192.168.0.209:8089/api/citizen/login';
-
     try {
       final response = await http
           .post(
@@ -28,7 +26,7 @@ class LoginSendData {
 
       switch (response.statusCode) {
         case 200:
-           final rawToken = response.body;
+          final rawToken = response.body;
           final token = rawToken.replaceAll('"', '');
           _logger.i('Inicio de sesión exitoso, Token:$token');
           SharedPreferences prefs = await SharedPreferences.getInstance();
