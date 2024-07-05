@@ -14,8 +14,7 @@ class M extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const String governmentId =
-        '40213481142'; // Proporciona el governmentId adecuado
+    const String governmentId = '';
 
     return ScreenUtilInit(
       designSize: const Size(360, 640),

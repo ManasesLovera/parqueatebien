@@ -5,9 +5,15 @@ import 'package:frontend_android_ciudadano/UI/Widgets/GlobalsWidgets/_00_logo_im
 import 'package:frontend_android_ciudadano/UI/Widgets/Welcome/_01_welcometext.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/Welcome/_02_subtituloreport.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/Welcome/_04_report_buttom.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Welcome extends StatelessWidget {
   const Welcome({super.key});
+
+  Future<String?> _getGovernmentId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('governmentId');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +33,24 @@ class Welcome extends StatelessWidget {
               SizedBox(height: 5.h),
               const SubtituloReport(sub: '¿Que deseas realizar hoy?'),
               SizedBox(height: 18.h),
-              ReportConsultButtom(
-                svgPath: 'assets/icons/car.svg',
-                title: 'Consulta de vehiculo',
-                subtitle: 'Consulta si tu vehiculo ha sido incautado',
-                onTap: () {
-                  // Proporcione el `governmentId` adecuado aquí
-                  showVehicleDialog(context, '40213481142');
+              FutureBuilder<String?>(
+                future: _getGovernmentId(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError || !snapshot.hasData) {
+                    return const Text('Error al obtener el ID del usuario');
+                  } else {
+                    final governmentId = snapshot.data!;
+                    return ReportConsultButtom(
+                      svgPath: 'assets/icons/car.svg',
+                      title: 'Consulta de vehiculo',
+                      subtitle: 'Consulta si tu vehiculo ha sido incautado',
+                      onTap: () {
+                        showVehicleDialog(context, governmentId);
+                      },
+                    );
+                  }
                 },
               ),
               ReportConsultButtom(
