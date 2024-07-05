@@ -581,7 +581,11 @@ app.MapPost("/api/citizen/login", ([FromBody] CitizenLoginDto user, ApplicationD
         }
         if (!BCrypt.Net.BCrypt.Verify(user.Password, citizen.PasswordHash))
         {
-            return Results.Conflict(new { Message = "Cedula y/o contraseña incorrectos: " + user.Password + " " + citizen!.PasswordHash });
+            return Results.Conflict(new { Message = "Cedula y/o contraseña incorrectos." });
+        }
+        if (citizen.Status == false)
+        {
+            return Results.Conflict(new { Message = "Ciudadano aun no esta activo, espere a ser aceptado." });
         }
         var token = tokenService.GenerateToken(user);
         return Results.Ok(token);
