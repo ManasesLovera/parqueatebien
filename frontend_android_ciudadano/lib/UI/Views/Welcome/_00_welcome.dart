@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android_ciudadano/UI/Views/DatosVehiculoStatus/_00_consulta_.dart';
+import 'package:frontend_android_ciudadano/UI/Views/Vehiculo_Registro/_00.2_register_new_car.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/GlobalsWidgets/_00_logo_image.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/Welcome/_01_welcometext.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/Welcome/_02_subtituloreport.dart';
@@ -59,9 +60,9 @@ class Welcome extends StatelessWidget {
                 subtitle:
                     'Si posees otro vehiculo, añade los datos para futuras consultas',
                 onTap: () {
-                  // Navigator.of(context).push(
-                  //   MaterialPageRoute(builder: (context) => RegisterCar()),
-                  // );
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => RegisterNewCar()),
+                  );
                 },
               ),
               ReportConsultButtom(
