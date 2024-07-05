@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android_ciudadano/Data/Models/NuevoRegistro/Cars/car_model.dart';
 
-class CustomDropdownSelectItem extends StatelessWidget {
-  final List<Vehicle> items;
-  final Vehicle? selectedItem;
-  final ValueChanged<Vehicle?> onChanged;
+class YearDropdownSelectItem extends StatelessWidget {
+  final List<String> items;
+  final String? selectedItem;
+  final ValueChanged<String?> onChanged;
   final String? hintText;
 
-  const CustomDropdownSelectItem({
+  const YearDropdownSelectItem({
     required this.items,
     this.selectedItem,
     required this.onChanged,
@@ -30,7 +29,8 @@ class CustomDropdownSelectItem extends StatelessWidget {
             border: Border.all(color: Colors.grey[400]!),
           ),
           child: DropdownButtonHideUnderline(
-            child: DropdownButton<Vehicle>(
+            child: DropdownButton<String>(
+              menuMaxHeight: 200,
               value: selectedItem,
               hint: Text(
                 hintText ?? '',
@@ -43,11 +43,11 @@ class CustomDropdownSelectItem extends StatelessWidget {
               icon: Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
               iconSize: 24.h,
               onChanged: onChanged,
-              items: items.map((Vehicle carModel) {
-                return DropdownMenuItem<Vehicle>(
-                  value: carModel,
+              items: items.map((String year) {
+                return DropdownMenuItem<String>(
+                  value: year,
                   child: Text(
-                    carModel.color,
+                    year,
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 14.h,

@@ -1,4 +1,5 @@
-import 'package:frontend_android_ciudadano/Data/Models/NuevoRegistro/Cars/car_model.dart';
+
+import 'package:frontend_android_ciudadano/Data/Models/car_model.dart';
 
 class User {
   final String governmentId;
@@ -19,7 +20,7 @@ class User {
 
   Map<String, dynamic> toJson() {
     return {
-      'governmentId': governmentId,
+      'governmentId': governmentId.replaceAll('-', ''),
       'name': name,
       'lastname': lastname,
       'email': email,
