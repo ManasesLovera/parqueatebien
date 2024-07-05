@@ -7,7 +7,7 @@ class LoginSendData {
   static final Logger _logger = Logger();
 
   Future<bool> signIn(String username, String password) async {
-    const url = 'http://192.168.0.168:8089/api/citizen/login';
+    const url = 'http://192.168.0.209:8089/api/citizen/login';
 
     try {
       final response = await http
@@ -17,7 +17,7 @@ class LoginSendData {
               'Content-Type': 'application/json; charset=UTF-8',
             },
             body: jsonEncode(<String, String>{
-              "governmentId": username,
+              "governmentId": username.replaceAll('-', ''),
               "password": password,
             }),
           )

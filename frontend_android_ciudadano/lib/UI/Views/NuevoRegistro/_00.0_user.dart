@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android_ciudadano/Data/Api/NuevoRegistro/_00.1_new_registro.dart';
+import 'package:frontend_android_ciudadano/Data/Api/NuevoRegistro/_00_register_.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/NuevoUser/register_bloc.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/NuevoUser/register_state.dart';
 import 'package:frontend_android_ciudadano/UI/Views/NuevoRegistro/_00.1_car.dart';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Login/ButtomLoginState/button_state_bloc.dart';
@@ -33,7 +34,7 @@ class Login extends StatelessWidget {
                     img: 'assets/splash/main.png', altura: 100),
                 SizedBox(height: 50.h),
                 const Usertext(
-                  text: 'Correo electronico',
+                  text: 'Cedula',
                 ),
                 BlocProvider(
                   create: (_) => ButtonStateBloc(),
@@ -54,7 +55,11 @@ class Login extends StatelessWidget {
                         children: [
                           CustomTextField(
                             controller: iD,
-                            hintText: 'Ingresar correo electronico',
+                            hintText: 'Ingresar cedula',
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              CedulaFormatterCedula(),
+                            ],
                           ),
                           SizedBox(height: 20.h),
                           const Usertext(
@@ -103,6 +108,33 @@ class Login extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class CedulaFormatterCedula extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    String text = newValue.text.replaceAll('-', ''); // Remove existing dashes
+    if (text.length > 11) {
+      return oldValue; // Limit to 11 characters
+    }
+
+    StringBuffer buffer = StringBuffer();
+    for (int i = 0; i < text.length; i++) {
+      if (i == 3 || i == 10) {
+        buffer.write('-');
+      }
+      buffer.write(text[i]);
+    }
+
+    return TextEditingValue(
+      text: buffer.toString(),
+      selection: newValue.selection.copyWith(
+        baseOffset: buffer.length,
+        extentOffset: buffer.length,
       ),
     );
   }
