@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoFetch/_00_vehicle_event.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoFetch/_01_vehicle_state.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoFetch/_02_vehicle_bloc.dart';
-import 'package:frontend_android_ciudadano/UI/Views/DatosVehiculoStatus/_01_vehiculo_data.dart';
+import 'package:frontend_android_ciudadano/UI/Views/Success_Screen/_05_error.dart';
 
 void showVehicleDialog(BuildContext context, String governmentId) {
   showDialog(
@@ -76,7 +76,17 @@ void showVehicleDialog(BuildContext context, String governmentId) {
                             },
                           );
                         } else if (state is VehicleError) {
-                          return Text('Error: ${state.error}');
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            Navigator.of(context).pop();
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => ErrorScreen(
+                                  errorMessage: state.error,
+                                ),
+                              ),
+                            );
+                          });
+                          return Container(); // return an empty container to avoid UI error
                         } else {
                           return Container();
                         }
@@ -91,15 +101,6 @@ void showVehicleDialog(BuildContext context, String governmentId) {
                             BlocProvider.of<VehicleBloc>(context)
                                 .add(FetchVehicleDetails(selectedPlate!));
                             Navigator.of(context).pop();
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => BlocProvider.value(
-                                  value: BlocProvider.of<VehicleBloc>(context),
-                                  child:
-                                      CarDetails(licensePlate: selectedPlate!),
-                                ),
-                              ),
-                            );
                           }
                         },
                         style: ElevatedButton.styleFrom(
