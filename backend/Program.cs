@@ -550,7 +550,24 @@ app.MapDelete("/api/citizen/{governmentId}", async (ApplicationDbContext context
 })
     .RequireAuthorization();
 
-// UPDATE STATUS CITIZEN ENDPOINT
+app.MapPut("/api/citizen/updateStatus{governmentId}", async (ApplicationDbContext context, [FromRoute] string governmentId) =>
+{
+    try
+    {
+        var citizen = context.Citizens.FirstOrDefault(c => c.GovernmentId == governmentId);
+        if (citizen == null)
+        {
+            return Results.NotFound();
+        }
+        citizen.Status = !citizen.Status;
+        await context.SaveChangesAsync();
+        return Results.Ok();
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+});
 
 // Crane company
 
