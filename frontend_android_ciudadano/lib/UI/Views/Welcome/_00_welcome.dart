@@ -94,25 +94,6 @@ class Welcome extends StatelessWidget {
                   }
                 },
               ),
-              ReportConsultButtom(
-                svgPath: 'assets/icons/create.svg',
-                title: 'Agregar otro vehiculo',
-                subtitle:
-                    'Si posees otro vehiculo, añade los datos para futuras consultas',
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const RegisterNewCar()),
-                  );
-                },
-              ),
-              ReportConsultButtom(
-                svgPath: 'assets/icons/create.svg',
-                title: 'Chat de soporte',
-                subtitle:
-                    'Obten asistencia inmediata a traves de nuestro chat de soporte',
-                onTap: () {},
-              ),
-
             ],
           ),
         )),
