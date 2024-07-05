@@ -11,6 +11,7 @@ public class ReportResponseDto
     public string? Year { get; set; }
     public string? Reference { get; set; }
     public string? Status { get; set; }
+    public bool Active { get; set; }
     public string? ReportedBy { get; set; }
     public string? ReportedDate { get; set; }
     public string? TowedByCraneDate { get; set; }

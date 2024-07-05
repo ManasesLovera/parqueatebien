@@ -288,6 +288,28 @@ app.MapPut("/api/reporte/actualizarEstado", async (ApplicationDbContext context,
 })
     .RequireAuthorization();
 
+app.MapPut("/api/reporte/cancelar/{licensePlate}", async (ApplicationDbContext context, [FromRoute] string licensePlate) =>
+{
+    try
+    {
+        var report = context.Reports.FirstOrDefault(r => r.LicensePlate == licensePlate);
+        if (report == null)
+            return Results.NotFound();
+
+        if (!report.Active)
+            return Results.Conflict(new { Message = "Already canceled" });
+
+        report.Active = false;
+        await context.SaveChangesAsync();
+        return Results.Ok();
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+})
+    .RequireAuthorization();
+
 app.MapGet("/api/reportes/estadisticas", (ApplicationDbContext context) =>
 {
     int reportados = context.Reports.Where(r => r.Status == "Reportado").ToList().Count;
@@ -486,14 +508,13 @@ app.MapPost("/api/citizen/register", async ([FromBody] CitizenDto citizenDto, Ap
         }
         var citizenExist = context.Citizens.FirstOrDefault(c => c.GovernmentId == citizenDto.GovernmentId);
         if (citizenExist != null)
-        {
             return Results.Conflict(new { Message = "Este ciudadano ya existe" });
-        }
+        
         var citizen = _mapper.Map<Citizen>(citizenDto);
         citizen.PasswordHash = BCrypt.Net.BCrypt.HashPassword(citizenDto.Password);
         context.Citizens.Add(citizen);
         await context.SaveChangesAsync();
-        return Results.Ok(new {Message = "Ciudadano creado"});
+        return Results.Ok(citizen);
     }
     catch (Exception ex)
     {
@@ -529,7 +550,7 @@ app.MapDelete("/api/citizen/{governmentId}", async (ApplicationDbContext context
     {
         governmentId = governmentId.Replace("-", "");
 
-        if (Regex.IsMatch(governmentId, @"^[0-9]{11}$"))
+        if (!Regex.IsMatch(governmentId, @"^[0-9]{11}$"))
             return Results.BadRequest("La cedula no es valida");
 
         var citizen = context.Citizens.FirstOrDefault(c => c.GovernmentId == governmentId);
@@ -537,8 +558,9 @@ app.MapDelete("/api/citizen/{governmentId}", async (ApplicationDbContext context
         if (citizen == null)
             return Results.NotFound();
 
-        var citizenVehicles = citizen.Vehicles;
-        context.CitizenVehicles.RemoveRange(citizenVehicles!);
+        var citizenVehicles = context.Vehicles;
+        if(citizenVehicles != null)
+            context.Vehicles.RemoveRange(citizenVehicles!);
         context.Citizens.Remove(citizen);
         await context.SaveChangesAsync();
         return Results.Ok();
@@ -550,7 +572,7 @@ app.MapDelete("/api/citizen/{governmentId}", async (ApplicationDbContext context
 })
     .RequireAuthorization();
 
-app.MapPut("/api/citizen/updateStatus{governmentId}", async (ApplicationDbContext context, [FromRoute] string governmentId) =>
+app.MapPut("/api/citizen/updateStatus/{governmentId}", async (ApplicationDbContext context, [FromRoute] string governmentId) =>
 {
     try
     {

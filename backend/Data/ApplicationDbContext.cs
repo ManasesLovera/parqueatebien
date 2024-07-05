@@ -11,7 +11,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Report> Reports { get; set; }
     public DbSet<Picture> Pictures { get; set; }
     public DbSet<Citizen> Citizens { get; set; }
-    public DbSet<CitizenVehicle> CitizenVehicles { get; set; }
+    public DbSet<CitizenVehicle> Vehicles { get; set; }
     public DbSet<CraneCompany> CraneCompanies { get; set; }
     public static void Seed (ApplicationDbContext context)
     {

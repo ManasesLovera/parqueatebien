@@ -74,7 +74,7 @@ namespace backend.Migrations
 
                     b.HasIndex("CitizenId");
 
-                    b.ToTable("CitizenVehicles");
+                    b.ToTable("Vehicles");
                 });
 
             modelBuilder.Entity("backend.Models.CraneCompany", b =>

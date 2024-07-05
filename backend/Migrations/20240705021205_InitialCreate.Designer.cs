@@ -11,7 +11,7 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240630175719_InitialCreate")]
+    [Migration("20240705021205_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -77,7 +77,7 @@ namespace backend.Migrations
 
                     b.HasIndex("CitizenId");
 
-                    b.ToTable("CitizenVehicles");
+                    b.ToTable("Vehicles");
                 });
 
             modelBuilder.Entity("backend.Models.CraneCompany", b =>

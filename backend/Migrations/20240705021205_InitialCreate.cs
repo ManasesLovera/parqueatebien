@@ -95,7 +95,7 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CitizenVehicles",
+                name: "Vehicles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -109,9 +109,9 @@ namespace backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CitizenVehicles", x => x.Id);
+                    table.PrimaryKey("PK_Vehicles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CitizenVehicles_Citizens_CitizenId",
+                        name: "FK_Vehicles_Citizens_CitizenId",
                         column: x => x.CitizenId,
                         principalTable: "Citizens",
                         principalColumn: "Id");
@@ -139,22 +139,19 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CitizenVehicles_CitizenId",
-                table: "CitizenVehicles",
-                column: "CitizenId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Pictures_ReportId",
                 table: "Pictures",
                 column: "ReportId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vehicles_CitizenId",
+                table: "Vehicles",
+                column: "CitizenId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "CitizenVehicles");
-
             migrationBuilder.DropTable(
                 name: "CraneCompanies");
 
@@ -165,10 +162,13 @@ namespace backend.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Citizens");
+                name: "Vehicles");
 
             migrationBuilder.DropTable(
                 name: "Reports");
+
+            migrationBuilder.DropTable(
+                name: "Citizens");
         }
     }
 }
