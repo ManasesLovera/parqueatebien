@@ -4,7 +4,8 @@ import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ConsultaPlaca {
-  final String apiUrlList = 'http://192.168.0.209:8089/api/reportes';
+  final String apiUrlCitizenVehicle =
+      'http://192.168.0.209:8089/api/citizenVehicle/';
   final String apiUrlDetails = 'http://192.168.0.209:8089/api/reporte/';
   final Logger _logger = Logger();
 
@@ -13,26 +14,26 @@ class ConsultaPlaca {
     return prefs.getString('token');
   }
 
-  Future<List<String>> fetchLicencePlates() async {
+  Future<List<String>> fetchLicencePlates(String governmentId) async {
     final token = await _getToken();
     if (token == null) {
       _logger.e('No token found. Please login first.');
       throw Exception('No token found');
     }
-        _logger.i('Using token: $token');
+    _logger.i('Using token: $token');
 
     final response = await http.get(
-      Uri.parse(apiUrlList),
+      Uri.parse('$apiUrlCitizenVehicle$governmentId'),
       headers: {
         'Authorization': 'Bearer $token',
       },
     );
-    _logger.i('Fetching licence plates from $apiUrlList');
+    _logger.i(
+        'Fetching licence plates for government ID: $governmentId from $apiUrlCitizenVehicle');
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
-      List<String> licensePlates =
-          data.map((item) => item['licensePlate'] as String).toList();
+      List<String> licensePlates = data.cast<String>();
       _logger.i('Fetched licence plates: $licensePlates');
       return licensePlates;
     } else {

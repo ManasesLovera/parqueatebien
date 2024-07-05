@@ -3,18 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android_ciudadano/Data/Api/ConsultaDePlacas/_00_api_consulta_placa.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoFetch/_00_vehicle_event.dart';
-import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoFetch/_01_vehicle_state.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoFetch/_02_vehicle_bloc.dart';
+import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoFetch/_01_vehicle_state.dart';
 import 'package:frontend_android_ciudadano/UI/Views/DatosVehiculoStatus/_01_vehiculo_data.dart';
 
-void showVehicleDialog(BuildContext context) {
+void showVehicleDialog(BuildContext context, String governmentId) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       String? selectedPlate;
       return BlocProvider(
         create: (context) =>
-            VehicleBloc(ConsultaPlaca())..add(FetchLicencePlates()),
+            VehicleBloc(ConsultaPlaca())..add(FetchLicencePlates(governmentId)),
         child: StatefulBuilder(
           builder: (context, setState) {
             return Dialog(

@@ -14,6 +14,9 @@ class M extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const String governmentId =
+        '40213481142'; // Proporciona el governmentId adecuado
+
     return ScreenUtilInit(
       designSize: const Size(360, 640),
       builder: (context, child) {
@@ -23,8 +26,8 @@ class M extends StatelessWidget {
               create: (context) => LoginBloc(),
             ),
             BlocProvider<VehicleBloc>(
-              create: (context) =>
-                  VehicleBloc(ConsultaPlaca())..add(FetchLicencePlates()),
+              create: (context) => VehicleBloc(ConsultaPlaca())
+                ..add(const FetchLicencePlates(governmentId)),
             )
           ],
           child: MaterialApp(

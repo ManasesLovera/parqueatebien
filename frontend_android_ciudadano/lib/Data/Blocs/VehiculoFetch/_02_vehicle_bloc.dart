@@ -12,7 +12,8 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
     on<FetchLicencePlates>((event, emit) async {
       emit(VehicleLoading());
       try {
-        final licencePlates = await placaconsult.fetchLicencePlates();
+        final licencePlates =
+            await placaconsult.fetchLicencePlates(event.governmentId);
         emit(VehicleLoaded(licencePlates));
       } catch (e) {
         _logger.e('Error fetching licence plates: $e');
