@@ -4,8 +4,8 @@ import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ConsultaPlaca {
-  final String apiUrlList = 'http://192.168.0.168:8089/api/reportes';
-  final String apiUrlDetails = 'http://192.168.0.168:8089/api/reporte/';
+  final String apiUrlList = 'http://192.168.0.209:8089/api/reportes';
+  final String apiUrlDetails = 'http://192.168.0.209:8089/api/reporte/';
   final Logger _logger = Logger();
 
   Future<String?> _getToken() async {

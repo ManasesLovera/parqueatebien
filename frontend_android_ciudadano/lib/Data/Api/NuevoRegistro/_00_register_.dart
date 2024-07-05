@@ -8,7 +8,7 @@ class RegisterApi {
 
   Future<bool> register(User user) async {
     final response = await http.post(
-      Uri.parse('http://192.168.0.168:8089/api/citizen/register'),
+      Uri.parse('http://192.168.0.209:8089/api/citizen/register'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
