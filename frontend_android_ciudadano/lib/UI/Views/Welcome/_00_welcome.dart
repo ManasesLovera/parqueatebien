@@ -32,7 +32,8 @@ class Welcome extends StatelessWidget {
                 title: 'Consulta de vehiculo',
                 subtitle: 'Consulta si tu vehiculo ha sido incautado',
                 onTap: () {
-                  showVehicleDialog(context);
+                  // Proporcione el `governmentId` adecuado aquí
+                  showVehicleDialog(context, '40213481142');
                 },
               ),
               ReportConsultButtom(
