@@ -12,8 +12,12 @@ void main() => runApp(const M());
 class M extends StatelessWidget {
   const M({super.key});
 
+  // Done
+
   @override
   Widget build(BuildContext context) {
+    const String governmentId = '';
+
     return ScreenUtilInit(
       designSize: const Size(360, 640),
       builder: (context, child) {
@@ -23,8 +27,8 @@ class M extends StatelessWidget {
               create: (context) => LoginBloc(),
             ),
             BlocProvider<VehicleBloc>(
-              create: (context) =>
-                  VehicleBloc(ConsultaPlaca())..add(FetchLicencePlates()),
+              create: (context) => VehicleBloc(ConsultaPlaca())
+                ..add(const FetchLicencePlates(governmentId)),
             )
           ],
           child: MaterialApp(

@@ -119,7 +119,7 @@ class ReportInfoScreen extends StatelessWidget {
                 SizedBox(height: 15.h),
                 _buildDetailItem(
                   title: 'Fecha y hora de incautación por grúa:',
-                  content: vehicleData['ReportedDate'] ?? 'Desconocido',
+                  content: vehicleData['reportedDate'] ?? 'Desconocido',
                 ),
                 FutureBuilder(
                   future: _getAddressFromLatLng(
@@ -147,7 +147,7 @@ class ReportInfoScreen extends StatelessWidget {
                 ),
                 _buildDetailItem(
                   title: 'Fecha y hora de llegada al centro:',
-                  content: vehicleData['ArrivalAtParkinglot'] ?? 'Desconocido',
+                  content: vehicleData['arrivalAtParkinglot'] ?? 'Desconocido',
                 ),
                 SizedBox(height: 50.h),
                 Padding(

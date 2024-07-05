@@ -87,11 +87,11 @@ class ReportInfoScreen extends StatelessWidget {
                           EdgeInsets.symmetric(horizontal: 60.w, vertical: 2.h),
                       decoration: BoxDecoration(
                         color: _getStatusColor(
-                            vehicleData['Status'] ?? 'Desconocido'),
+                            vehicleData['status'] ?? 'Desconocido'),
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Text(
-                        vehicleData['Status'] ?? 'Desconocido',
+                        vehicleData['status'] ?? 'Desconocido',
                         style: TextStyle(
                           fontSize: 12.h,
                           fontWeight: FontWeight.bold,
@@ -104,15 +104,15 @@ class ReportInfoScreen extends StatelessWidget {
                 SizedBox(height: 15.h),
                 _buildDetailItem(
                   title: 'Fecha y hora de incautación por grúa:',
-                  content: vehicleData['ReportedDate'] ?? 'Desconocido',
+                  content: vehicleData['reportedDate'] ?? 'Desconocido',
                 ),
                 _buildDetailItem(
                   title: 'Ubicación actual',
-                  content: vehicleData['CurrentAddress'] ?? 'Desconocido',
+                  content: vehicleData['reference'] ?? 'Desconocido',
                 ),
                 _buildDetailItem(
                   title: 'Fecha y hora de llegada al centro',
-                  content: vehicleData['ArrivalAtParkinglot'] ?? 'Desconocido',
+                  content: vehicleData['arrivalAtParkinglot'] ?? 'Desconocido',
                 ),
                 SizedBox(height: 50.h),
                 Padding(

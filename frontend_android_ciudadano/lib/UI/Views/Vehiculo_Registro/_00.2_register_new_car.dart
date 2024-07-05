@@ -1,42 +1,27 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:logger/logger.dart';
+import 'package:frontend_android_ciudadano/Data/Api/Add_Vehiculo/add_vechicle.dart';
 import 'package:frontend_android_ciudadano/Data/Api/NuevoRegistro/_00_register_.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Add_New_User/register_bloc.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Add_New_User/register_state.dart';
-import 'package:frontend_android_ciudadano/Data/Models/car_model.dart';
-import 'package:frontend_android_ciudadano/Data/Models/user_model.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_00_app_bar.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_01_custom_textfield_.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_01_titlle_textfield_.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_02_custom_buttom_.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/color_dropdownselectitem.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/year_dropdownselectitem.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class RegisterCar extends StatefulWidget {
-  final String governmentId;
-  final String name;
-  final String lastname;
-  final String email;
-  final String password;
-
-  const RegisterCar({
-    super.key,
-    required this.governmentId,
-    required this.name,
-    required this.lastname,
-    required this.email,
-    required this.password,
-  });
+class RegisterNewCar extends StatefulWidget {
+  const RegisterNewCar({super.key});
 
   @override
-  State<RegisterCar> createState() => _RegisterCarState();
+  State<RegisterNewCar> createState() => _RegisterCarState();
 }
 
-class _RegisterCarState extends State<RegisterCar> {
+class _RegisterCarState extends State<RegisterNewCar> {
   final numplacaC = TextEditingController();
   final modeloC = TextEditingController();
   String? selectedYear;
@@ -46,7 +31,6 @@ class _RegisterCarState extends State<RegisterCar> {
   final List<String> colores = ['Rojo', 'Azul', 'Verde', 'Negro', 'Blanco'];
   final List<String> years =
       List<String>.generate(124, (i) => (DateTime.now().year - i).toString());
-  final Logger _logger = Logger();
 
   bool _validateFields() {
     if (numplacaC.text.isEmpty ||
@@ -69,37 +53,33 @@ class _RegisterCarState extends State<RegisterCar> {
     }
     if (matriculaC.text.length != 9) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('La matrícula debe tener 14 caracteres')),
+        const SnackBar(content: Text('La matrícula debe tener 9 caracteres')),
       );
       return false;
     }
     return true;
   }
 
-  void _register() async {
+  Future<void> _register() async {
     if (_validateFields()) {
-      final vehicle = Vehicle(
-        governmentId: widget.governmentId,
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final governmentId = prefs.getString('governmentId');
+
+      if (governmentId == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No se encontró el ID del usuario')),
+        );
+        return;
+      }
+
+      final success = await AddVehicleApi().addVehicle(
+        governmentId: governmentId,
         licensePlate: numplacaC.text,
         registrationDocument: matriculaC.text,
         model: modeloC.text,
         year: selectedYear!,
         color: selectedColor!,
       );
-
-      final user = User(
-        governmentId: widget.governmentId,
-        name: widget.name,
-        lastname: widget.lastname,
-        email: widget.email,
-        password: widget.password,
-        vehicles: [vehicle],
-      );
-
-      _logger.i('Request body: ${jsonEncode(user.toJson())}');
-
-      final api = RegisterApi();
-      final success = await api.register(user);
 
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -116,10 +96,10 @@ class _RegisterCarState extends State<RegisterCar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBarRegister(progress: progress),
-        body: SafeArea(
-            child: Padding(
+      backgroundColor: Colors.white,
+      appBar: AppBarRegister(progress: progress),
+      body: SafeArea(
+        child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 0.h),
           child: SingleChildScrollView(
             child: BlocProvider(
@@ -229,11 +209,11 @@ class _RegisterCarState extends State<RegisterCar> {
               ),
             ),
           ),
-        )));
+        ),
+      ),
+    );
   }
 }
-
-class ColorDropdownSelectItem {}
 
 class LicensePlateFormatter extends TextInputFormatter {
   @override

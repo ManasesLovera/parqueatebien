@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/Services/_02_Reporte/widgets/_13_map_consulta.dart';
 import 'package:frontend_android/Services/update_status/_api_updatestatus.dart';
 import 'dart:convert';
 
@@ -16,7 +15,7 @@ class VehicleDetailsScreen extends StatefulWidget {
 
 class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
   bool get _isButtonEnabled {
-    return widget.vehicleData['Status'].toString().toLowerCase() == 'reportado';
+    return widget.vehicleData['status'].toString().toLowerCase() == 'reportado';
   }
 
   Color _getStatusColor(String status) {
@@ -35,9 +34,9 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
   }
 
   Future<void> _updateStatus() async {
-    if (widget.vehicleData['Status'].toString().toLowerCase() == 'reportado') {
+    if (widget.vehicleData['status'].toString().toLowerCase() == 'reportado') {
       ChangeStatusDTO changeStatusDTO = ChangeStatusDTO(
-        licensePlate: widget.vehicleData['LicensePlate'],
+        licensePlate: widget.vehicleData['licensePlate'],
         newStatus: 'Incautado por grua',
         username: 'your_username',
       );
@@ -50,7 +49,7 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
           const SnackBar(content: Text('Estatus actualizado exitosamente')),
         );
         setState(() {
-          widget.vehicleData['Status'] = 'Incautado por grua';
+          widget.vehicleData['status'] = 'Incautado por grua';
         });
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
@@ -71,8 +70,8 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
     debugPrint('VehicleDetailsScreen: Received data: ${widget.vehicleData}');
 
     List<Map<String, String>> photos = [];
-    if (widget.vehicleData['Photos'] is List) {
-      photos = List<Map<String, String>>.from(widget.vehicleData['Photos']
+    if (widget.vehicleData['photos'] is List) {
+      photos = List<Map<String, String>>.from(widget.vehicleData['photos']
           .map((item) => Map<String, String>.from(item)));
     }
 
@@ -134,11 +133,11 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                           EdgeInsets.symmetric(horizontal: 50.w, vertical: 2.h),
                       decoration: BoxDecoration(
                         color: _getStatusColor(
-                            widget.vehicleData['Status'] ?? 'Desconocido'),
+                            widget.vehicleData['status'] ?? 'Desconocido'),
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Text(
-                        widget.vehicleData['Status'] ?? 'Desconocido',
+                        widget.vehicleData['status'] ?? 'Desconocido',
                         style: TextStyle(
                           fontSize: 12.h,
                           fontWeight: FontWeight.bold,
@@ -158,7 +157,7 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                   ),
                 ),
                 Text(
-                  widget.vehicleData['LicensePlate'] ?? 'Desconocido',
+                  widget.vehicleData['licensePlate'] ?? 'Desconocido',
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 10.h,
@@ -177,7 +176,7 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                   ),
                 ),
                 Text(
-                  widget.vehicleData['VehicleType'] ?? 'Desconocido',
+                  widget.vehicleData['vehicleType'] ?? 'Desconocido',
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 10.h,
@@ -196,7 +195,7 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                   ),
                 ),
                 Text(
-                  widget.vehicleData['VehicleColor'] ?? 'Desconocido',
+                  widget.vehicleData['vehicleColor'] ?? 'Desconocido',
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 10.h,
@@ -204,7 +203,6 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                   ),
                 ),
                 const Divider(),
-                //     widget.vehicleData['CurrentAddress'] ?? 'Desconocido',
                 Text(
                   'Referencia',
                   style: TextStyle(
@@ -214,15 +212,13 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                   ),
                 ),
                 Text(
-                  widget.vehicleData['CurrentAddress'] ?? 'Desconocido',
+                  widget.vehicleData['reference'] ?? 'Desconocido',
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 10.h,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const MapWidgetConsulta(),
-                SizedBox(height: 8.h),
                 const Divider(),
                 SizedBox(height: 4.h),
                 SizedBox(
@@ -236,7 +232,7 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10.0),
                             child: Image.memory(
-                              base64Decode(photos[index]['File']!),
+                              base64Decode(photos[index]['file']!),
                               height: 55.h,
                               width: 70.h,
                               fit: BoxFit.cover,

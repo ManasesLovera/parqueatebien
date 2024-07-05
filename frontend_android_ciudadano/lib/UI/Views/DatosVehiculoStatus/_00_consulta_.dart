@@ -6,15 +6,16 @@ import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoFetch/_00_vehicle_
 import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoFetch/_01_vehicle_state.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoFetch/_02_vehicle_bloc.dart';
 import 'package:frontend_android_ciudadano/UI/Views/DatosVehiculoStatus/_01_vehiculo_data.dart';
+import 'package:frontend_android_ciudadano/UI/Views/SuccessAndErrors_Screens/_05_error.dart';
 
-void showVehicleDialog(BuildContext context) {
-  showDialog(
+Future<bool?> showVehicleDialog(BuildContext context, String governmentId) {
+  return showDialog<bool>(
     context: context,
     builder: (BuildContext context) {
       String? selectedPlate;
       return BlocProvider(
         create: (context) =>
-            VehicleBloc(ConsultaPlaca())..add(FetchLicencePlates()),
+            VehicleBloc(ConsultaPlaca())..add(FetchLicencePlates(governmentId)),
         child: StatefulBuilder(
           builder: (context, setState) {
             return Dialog(
@@ -76,7 +77,17 @@ void showVehicleDialog(BuildContext context) {
                             },
                           );
                         } else if (state is VehicleError) {
-                          return Text('Error: ${state.error}');
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            Navigator.of(context).pop();
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => ErrorScreen(
+                                  errorMessage: state.error,
+                                ),
+                              ),
+                            );
+                          });
+                          return Container(); // return an empty container to avoid UI error
                         } else {
                           return Container();
                         }
@@ -90,16 +101,6 @@ void showVehicleDialog(BuildContext context) {
                           if (selectedPlate != null) {
                             BlocProvider.of<VehicleBloc>(context)
                                 .add(FetchVehicleDetails(selectedPlate!));
-                            Navigator.of(context).pop();
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => BlocProvider.value(
-                                  value: BlocProvider.of<VehicleBloc>(context),
-                                  child:
-                                      CarDetails(licensePlate: selectedPlate!),
-                                ),
-                              ),
-                            );
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -111,6 +112,31 @@ void showVehicleDialog(BuildContext context) {
                         ),
                         child: const Text('Consultar'),
                       ),
+                    ),
+                    BlocListener<VehicleBloc, VehicleState>(
+                      listener: (context, state) {
+                        if (state is VehicleDetailsLoaded) {
+                          Navigator.of(context).pop(true);
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => BlocProvider.value(
+                                value: BlocProvider.of<VehicleBloc>(context),
+                                child: CarDetails(licensePlate: selectedPlate!),
+                              ),
+                            ),
+                          );
+                        } else if (state is VehicleError) {
+                          Navigator.of(context).pop(false);
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ErrorScreen(
+                                errorMessage: state.error,
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                      child: Container(),
                     ),
                   ],
                 ),
