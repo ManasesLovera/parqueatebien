@@ -13,7 +13,9 @@ class CustomTextField extends StatelessWidget {
   final double fontSize;
   final double borderRadius;
   final Color borderColor;
-   final List<TextInputFormatter>? inputFormatters;
+  final List<TextInputFormatter>? inputFormatters;
+  //
+  final Widget? suffixIcon;
 
   const CustomTextField({
     super.key,
@@ -28,6 +30,8 @@ class CustomTextField extends StatelessWidget {
     this.borderRadius = 7.0,
     this.borderColor = Colors.grey,
     this.inputFormatters,
+    //
+    this.suffixIcon,
   });
 
   @override
@@ -39,6 +43,7 @@ class CustomTextField extends StatelessWidget {
         child: TextField(
           controller: controller,
           obscureText: obscureText,
+          obscuringCharacter: '*',
           keyboardType: keyboardType,
           inputFormatters: inputFormatters,
           decoration: InputDecoration(
@@ -54,6 +59,8 @@ class CustomTextField extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(borderRadius.r)),
               borderSide: BorderSide(color: borderColor),
             ),
+            //
+            suffixIcon: suffixIcon,
           ),
           style: TextStyle(color: textColor),
         ),

@@ -14,7 +14,7 @@ class AddVehicleApi {
     required String year,
     required String color,
   }) async {
-    const url = 'http://192.168.0.209:8089/api/citizen/addVehicle';
+    const url = 'http://192.168.0.168:8089/api/citizen/addVehicle';
 
     try {
       final token = await _getToken();
@@ -43,6 +43,7 @@ class AddVehicleApi {
 
       _logger.i('Response status: ${response.statusCode}');
       _logger.i('Response body: ${response.body}');
+      
 
       if (response.statusCode == 200) {
         return true;

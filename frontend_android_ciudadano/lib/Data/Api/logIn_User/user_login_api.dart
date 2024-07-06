@@ -6,8 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LoginSendData {
   static final Logger _logger = Logger();
 
-  Future<bool> signIn(String username, String password) async {
-    const url = 'http://192.168.0.209:8089/api/citizen/login';
+  Future<dynamic> signIn(String username, String password) async {
+    const url = 'http://192.168.0.168:8089/api/citizen/login';
     try {
       final response = await http
           .post(
@@ -27,9 +27,7 @@ class LoginSendData {
 
       if (response.statusCode == 200) {
         final token = response.body.replaceAll('"', '');
-        final governmentId = username.replaceAll('-',
-            ''); // Assuming the governmentId is the username without dashes
-
+        final governmentId = username.replaceAll('-', '');
         _logger.i(
             'Inicio de sesión exitoso, Token: $token, Government ID: $governmentId');
 
@@ -38,12 +36,9 @@ class LoginSendData {
         await prefs.setString('token', token);
         await prefs.setString('governmentId', governmentId);
         return true;
-      } else if (response.statusCode == 401) {
-        _logger.e('Unauthorized - Wrong Password');
-        return false;
-      } else if (response.statusCode == 404) {
-        _logger.e('Not Found');
-        return false;
+      } else if (response.statusCode == 409) {
+        _logger.e('Ciudadano aun no esta activo, espere a ser aceptado');
+        return 409;
       } else {
         _logger.e('Error inesperado: ${response.statusCode}');
         return false;
