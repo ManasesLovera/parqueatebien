@@ -2,30 +2,58 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android_ciudadano/Data/Api/NuevoRegistro/_00_register_.dart';
+import 'package:frontend_android_ciudadano/Data/Api/Add_User/user_register_api.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/NuevoUser/register_bloc.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/NuevoUser/register_state.dart';
-import 'package:frontend_android_ciudadano/UI/Views/NuevoRegistro/_00.1_car.dart';
+import 'package:frontend_android_ciudadano/UI/Views/User_Register_Vehicle/_00.1_car.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_00_app_bar.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_01_custom_textfield_.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_01_titlle_textfield_.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_02_custom_buttom_.dart';
 
-class RegisterUser extends StatelessWidget {
-  RegisterUser({super.key});
+class RegisterUser extends StatefulWidget {
+  const RegisterUser({super.key});
 
+  @override
+  State<RegisterUser> createState() => _RegisterUserState();
+}
+
+class _RegisterUserState extends State<RegisterUser> {
   final cedulaC = TextEditingController();
+  //
+  bool obscureText = true;
+  //
   final nombresC = TextEditingController();
   final apellidosC = TextEditingController();
   final correoC = TextEditingController();
   final passC = TextEditingController();
   final confirmPassC = TextEditingController();
-
   final double progress = 50;
-  final bool isButtonEnabled = false;
   final RegExp emailRegex = RegExp(
     r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
   );
+
+  final ValueNotifier<bool> isButtonEnabled = ValueNotifier<bool>(false);
+
+  @override
+  void initState() {
+    super.initState();
+    cedulaC.addListener(_updateButtonState);
+    nombresC.addListener(_updateButtonState);
+    apellidosC.addListener(_updateButtonState);
+    correoC.addListener(_updateButtonState);
+    passC.addListener(_updateButtonState);
+    confirmPassC.addListener(_updateButtonState);
+  }
+
+  void _updateButtonState() {
+    isButtonEnabled.value = cedulaC.text.isNotEmpty &&
+        nombresC.text.isNotEmpty &&
+        apellidosC.text.isNotEmpty &&
+        correoC.text.isNotEmpty &&
+        passC.text.isNotEmpty &&
+        confirmPassC.text.isNotEmpty;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,6 +146,19 @@ class RegisterUser extends StatelessWidget {
                         CustomTextField(
                           controller: passC,
                           hintText: 'Contraseña',
+                          obscureText: obscureText,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              obscureText
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                obscureText = !obscureText;
+                              });
+                            },
+                          ),
                         ),
                         SizedBox(height: 16.h),
                         const CustomText(
@@ -126,28 +167,49 @@ class RegisterUser extends StatelessWidget {
                         CustomTextField(
                           controller: confirmPassC,
                           hintText: 'Confirmar contraseña',
+                          obscureText: obscureText,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              obscureText
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                obscureText = !obscureText;
+                              });
+                            },
+                          ),
                         ),
                         SizedBox(height: 16.h),
                         if (state is RegisterLoading)
                           const CircularProgressIndicator()
                         else
-                          RegistroButtom(
-                            onPressed: () {
-                              if (_validateFields(context)) {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => RegisterCar(
-                                      governmentId: cedulaC.text,
-                                      name: nombresC.text,
-                                      lastname: apellidosC.text,
-                                      email: correoC.text,
-                                      password: passC.text,
-                                    ),
-                                  ),
-                                );
-                              }
+                          ValueListenableBuilder<bool>(
+                            valueListenable: isButtonEnabled,
+                            builder: (context, value, child) {
+                              return RegistroButtom(
+                                onPressed: value
+                                    ? () {
+                                        if (_validateFields(context)) {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) => RegisterCar(
+                                                governmentId: cedulaC.text,
+                                                name: nombresC.text,
+                                                lastname: apellidosC.text,
+                                                email: correoC.text,
+                                                password: passC.text,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      }
+                                    : null,
+                                text: 'Siguiente',
+                                isEnabled: value,
+                              );
                             },
-                            text: 'Siguiente',
                           ),
                       ],
                     );
@@ -205,6 +267,17 @@ class RegisterUser extends StatelessWidget {
       return false;
     }
     return true;
+  }
+
+  @override
+  void dispose() {
+    cedulaC.dispose();
+    nombresC.dispose();
+    apellidosC.dispose();
+    correoC.dispose();
+    passC.dispose();
+    confirmPassC.dispose();
+    super.dispose();
   }
 }
 

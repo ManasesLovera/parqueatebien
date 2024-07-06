@@ -1,7 +1,7 @@
-import 'package:frontend_android_ciudadano/Data/Api/Login/_00_api_login.dart';
+import 'package:frontend_android_ciudadano/Data/Api/logIn_User/user_login_api.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend_android_ciudadano/Data/Blocs/Login/LoginLogic/_00_login_event.dart';
-import 'package:frontend_android_ciudadano/Data/Blocs/Login/LoginLogic/_01_login_state.dart';
+import 'package:frontend_android_ciudadano/Data/Blocs/Login/Login_Bloc/_00_login_event.dart';
+import 'package:frontend_android_ciudadano/Data/Blocs/Login/Login_Bloc/_01_login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(LoginInitial()) {
@@ -10,11 +10,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       try {
         final result =
             await LoginSendData().signIn(event.username, event.password);
-        if (result) {
+        if (result == true) {
           emit(LoginSuccess());
-        } else {
-          emit(LoginFailure('Usuario O Contraseña Incorrecta'));
+        } else if (result == 409) {
+          emit(LoginFailure(
+              'Ciudadano aun no esta activo, espere a ser aceptado'));
           _startErrorClearTimer();
+        } else {
+          emit(LoginFailure('Usuario o Contrasena Incorrecta'));
         }
       } catch (e) {
         emit(LoginFailure(e.toString()));
@@ -28,7 +31,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   void _startErrorClearTimer() {
-    Future.delayed(const Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 4), () {
       add(ClearError());
     });
   }

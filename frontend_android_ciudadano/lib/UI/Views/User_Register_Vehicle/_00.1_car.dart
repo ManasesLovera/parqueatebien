@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:frontend_android_ciudadano/Data/Blocs/NuevoUser/register_bloc.dart';
+import 'package:frontend_android_ciudadano/Data/Blocs/NuevoUser/register_event.dart';
+import 'package:frontend_android_ciudadano/Data/Blocs/NuevoUser/register_state.dart';
 import 'package:logger/logger.dart';
-import 'package:frontend_android_ciudadano/Data/Api/NuevoRegistro/_00_register_.dart';
-import 'package:frontend_android_ciudadano/Data/Blocs/Add_New_User/register_bloc.dart';
-import 'package:frontend_android_ciudadano/Data/Blocs/Add_New_User/register_state.dart';
+import 'package:frontend_android_ciudadano/Data/Api/Add_User/user_register_api.dart';
 import 'package:frontend_android_ciudadano/Data/Models/car_model.dart';
 import 'package:frontend_android_ciudadano/Data/Models/user_model.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_00_app_bar.dart';
@@ -48,6 +49,24 @@ class _RegisterCarState extends State<RegisterCar> {
       List<String>.generate(124, (i) => (DateTime.now().year - i).toString());
   final Logger _logger = Logger();
 
+  final ValueNotifier<bool> isButtonEnabled = ValueNotifier<bool>(false);
+
+  @override
+  void initState() {
+    super.initState();
+    numplacaC.addListener(_updateButtonState);
+    modeloC.addListener(_updateButtonState);
+    matriculaC.addListener(_updateButtonState);
+  }
+
+  void _updateButtonState() {
+    isButtonEnabled.value = numplacaC.text.isNotEmpty &&
+        modeloC.text.isNotEmpty &&
+        selectedYear != null &&
+        selectedColor != null &&
+        matriculaC.text.isNotEmpty;
+  }
+
   bool _validateFields() {
     if (numplacaC.text.isEmpty ||
         modeloC.text.isEmpty ||
@@ -69,14 +88,14 @@ class _RegisterCarState extends State<RegisterCar> {
     }
     if (matriculaC.text.length != 9) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('La matrícula debe tener 14 caracteres')),
+        const SnackBar(content: Text('La matrícula debe tener 9 caracteres')),
       );
       return false;
     }
     return true;
   }
 
-  void _register() async {
+  void _register(BuildContext context) {
     if (_validateFields()) {
       final vehicle = Vehicle(
         governmentId: widget.governmentId,
@@ -98,18 +117,8 @@ class _RegisterCarState extends State<RegisterCar> {
 
       _logger.i('Request body: ${jsonEncode(user.toJson())}');
 
-      final api = RegisterApi();
-      final success = await api.register(user);
-
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registro exitoso')),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error al registrar')),
-        );
-      }
+      // Emitir evento de registro
+      context.read<RegisterBloc>().add(RegisterSubmitted(user));
     }
   }
 
@@ -180,6 +189,7 @@ class _RegisterCarState extends State<RegisterCar> {
                             setState(() {
                               selectedYear = value;
                             });
+                            _updateButtonState();
                           },
                           hintText: 'Seleccionar año',
                         ),
@@ -194,6 +204,7 @@ class _RegisterCarState extends State<RegisterCar> {
                             setState(() {
                               selectedColor = value;
                             });
+                            _updateButtonState();
                           },
                           hintText: 'Seleccionar color',
                         ),
@@ -212,15 +223,16 @@ class _RegisterCarState extends State<RegisterCar> {
                         if (state is RegisterLoading)
                           const CircularProgressIndicator()
                         else
-                          SizedBox(
-                            child: RegistroButtom(
-                              onPressed: () {
-                                if (_validateFields()) {
-                                  _register();
-                                }
-                              },
-                              text: 'Registrarse',
-                            ),
+                          ValueListenableBuilder<bool>(
+                            valueListenable: isButtonEnabled,
+                            builder: (context, isEnabled, child) {
+                              return RegistroButtom(
+                                onPressed:
+                                    isEnabled ? () => _register(context) : null,
+                                text: 'Registrarse',
+                                isEnabled: isEnabled,
+                              );
+                            },
                           ),
                       ],
                     );

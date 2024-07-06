@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android_ciudadano/Data/Blocs/Login/ButtomLoginState/button_state_bloc.dart';
-import 'package:frontend_android_ciudadano/Data/Blocs/Login/LoginLogic/_00_login_event.dart';
-import 'package:frontend_android_ciudadano/Data/Blocs/Login/LoginLogic/_01_login_state.dart';
-import 'package:frontend_android_ciudadano/Data/Blocs/Login/LoginLogic/_02_login_bloc.dart';
+import 'package:frontend_android_ciudadano/Data/Blocs/Login/ButtomLoginState/buttom_is_or_not_enable.dart';
+import 'package:frontend_android_ciudadano/Data/Blocs/Login/Login_Bloc/_00_login_event.dart';
+import 'package:frontend_android_ciudadano/Data/Blocs/Login/Login_Bloc/_01_login_state.dart';
+import 'package:frontend_android_ciudadano/Data/Blocs/Login/Login_Bloc/_02_login_bloc.dart';
 import 'package:frontend_android_ciudadano/UI/Views/Welcome/_00_welcome.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_02_custom_buttom_.dart';
 
 class SignInBlocBuilder extends StatelessWidget {
   final TextEditingController iD;
   final TextEditingController pass;
-  final String role;
 
-  const SignInBlocBuilder({
-    required this.iD,
-    required this.pass,
-    super.key,
-    required this.role,
-  });
+  const SignInBlocBuilder({required this.iD, required this.pass, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +47,12 @@ class SignInBlocBuilder extends StatelessWidget {
                 },
               ),
             SizedBox(height: 4.h),
+            // Mensaje
             if (state is LoginFailure)
               Column(
                 children: [
                   Text(
+                    textAlign: TextAlign.center,
                     state.error,
                     style: TextStyle(
                       color: Colors.red,
