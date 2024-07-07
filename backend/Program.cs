@@ -523,6 +523,11 @@ app.MapPost("/api/citizen/addVehicle", async (ApplicationDbContext context, [Fro
         var validationResult = validator.Validate(vehicle);
         if (!validationResult.IsValid)
             return Results.BadRequest(validationResult.Errors);
+
+        var v = context.Vehicles.FirstOrDefault(v => v.LicensePlate == vehicle.LicensePlate && v.GovernmentId == vehicle.GovernmentId);
+        if (v is not null)
+            return Results.Conflict(new { Message = "Esta placa ya existe para este ciudadano" });
+
         context.Vehicles.Add(vehicle);
         await context.SaveChangesAsync();
         return Results.Ok();
