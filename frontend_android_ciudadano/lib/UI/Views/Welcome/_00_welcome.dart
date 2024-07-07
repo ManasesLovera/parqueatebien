@@ -6,7 +6,7 @@ import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoFetch/_00_vehicle_
 import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoFetch/_01_vehicle_state.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoFetch/_02_vehicle_bloc.dart';
 import 'package:frontend_android_ciudadano/UI/Views/DatosVehiculoStatus/_00_consulta_.dart';
-import 'package:frontend_android_ciudadano/UI/Views/Vehiculo_Registro/_00.2_register_new_car.dart';
+import 'package:frontend_android_ciudadano/UI/Views/User_Login_Register_Vehicle/vehicle_register_for_user_login.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/GlobalsWidgets/_00_logo_image.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/Welcome/_01_welcometext.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/Welcome/_02_subtituloreport.dart';

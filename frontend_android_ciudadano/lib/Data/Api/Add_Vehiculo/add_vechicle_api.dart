@@ -43,10 +43,13 @@ class AddVehicleApi {
 
       _logger.i('Response status: ${response.statusCode}');
       _logger.i('Response body: ${response.body}');
-      
 
       if (response.statusCode == 200) {
         return true;
+      } else if (response.statusCode == 400 &&
+          response.body.contains('Vehicle already exists')) {
+        _logger.e('El vehículo ya existe.');
+        return false;
       } else {
         _logger.e('Error inesperado: ${response.statusCode}');
         return false;
