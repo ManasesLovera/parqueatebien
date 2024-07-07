@@ -31,8 +31,12 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
             await placaconsult.fetchVehicleDetails(event.selectedPlate);
         emit(VehicleDetailsLoaded(vehicleDetails));
       } catch (e) {
-        _logger.e('Error fetching vehicle details: $e');
-        emit(VehicleError(e.toString()));
+        if (e.toString().contains('Vehicle not found')) {
+          emit(VehicleNotFound());
+        } else {
+          _logger.e('Error fetching vehicle details: $e');
+          emit(VehicleError(e.toString()));
+        }
       }
     });
   }
