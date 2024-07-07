@@ -121,24 +121,6 @@ class _RegisterCarState extends State<RegisterCar> {
     }
   }
 
-  void _showDialog(String title, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -153,9 +135,19 @@ class _RegisterCarState extends State<RegisterCar> {
               child: BlocListener<RegisterBloc, RegisterState>(
                 listener: (context, state) {
                   if (state is RegisterSuccess) {
-                    _showDialog('Éxito', 'Registro exitoso');
+                    _showUniversalSuccessErrorDialog(
+                      context,
+                      'Registro exitoso',
+                      Icons.check_circle,
+                      Colors.green,
+                    );
                   } else if (state is RegisterFailure) {
-                    _showDialog('Error', state.error);
+                    _showUniversalSuccessErrorDialog(
+                      context,
+                      state.error,
+                      Icons.warning,
+                      Colors.orange,
+                    );
                   }
                 },
                 child: BlocBuilder<RegisterBloc, RegisterState>(
@@ -286,4 +278,45 @@ class LicensePlateFormatter extends TextInputFormatter {
     }
     return oldValue;
   }
+}
+
+void _showUniversalSuccessErrorDialog(
+    BuildContext context, String message, IconData icon, Color iconColor) {
+  showDialog(
+    context: context,
+    barrierDismissible: false, // No permitir cerrar el diálogo tocando fuera
+    builder: (BuildContext context) {
+      // Cerrar el diálogo automáticamente después de 2 segundos
+      Future.delayed(const Duration(seconds: 2), () {
+        if (Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+        }
+      });
+
+      return PopScope(
+        onPopInvoked: (shouldPop) => false, // Deshabilitar botón de retroceso
+        child: AlertDialog(
+          title: const SizedBox.shrink(), // No mostrar título
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon, // Ícono dinámico
+                color: iconColor, // Color dinámico
+                size: 48.0,
+              ),
+              SizedBox(height: 16.h),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.h,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }

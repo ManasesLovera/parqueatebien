@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ConsultaPlaca {
   final String apiUrlCitizenVehicles =
-      'http://192.168.0.168:8089/api/citizenVehicle/';
+      'http://192.168.0.209:8089/api/citizenVehicle/';
   final String apiUrlDetails = 'http://192.168.0.209:8089/api/reporte/';
   final Logger _logger = Logger();
 
