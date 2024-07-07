@@ -6,8 +6,12 @@ class RegistroButtom extends StatelessWidget {
   final String? text;
   final bool isEnabled;
 
-  const RegistroButtom(
-      {super.key, required this.onPressed, this.isEnabled = false, this.text});
+  const RegistroButtom({
+    super.key,
+    required this.onPressed,
+    this.isEnabled = false,
+    this.text,
+  });
 
   @override
   Widget build(BuildContext context) {

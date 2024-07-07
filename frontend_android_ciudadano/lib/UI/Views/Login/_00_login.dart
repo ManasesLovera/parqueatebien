@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android_ciudadano/Data/Blocs/Login/ButtomLoginState/button_state_bloc.dart';
+import 'package:frontend_android_ciudadano/Data/Blocs/Login/ButtomLoginState/buttom_is_or_not_enable.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/Login/ButtomLoginState/sign_in_bloc_builder.dart';
-import 'package:frontend_android_ciudadano/Data/Blocs/Login/LoginLogic/_02_login_bloc.dart';
-import 'package:frontend_android_ciudadano/UI/Views/NuevoRegistro/_00.0_user.dart';
+import 'package:frontend_android_ciudadano/Data/Blocs/Login/Login_Bloc/_02_login_bloc.dart';
+import 'package:frontend_android_ciudadano/UI/Views/User_Register_Vehicle/_00.0_user.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/GlobalsWidgets/_00_logo_image.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/Login/_01_user_text_for_textfield_.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/Login/_05_forgot_password_tex.dart';
@@ -13,12 +13,19 @@ import 'package:frontend_android_ciudadano/UI/Widgets/Login/_06_not_account_text
 import 'package:frontend_android_ciudadano/UI/Widgets/Login/_09_custom_registrate_now.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_01_custom_textfield_.dart';
 
-class Login extends StatelessWidget {
-  Login({super.key});
+class Login extends StatefulWidget {
+  const Login({super.key});
 
+  @override
+  State<Login> createState() => LoginState();
+}
+
+class LoginState extends State<Login> {
   final iD = TextEditingController();
   final pass = TextEditingController();
-
+  //
+  bool obscureText = true;
+  //
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,7 +75,21 @@ class Login extends StatelessWidget {
                           CustomTextField(
                             controller: pass,
                             hintText: 'Ingresar la contraseña',
-                            obscureText: true,
+                            obscureText: obscureText,
+                            //
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                obscureText
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  obscureText = !obscureText;
+                                });
+                              },
+                            ),
+                            //
                           ),
                           SizedBox(height: 16.h),
                           BlocProvider(
@@ -76,7 +97,6 @@ class Login extends StatelessWidget {
                             child: SignInBlocBuilder(
                               iD: iD,
                               pass: pass,
-                              role: 'Agente',
                             ),
                           ),
                           SizedBox(height: 15.h),
@@ -93,7 +113,7 @@ class Login extends StatelessWidget {
                               onPressed: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) => RegisterUser(),
+                                    builder: (context) => const RegisterUser(),
                                   ),
                                 );
                               },
