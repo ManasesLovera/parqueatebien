@@ -325,7 +325,7 @@
     "password": string
 }
 ```
-4. PUT / -> `/api/citizen/updateStatus{governmentId}`:
+4. PUT / -> `/api/citizen/updateStatus/{governmentId}`:
     - Update status to true if false and to false if true
     - 200 Ok, 404 NotFound
 
