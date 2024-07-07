@@ -273,6 +273,26 @@
 1. GET / -> `/api/citizens`:
     - Get all citizens
     - 200 Ok
+```json
+[
+    {
+        "governmentId": string,
+        "name": string,
+        "lastname": string,
+        "email": string,
+        "status": boolean,
+        "vehicles": [
+            {
+                "licensePlate": string,
+                "registrationDocument": string,
+                "model": string,
+                "year": string,
+                "color": string
+            }
+        ]
+    }
+]
+```
 
 1. POST / -> `/api/citizen/register`:
     - Register citizen
@@ -308,3 +328,15 @@
 4. PUT / -> `/api/citizen/updateStatus{governmentId}`:
     - Update status to true if false and to false if true
     - 200 Ok, 404 NotFound
+
+5. GET / -> `/api/citizenVehicle/{governmentId}`:
+    - Returns a list of strings of all the vehicle a citizen has
+    - 404 NotFound, 200 Ok
+```json
+[
+    string
+]
+```
+6. POST / -> `/api/citizen/addVehicle`:
+    - Add a vehicle to a citizen
+    - 400 BadRequest (Invalid data), 200 Ok

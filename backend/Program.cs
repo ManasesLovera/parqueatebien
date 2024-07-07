@@ -25,7 +25,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         policy =>
         {
-            policy.WithOrigins("http://127.0.0.1:5501", "http://127.0.0.1:50775")
+            policy.WithOrigins("http://127.0.0.1:5501", "http://127.0.0.1:50775", "http://localhost:3000")
                   .AllowAnyOrigin()
                   .AllowAnyMethod()
                   .AllowAnyHeader();
@@ -650,6 +650,20 @@ app.MapGet("/api/craneCompanies/", (ApplicationDbContext context) =>
     try
     {
         var craneCompanies = context.CraneCompanies.ToList();
+        return Results.Ok(craneCompanies);
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+})
+    .RequireAuthorization();
+
+app.MapGet("/api/craneCompaniesList/", (ApplicationDbContext context) =>
+{
+    try
+    {
+        var craneCompanies = context.CraneCompanies.Select(c => c.CompanyName).ToList();
         return Results.Ok(craneCompanies);
     }
     catch (Exception ex)
