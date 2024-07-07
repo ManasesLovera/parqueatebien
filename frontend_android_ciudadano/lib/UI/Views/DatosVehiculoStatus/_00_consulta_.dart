@@ -6,6 +6,7 @@ import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoFetch/_00_vehicle_
 import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoFetch/_01_vehicle_state.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoFetch/_02_vehicle_bloc.dart';
 import 'package:frontend_android_ciudadano/UI/Views/DatosVehiculoStatus/_01_vehiculo_data.dart';
+import 'package:frontend_android_ciudadano/UI/Views/Welcome/_00_welcome.dart';
 
 Future<bool?> showVehicleDialog(BuildContext context, String governmentId) {
   return showDialog<bool>(
@@ -129,6 +130,21 @@ Future<bool?> showVehicleDialog(BuildContext context, String governmentId) {
                             icon: Icons.warning,
                             iconColor: Colors.red,
                           );
+                        } else if (state is VehicleNotFound) {
+                          Navigator.of(context).pop();
+                          _showUniversalSuccessErrorDialog(
+                            context,
+                            'Vehículo no reportado',
+                            icon: Icons.info,
+                            iconColor: Colors.blue,
+                          );
+                          Future.delayed(const Duration(seconds: 2), () {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => const Welcome(),
+                              ),
+                            );
+                          });
                         }
                       },
                       child: Container(),
@@ -148,8 +164,9 @@ void _showUniversalSuccessErrorDialog(BuildContext context, String message,
     {required IconData icon, required Color iconColor}) {
   showDialog(
     context: context,
-    barrierDismissible: false,
+    barrierDismissible: false, // No permitir cerrar el diálogo tocando fuera
     builder: (BuildContext context) {
+      // Cerrar el diálogo automáticamente después de 2 segundos
       Future.delayed(const Duration(seconds: 2), () {
         if (Navigator.of(context).canPop()) {
           Navigator.of(context).pop();
@@ -157,15 +174,15 @@ void _showUniversalSuccessErrorDialog(BuildContext context, String message,
       });
 
       return PopScope(
-        onPopInvoked: (shouldPop) => false,
+        onPopInvoked: (shouldPop) => false, // Deshabilitar botón de retroceso
         child: AlertDialog(
-          title: const SizedBox.shrink(),
+          title: const SizedBox.shrink(), // No mostrar título
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-                icon,
-                color: iconColor,
+                icon, // Ícono pasado como parámetro
+                color: iconColor, // Color pasado como parámetro
                 size: 48.h,
               ),
               SizedBox(height: 16.h),

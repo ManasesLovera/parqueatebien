@@ -37,3 +37,5 @@ class VehicleDetailsLoaded extends VehicleState {
   @override
   List<Object> get props => [vehicleDetails];
 }
+
+class VehicleNotFound extends VehicleState {}
