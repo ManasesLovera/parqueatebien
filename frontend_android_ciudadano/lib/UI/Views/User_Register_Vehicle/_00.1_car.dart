@@ -117,7 +117,6 @@ class _RegisterCarState extends State<RegisterCar> {
 
       _logger.i('Request body: ${jsonEncode(user.toJson())}');
 
-      // Emitir evento de registro
       context.read<RegisterBloc>().add(RegisterSubmitted(user));
     }
   }
@@ -136,12 +135,18 @@ class _RegisterCarState extends State<RegisterCar> {
               child: BlocListener<RegisterBloc, RegisterState>(
                 listener: (context, state) {
                   if (state is RegisterSuccess) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Registro exitoso')),
+                    _showUniversalSuccessErrorDialog(
+                      context,
+                      'Registro exitoso',
+                      Icons.check_circle,
+                      Colors.green,
                     );
                   } else if (state is RegisterFailure) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.error)),
+                    _showUniversalSuccessErrorDialog(
+                      context,
+                      state.error,
+                      Icons.warning,
+                      Colors.orange,
                     );
                   }
                 },
@@ -273,4 +278,45 @@ class LicensePlateFormatter extends TextInputFormatter {
     }
     return oldValue;
   }
+}
+
+void _showUniversalSuccessErrorDialog(
+    BuildContext context, String message, IconData icon, Color iconColor) {
+  showDialog(
+    context: context,
+    barrierDismissible: false, // No permitir cerrar el diálogo tocando fuera
+    builder: (BuildContext context) {
+      // Cerrar el diálogo automáticamente después de 2 segundos
+      Future.delayed(const Duration(seconds: 2), () {
+        if (Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+        }
+      });
+
+      return PopScope(
+        onPopInvoked: (shouldPop) => false, // Deshabilitar botón de retroceso
+        child: AlertDialog(
+          title: const SizedBox.shrink(), // No mostrar título
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon, // Ícono dinámico
+                color: iconColor, // Color dinámico
+                size: 48.0,
+              ),
+              SizedBox(height: 16.h),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.h,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }
