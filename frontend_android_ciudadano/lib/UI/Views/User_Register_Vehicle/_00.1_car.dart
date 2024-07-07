@@ -117,9 +117,26 @@ class _RegisterCarState extends State<RegisterCar> {
 
       _logger.i('Request body: ${jsonEncode(user.toJson())}');
 
-      // Emitir evento de registro
       context.read<RegisterBloc>().add(RegisterSubmitted(user));
     }
+  }
+
+  void _showDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -136,13 +153,9 @@ class _RegisterCarState extends State<RegisterCar> {
               child: BlocListener<RegisterBloc, RegisterState>(
                 listener: (context, state) {
                   if (state is RegisterSuccess) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Registro exitoso')),
-                    );
+                    _showDialog('Éxito', 'Registro exitoso');
                   } else if (state is RegisterFailure) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.error)),
-                    );
+                    _showDialog('Error', state.error);
                   }
                 },
                 child: BlocBuilder<RegisterBloc, RegisterState>(
