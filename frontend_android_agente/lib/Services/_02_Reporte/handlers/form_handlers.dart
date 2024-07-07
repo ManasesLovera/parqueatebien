@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_android/Services/_02_Reporte/api/location.dart';
+import 'package:frontend_android/Services/_02_Reporte/api/location_handler.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
 
@@ -35,7 +35,7 @@ class FormHandlers {
         selectedVehicleType != null &&
         selectedColor != null &&
         plateController.text.isNotEmpty;
-        // addressController.text.isNotEmpty;
+    // addressController.text.isNotEmpty;
   }
 
   String? getValidationMessage() {
@@ -51,9 +51,7 @@ class FormHandlers {
     if (selectedColor == null) {
       return 'Seleccione un color';
     }
-    // if (addressController.text.isEmpty) {
-    //   return 'Por favor ingrese una dirección';
-    // }
+
     return null;
   }
 
@@ -90,7 +88,6 @@ class FormHandlers {
       final locationService = LocationService();
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        showDialog('Por favor, Activar la ubicacions.');
         return;
       }
 
@@ -100,11 +97,11 @@ class FormHandlers {
         longitude = position.longitude.toString();
       } else {
         logger.e('Error Fatal! Localization');
-        showDialog('Por favor, Aceptar los Permisos de Ubicacion');
+        return;
       }
     } catch (e) {
       logger.e('Error Fatal! Current Locations');
-      showDialog('Error Fatal Error: Could not retrieve current location.');
+      return;
     }
   }
 }

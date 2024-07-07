@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:frontend_android/Services/update_status/change_status_dto.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -69,4 +70,6 @@ class ApiService {
 
     return response;
   }
+
+  static updateVehicleStatus(ChangeStatusDTO changeStatusDTO) {}
 }
