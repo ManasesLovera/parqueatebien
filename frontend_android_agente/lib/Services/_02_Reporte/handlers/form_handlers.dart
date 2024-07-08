@@ -8,7 +8,7 @@ class FormHandlers {
   final TextEditingController plateController;
   final TextEditingController addressController;
   final Function(String) showSnackBar;
-  final Function(String) showDialog;
+  final Function(BuildContext, String) showLocationDialog;
 
   String? selectedVehicleType;
   String? selectedColor;
@@ -27,7 +27,7 @@ class FormHandlers {
     required this.plateController,
     required this.addressController,
     required this.showSnackBar,
-    required this.showDialog,
+    required this.showLocationDialog,
   });
 
   void validateForm() {
@@ -83,15 +83,18 @@ class FormHandlers {
     }
   }
 
-  Future<void> getLocation() async {
+  Future<void> getLocation(BuildContext context) async {
     try {
       final locationService = LocationService();
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
+        showLocationDialog(context,
+            "Los servicios de ubicación están deshabilitados. Por favor, actívalos.");
         return;
       }
 
-      Position? position = await locationService.getCurrentLocation();
+      Position? position = await locationService.getCurrentLocation(
+          (message) => showLocationDialog(context, message));
       if (position != null) {
         latitude = position.latitude.toString();
         longitude = position.longitude.toString();
