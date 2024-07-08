@@ -25,11 +25,10 @@ class MapWidgetState extends State<MapWidgetConsulta> {
     super.initState();
     _getCurrentLocation();
   }
-    Future<void> _getCurrentLocation() async {
+
+  Future<void> _getCurrentLocation() async {
     try {
-      Position? position = await LocationService().getCurrentLocation(
-        (message) => _showLocationDialog(context, message),
-      );
+      Position? position = await LocationService().getCurrentLocation();
       if (position != null) {
         setState(() {
           _currentPosition = position;
@@ -74,29 +73,6 @@ class MapWidgetState extends State<MapWidgetConsulta> {
       });
       debugPrint('Error fetching current location: $e');
     }
-  }
-
-  void _showLocationDialog(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      barrierDismissible: false, // No permitir cerrar el diálogo tocando fuera
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Servicios de Ubicación'),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Geolocator.openLocationSettings()
-                    .then((_) => _getCurrentLocation());
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   void _onMapCreated(GoogleMapController controller) {

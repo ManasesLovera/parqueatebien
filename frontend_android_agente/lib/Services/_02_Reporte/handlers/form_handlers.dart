@@ -8,7 +8,7 @@ class FormHandlers {
   final TextEditingController plateController;
   final TextEditingController addressController;
   final Function(String) showSnackBar;
-  final Function(BuildContext, String) showLocationDialog;
+  final Function(String) showDialog;
 
   String? selectedVehicleType;
   String? selectedColor;
@@ -21,13 +21,13 @@ class FormHandlers {
   bool isFormValid = false;
 
   final Logger logger = Logger();
-//
+
   FormHandlers({
     required this.formKey,
     required this.plateController,
     required this.addressController,
     required this.showSnackBar,
-    required this.showLocationDialog,
+    required this.showDialog,
   });
 
   void validateForm() {
@@ -51,7 +51,9 @@ class FormHandlers {
     if (selectedColor == null) {
       return 'Seleccione un color';
     }
-
+    // if (addressController.text.isEmpty) {
+    //   return 'Por favor ingrese una dirección';
+    // }
     return null;
   }
 
@@ -83,28 +85,26 @@ class FormHandlers {
     }
   }
 
-  Future<void> getLocation(BuildContext context) async {
+  Future<void> getLocation() async {
     try {
       final locationService = LocationService();
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        showLocationDialog(context,
-            "Los servicios de ubicación están deshabilitados. Por favor, actívalos.");
+        showDialog('Por favor, Activar la ubicacions.');
         return;
       }
 
-      Position? position = await locationService.getCurrentLocation(
-          (message) => showLocationDialog(context, message));
+      Position? position = await locationService.getCurrentLocation();
       if (position != null) {
         latitude = position.latitude.toString();
         longitude = position.longitude.toString();
       } else {
         logger.e('Error Fatal! Localization');
-        return;
+        showDialog('Por favor, Aceptar los Permisos de Ubicacion');
       }
     } catch (e) {
       logger.e('Error Fatal! Current Locations');
-      return;
+      showDialog('Error Fatal Error: Could not retrieve current location.');
     }
   }
 }
