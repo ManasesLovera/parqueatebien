@@ -32,7 +32,7 @@ class LoginSendData {
           final token = rawToken.replaceAll('"', '');
           _logger.i('Inicio de sesión exitoso');
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('loggedInUser', username);
+          await prefs.setString('username', username);
           await prefs.setString('token', token);
           return true;
         case 401:
