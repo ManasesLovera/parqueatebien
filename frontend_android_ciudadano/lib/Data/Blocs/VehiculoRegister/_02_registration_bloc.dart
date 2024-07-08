@@ -23,7 +23,7 @@ class VehicleRegistrationBloc
         if (success) {
           emit(VehicleRegistrationSuccess());
         } else {
-          emit(const VehicleRegistrationFailure(error: 'Registro fallido'));
+          emit(const VehicleRegistrationFailure(error: 'Ya tiene un Vehiculo con esta placa'));
         }
       } catch (error) {
         emit(VehicleRegistrationFailure(error: error.toString()));
