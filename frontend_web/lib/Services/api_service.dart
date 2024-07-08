@@ -5,7 +5,7 @@ import '../models/citizen.dart';
 class ApiService {
   static Future<Citizen?> getCitizen(String licensePlate) async {
     final response = await http.get(
-      Uri.parse('http://192.168.0.209:8089/api/reporte/$licensePlate'),
+      Uri.parse('http://locahost:8089/api/reporte/$licensePlate'),
     );
 
     switch (response.statusCode) {
