@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android/Services/_02_Reporte/widgets/_13_map_c.dart';
@@ -37,6 +36,18 @@ var logger = Logger();
 class ConfirmationScreenState extends State<ConfirmationScreen> {
   Future<void> _createReport() async {
     try {
+      if (widget.latitude == null || widget.longitude == null) {
+        throw Exception("Latitud y longitud son requeridas.");
+      }
+
+      double? latitude = double.tryParse(widget.latitude!);
+      double? longitude = double.tryParse(widget.longitude!);
+
+      if (latitude == null || longitude == null) {
+        throw Exception(
+            "Latitud y longitud deben ser números decimales válidos.");
+      }
+
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? reportedBy = prefs.getString('loggedInUser');
 
