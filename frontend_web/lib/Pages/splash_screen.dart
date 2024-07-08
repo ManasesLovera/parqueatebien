@@ -1,27 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:web/main.dart';
+import 'main_app.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  SplashScreenState createState() => SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 3), () {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainApp()));
+    Future.delayed(const Duration(seconds: 3), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const MainApp()),
+      );
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/image/fondo_splash.png'),
                 fit: BoxFit.cover,
@@ -34,10 +39,10 @@ class _SplashScreenState extends State<SplashScreen> {
               Center(
                 child: Image.asset(
                   'assets/image/LOGO_PARQUEATE.png',
-                  height: 200, // Ajusta el tamaño de la imagen según sea necesario
+                  height: 200,
                 ),
               ),
-              SizedBox(height: 20), 
+              const SizedBox(height: 20),
             ],
           ),
           Positioned(
@@ -47,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Center(
               child: Image.asset(
                 'assets/image/LOGO_INTRANT.png',
-                height: 50, // Ajusta el tamaño de la tercera imagen según sea necesario
+                height: 50,
               ),
             ),
           ),

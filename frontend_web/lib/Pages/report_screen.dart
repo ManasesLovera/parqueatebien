@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
 class ReportScreen extends StatelessWidget {
- final String licensePlate;
- final String address;
- final String status;
- final String currentAddress;
- final String reportedDate;
- final String towedByCraneDate;
- final String arrivalAtParkinglot;
- final String releaseDate;
+  final String licensePlate;
+  final String address;
+  final String status;
+  final String currentAddress;
+  final String reportedDate;
+  final String towedByCraneDate;
+  final String arrivalAtParkinglot;
+  final String releaseDate;
 
-  ReportScreen({
+  const ReportScreen({
+    super.key,
     required this.licensePlate,
     required this.address,
     required this.status,
@@ -40,7 +41,7 @@ class ReportScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(''),
+        title: const Text(''),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
@@ -55,18 +56,17 @@ class ReportScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 5),
-             Center(
+            const Center(
               child: Text(
                 'Infomacion del reporte',
                 style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF010F56)
-                ),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF010F56)),
               ),
-            ), 
+            ),
             const SizedBox(height: 50),
-            Center(
+            const Center(
               child: Text(
                 'Status:',
                 style: TextStyle(
@@ -78,15 +78,14 @@ class ReportScreen extends StatelessWidget {
             const SizedBox(height: 16.0),
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: _getButtonColor(status), // Color del botón según el estado
+                  backgroundColor: _getButtonColor(
+                      status), // Color del botón según el estado
                 ),
                 child: Text(
-                  '$status',
-                  style: TextStyle(color: Colors.white),
+                  status,
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
             ),
@@ -95,16 +94,17 @@ class ReportScreen extends StatelessWidget {
               child: Column(
                 children: [
                   _buildInfoRow('Fecha y Hora de Incautación', reportedDate),
-                  
                   _buildInfoRow('Ubicación Actual', currentAddress),
-                  _buildInfoRow('Fecha y Hora de Llegada al Centro', arrivalAtParkinglot),
+                  _buildInfoRow(
+                      'Fecha y Hora de Llegada al Centro', arrivalAtParkinglot),
                 ],
               ),
             ),
             if (status.toLowerCase() == 'retenido') ...[
               const SizedBox(height: 200),
               Center(
-                child: _buildTextBox('Instrucciones para Sacar el Vehículo', 'PUEDE LIBERAR SU VEHICULO VISITANDO EL CENTRO DE RETENCION DE VEHICULOS DE PROGRAMA "PARQUEATE BIEN" UBICADO EN LA AVENIDA TIRADENTES #17, SECTOR NACO, EN HORARIOS D 8:00AM a 7:00PM '),
+                child: _buildTextBox('Instrucciones para Sacar el Vehículo',
+                    'PUEDE LIBERAR SU VEHICULO VISITANDO EL CENTRO DE RETENCION DE VEHICULOS DE PROGRAMA "PARQUEATE BIEN" UBICADO EN LA AVENIDA TIRADENTES #17, SECTOR NACO, EN HORARIOS D 8:00AM a 7:00PM '),
               ),
             ],
           ],
@@ -119,13 +119,13 @@ class ReportScreen extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Color(0xFF010F56),
           ),
         ),
-        Text(value, style: TextStyle(fontSize: 18)),
+        Text(value, style: const TextStyle(fontSize: 18)),
         const SizedBox(height: 8.0),
       ],
     );
@@ -137,7 +137,7 @@ class ReportScreen extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Color(0xFF010F56),
@@ -147,16 +147,16 @@ class ReportScreen extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(20.0),
           width: 400,
-          constraints: BoxConstraints(
+          constraints: const BoxConstraints(
             minHeight: 150.0,
           ),
           decoration: BoxDecoration(
-            border: Border.all(color: Color.fromARGB(255, 136, 155, 252)),
+            border: Border.all(color: const Color.fromARGB(255, 136, 155, 252)),
             borderRadius: BorderRadius.circular(10.0),
           ),
           child: Text(
             value,
-            style: TextStyle(fontSize: 20),
+            style: const TextStyle(fontSize: 20),
           ),
         ),
         const SizedBox(height: 8.0),

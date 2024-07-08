@@ -1,37 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:web/Pages/report_screen.dart';
 import 'dart:convert';
-import 'ReportScreen.dart';
+import '../models/citizen.dart';
 
 class PlacaScreen extends StatelessWidget {
- final String licensePlate;
- final String vehicleType;
- final String vehicleColor;
- final String address;
- final String status;
- final String currentAddress;
- final String reportedDate;
- final String towedByCraneDate;
- final String arrivalAtParkinglot;
- final String releaseDate;
- final String lat;
- final String lon;
- final List photos;
+  final Citizen citizen;
 
-  PlacaScreen({
-    required this.licensePlate,
-    required this.vehicleType,
-    required this.vehicleColor,
-    required this.address,
-    required this.status,
-    required this.currentAddress,
-    required this.reportedDate,
-    required this.towedByCraneDate,
-    required this.arrivalAtParkinglot,
-    required this.releaseDate,
-    required this.lat,
-    required this.lon,
-    required this.photos,
-  });
+  const PlacaScreen({super.key, required this.citizen});
 
   Color _getButtonColor(String status) {
     switch (status.toLowerCase()) {
@@ -52,26 +27,26 @@ class PlacaScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(''),
+        title: const Text(''),
         actions: [
           Row(
             children: [
-              Text('INFO'),
+              const Text('INFO'),
               IconButton(
-                icon: Icon(Icons.info),
+                icon: const Icon(Icons.info),
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => ReportScreen(
-                        licensePlate: licensePlate,
-                        address: address,
-                        status: status,
-                        reportedDate: reportedDate,
-                        towedByCraneDate: towedByCraneDate,
-                        currentAddress: currentAddress,
-                        arrivalAtParkinglot: arrivalAtParkinglot,
-                        releaseDate: releaseDate,
+                        licensePlate: citizen.licensePlate,
+                        address: citizen.registrationDocument,
+                        status: citizen.status,
+                        reportedDate: citizen.reportedDate,
+                        towedByCraneDate: citizen.towedByCraneDate ?? '',
+                        currentAddress: citizen.model,
+                        arrivalAtParkinglot: citizen.arrivalAtParkinglot ?? '',
+                        releaseDate: citizen.releaseDate ?? '',
                       ),
                     ),
                   );
@@ -94,7 +69,7 @@ class PlacaScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16.0),
-            Center(
+            const Center(
               child: Text(
                 'Datos del Vehículo',
                 style: TextStyle(
@@ -110,12 +85,11 @@ class PlacaScreen extends StatelessWidget {
                   // Acción del botón
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: _getButtonColor(
-                      status), // Color del botón según el estado
+                  backgroundColor: _getButtonColor(citizen.status),
                 ),
                 child: Text(
-                  '$status',
-                  style: TextStyle(color: Colors.white),
+                  citizen.status,
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
             ),
@@ -126,24 +100,17 @@ class PlacaScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _buildInfoRow('Número de Placa', licensePlate),
-                  Divider(
-                    height: 50,
-                  ),
-                  _buildInfoRow('Tipo de Vehículo', vehicleType),
-                  Divider(
-                    height: 50,
-                  ),
-                  _buildInfoRow('Color', vehicleColor),
-                  Divider(
-                    height: 50,
-                  ),
-                  _buildInfoRow('Ubicación de la Retención', address),
-                  Divider(
-                    height: 50,
-                  ),
-                  if (photos.isNotEmpty) ...[
-                    Text(
+                  _buildInfoRow('Número de Placa', citizen.licensePlate),
+                  const Divider(height: 50),
+                  _buildInfoRow('Tipo de Vehículo', citizen.vehicleType),
+                  const Divider(height: 50),
+                  _buildInfoRow('Color', citizen.vehicleColor),
+                  const Divider(height: 50),
+                  _buildInfoRow('Ubicación de la Retención',
+                      citizen.registrationDocument),
+                  const Divider(height: 50),
+                  if (citizen.photos.isNotEmpty) ...[
+                    const Text(
                       'Fotos del Vehículo',
                       style: TextStyle(
                         fontSize: 18,
@@ -155,7 +122,7 @@ class PlacaScreen extends StatelessWidget {
                     Wrap(
                       spacing: 8.0,
                       runSpacing: 8.0,
-                      children: photos.map((photo) {
+                      children: citizen.photos.map((photo) {
                         return SizedBox(
                           width: 100,
                           height: 100,
@@ -185,13 +152,13 @@ class PlacaScreen extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Color(0xFF010F56),
           ),
         ),
-        Text(value, style: TextStyle(fontSize: 18)),
+        Text(value, style: const TextStyle(fontSize: 18)),
         const SizedBox(height: 8.0),
       ],
     );
