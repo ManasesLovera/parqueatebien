@@ -1,9 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   static final Logger _logger = Logger();
+
+  static Future<String?> _getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
 
   static Future<bool> updateVehicleStatus(
       ChangeStatusDTO changeStatusDTO) async {
@@ -12,10 +18,17 @@ class ApiService {
     final Uri url = Uri.parse(baseUrl);
 
     try {
+      String? token = await _getToken();
+      if (token == null) {
+        _logger.e('No se encontró el token. Por favor, inicie sesión primero.');
+        return false;
+      }
+
       final response = await http.put(
         url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
         },
         body: jsonEncode(changeStatusDTO.toJson()),
       );

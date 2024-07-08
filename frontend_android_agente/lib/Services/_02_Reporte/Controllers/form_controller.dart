@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:frontend_android/Services/_02_Reporte/handlers/form_handlers.dart';
 
 class FormController {
@@ -8,10 +7,10 @@ class FormController {
     required this.handlers,
   });
 
-  void init(BuildContext context) {
+  void init() {
     handlers.plateController.addListener(handlers.validateForm);
     handlers.addressController.addListener(handlers.validateForm);
-    handlers.getLocation(context);
+    handlers.getLocation();
   }
 
   void dispose() {
