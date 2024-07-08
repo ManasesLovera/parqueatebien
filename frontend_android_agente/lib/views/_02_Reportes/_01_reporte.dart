@@ -15,6 +15,7 @@ import 'package:frontend_android/Services/_02_Reporte/widgets/_09_reference_widg
 import 'package:frontend_android/Services/_02_Reporte/widgets/_10_referenciatextdown.dart';
 import 'package:frontend_android/Services/_02_Reporte/widgets/_12_nextbuttom.dart';
 import 'package:frontend_android/Services/_02_Reporte/widgets/_13_map.dart';
+import 'package:geolocator/geolocator.dart';
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
@@ -36,10 +37,12 @@ class ReportScreenState extends State<ReportScreen> {
       plateController: TextEditingController(),
       addressController: TextEditingController(),
       showSnackBar: _showSnackBar,
-      showDialog: _showDialog,
+      showLocationDialog: _showLocationDialog,
     );
     _formController = FormController(handlers: _formHandlers);
-    _formController.init();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _formController.init(context); // Asegúrate de pasar el contexto aquí
+    });
   }
 
   @override
@@ -53,23 +56,25 @@ class ReportScreenState extends State<ReportScreen> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  void _showDialog(String message) {
-    List<String> parts = message.split('|');
-    String title = parts.length > 1 ? parts[0] : 'Error';
-    String content = parts.length > 1 ? parts[1] : message;
-
+  void _showLocationDialog(BuildContext context, String message) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(title),
-        content: Text(content),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
+      barrierDismissible: false, // No permitir cerrar el diálogo tocando fuera
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Servicios de Ubicación'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Geolocator.openLocationSettings();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

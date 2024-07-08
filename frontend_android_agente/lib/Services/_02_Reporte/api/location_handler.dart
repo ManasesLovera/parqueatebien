@@ -20,11 +20,14 @@ class LocationService {
     }
   }
 
-  Future<Position?> getCurrentLocation() async {
+  Future<Position?> getCurrentLocation(
+      Function(String) showLocationDialog) async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       _logger.e("Location services are disabled.");
-      return null;
+      showLocationDialog(
+          "Los servicios de ubicación están deshabilitados. Por favor, actívalos.");
+      await _waitForLocationServicesEnabled();
     }
 
     bool permissionsGranted = await _requestPermissions();
@@ -43,6 +46,12 @@ class LocationService {
     } catch (e) {
       _logger.e("Error getting current location: $e");
       return null;
+    }
+  }
+
+  Future<void> _waitForLocationServicesEnabled() async {
+    while (!await Geolocator.isLocationServiceEnabled()) {
+      await Future.delayed(const Duration(seconds: 1));
     }
   }
 }

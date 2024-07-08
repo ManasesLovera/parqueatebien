@@ -28,7 +28,9 @@ class MapWidgetState extends State<MapWidget> {
 
   Future<void> _getCurrentLocation() async {
     try {
-      Position? position = await LocationService().getCurrentLocation();
+      Position? position = await LocationService().getCurrentLocation(
+        (message) => _showLocationDialog(context, message),
+      );
       if (position != null) {
         setState(() {
           _currentPosition = position;
@@ -75,6 +77,29 @@ class MapWidgetState extends State<MapWidget> {
     }
   }
 
+  void _showLocationDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // No permitir cerrar el diálogo tocando fuera
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Servicios de Ubicación'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Geolocator.openLocationSettings()
+                    .then((_) => _getCurrentLocation());
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _onMapCreated(GoogleMapController controller) {
     _controller = controller;
     if (_currentPosition != null) {
@@ -88,7 +113,7 @@ class MapWidgetState extends State<MapWidget> {
   void _addPolyline(Position start, Position end) async {
     PolylinePoints polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      'AIzaSyAyvUbCqtP9uZRgb1k29tq2vQPuTc-C7lQ',
+      'YOUR_API_KEY',
       PointLatLng(start.latitude, start.longitude),
       PointLatLng(end.latitude, end.longitude),
     );
