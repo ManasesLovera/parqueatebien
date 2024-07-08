@@ -1,1 +1,0 @@
-export let url = 'https://demooriontek.azurewebsites.net'

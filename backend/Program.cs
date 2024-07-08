@@ -33,9 +33,9 @@ builder.Services.AddCors(options =>
 });
 
 // Database connection EF
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseSqlite("Data Source=parqueatebien.db"));
 
 //Token Generator
 builder.Services.AddScoped<TokenService>();
