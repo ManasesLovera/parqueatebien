@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_android/Services/_02_Reporte/api/location.dart';
+import 'package:frontend_android/Services/_02_Reporte/api/location_handler.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
 
@@ -8,7 +8,7 @@ class FormHandlers {
   final TextEditingController plateController;
   final TextEditingController addressController;
   final Function(String) showSnackBar;
-  final Function(String) showDialog;
+  final Function(BuildContext, String) showLocationDialog;
 
   String? selectedVehicleType;
   String? selectedColor;
@@ -27,7 +27,7 @@ class FormHandlers {
     required this.plateController,
     required this.addressController,
     required this.showSnackBar,
-    required this.showDialog,
+    required this.showLocationDialog,
   });
 
   void validateForm() {
@@ -35,7 +35,7 @@ class FormHandlers {
         selectedVehicleType != null &&
         selectedColor != null &&
         plateController.text.isNotEmpty;
-        // addressController.text.isNotEmpty;
+    // addressController.text.isNotEmpty;
   }
 
   String? getValidationMessage() {
@@ -51,9 +51,7 @@ class FormHandlers {
     if (selectedColor == null) {
       return 'Seleccione un color';
     }
-    // if (addressController.text.isEmpty) {
-    //   return 'Por favor ingrese una dirección';
-    // }
+
     return null;
   }
 
@@ -85,26 +83,28 @@ class FormHandlers {
     }
   }
 
-  Future<void> getLocation() async {
+  Future<void> getLocation(BuildContext context) async {
     try {
       final locationService = LocationService();
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        showDialog('Por favor, Activar la ubicacions.');
+        showLocationDialog(context,
+            "Los servicios de ubicación están deshabilitados. Por favor, actívalos.");
         return;
       }
 
-      Position? position = await locationService.getCurrentLocation();
+      Position? position = await locationService.getCurrentLocation(
+          (message) => showLocationDialog(context, message));
       if (position != null) {
         latitude = position.latitude.toString();
         longitude = position.longitude.toString();
       } else {
         logger.e('Error Fatal! Localization');
-        showDialog('Por favor, Aceptar los Permisos de Ubicacion');
+        return;
       }
     } catch (e) {
       logger.e('Error Fatal! Current Locations');
-      showDialog('Error Fatal Error: Could not retrieve current location.');
+      return;
     }
   }
 }

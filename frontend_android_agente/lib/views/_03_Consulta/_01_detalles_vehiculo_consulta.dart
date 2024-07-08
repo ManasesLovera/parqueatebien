@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/Services/update_status/_api_updatestatus.dart';
+import 'package:frontend_android/Services/add_licence/_api_.dart';
+import 'package:frontend_android/Services/update_status/change_status_dto.dart';
 import 'dart:convert';
 
 import 'package:frontend_android/views/_03_Consulta/_02_report_info.dart';

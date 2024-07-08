@@ -1,35 +1,52 @@
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:frontend_android_ciudadano/Data/Api/NuevoRegistro/_00.1_new_registro.dart';
-// import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoRegister/_00_registration_event.dart';
-// import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoRegister/_01_registration_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend_android_ciudadano/Data/Api/Add_Vehiculo/add_vechicle_api.dart';
+import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoRegister/_00_registration_event.dart';
+import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoRegister/_01_registration_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-// class VehicleRegistrationBloc
-//     extends Bloc<VehicleRegistrationEvent, VehicleRegistrationState> {
-//   final RegisterApi api;
+class VehicleRegistrationBloc
+    extends Bloc<VehicleRegistrationEvent, VehicleRegistrationState> {
+  final AddVehicleApi api;
 
-//   VehicleRegistrationBloc(this.api) : super(VehicleRegistrationInitial());
+  VehicleRegistrationBloc(this.api) : super(VehicleRegistrationInitial()) {
+    on<RegisterVehicle>((event, emit) async {
+      emit(VehicleRegistrationLoading());
+      try {
+        final success = await api.addVehicle(
+          governmentId: event.governmentId,
+          licensePlate: event.licensePlate,
+          registrationDocument: event.matricula,
+          model: event.model,
+          year: event.year,
+          color: event.vehicleColor,
+        );
+        if (success) {
+          emit(VehicleRegistrationSuccess());
+        } else {
+          emit(const VehicleRegistrationFailure(error: 'Registro fallido'));
+        }
+      } catch (error) {
+        emit(VehicleRegistrationFailure(error: error.toString()));
+      }
+    });
 
-//   Stream<VehicleRegistrationState> mapEventToState(
-//       VehicleRegistrationEvent event) async* {
-//     if (event is RegisterVehicle) {
-//       yield VehicleRegistrationLoading();
-//       try {
-//         final success = await api.registerVehicle(
-//           event.licensePlate,
-//           event.vehicleType,
-//           event.vehicleColor,
-//           event.model,
-//           event.year,
-//           event.matricula,
-//         );
-//         if (success) {
-//           yield VehicleRegistrationSuccess();
-//         } else {
-//           yield const VehicleRegistrationFailure(error: 'Registro fallido');
-//         }
-//       } catch (error) {
-//         yield VehicleRegistrationFailure(error: error.toString());
-//       }
-//     }
-//   }
-// }
+    on<FetchGovernmentId>((event, emit) async {
+      final prefs = await SharedPreferences.getInstance();
+      final governmentId = prefs.getString('governmentId');
+      if (governmentId != null) {
+        add(RegisterVehicle(
+          governmentId: governmentId,
+          licensePlate: event.licensePlate,
+          vehicleType: event.vehicleType,
+          vehicleColor: event.vehicleColor,
+          model: event.model,
+          year: event.year,
+          matricula: event.matricula,
+        ));
+      } else {
+        emit(const VehicleRegistrationFailure(
+            error: 'No se encontró el ID del usuario'));
+      }
+    });
+  }
+}

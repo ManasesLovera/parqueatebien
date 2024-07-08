@@ -3,16 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android_ciudadano/Data/Api/Add_Vehiculo/add_vechicle_api.dart';
-import 'package:frontend_android_ciudadano/Data/Api/Add_User/user_register_api.dart';
-import 'package:frontend_android_ciudadano/Data/Blocs/NuevoUser/register_bloc.dart';
-import 'package:frontend_android_ciudadano/Data/Blocs/NuevoUser/register_state.dart';
+import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoRegister/_00_registration_event.dart';
+import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoRegister/_01_registration_state.dart';
+import 'package:frontend_android_ciudadano/Data/Blocs/VehiculoRegister/_02_registration_bloc.dart';
+import 'package:frontend_android_ciudadano/UI/Views/Welcome/_00_welcome.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_00_app_bar.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_01_custom_textfield_.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_01_titlle_textfield_.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_02_custom_buttom_.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/color_dropdownselectitem.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/year_dropdownselectitem.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterNewCar extends StatefulWidget {
   const RegisterNewCar({super.key});
@@ -31,6 +31,23 @@ class _RegisterCarState extends State<RegisterNewCar> {
   final List<String> colores = ['Rojo', 'Azul', 'Verde', 'Negro', 'Blanco'];
   final List<String> years =
       List<String>.generate(124, (i) => (DateTime.now().year - i).toString());
+  final ValueNotifier<bool> isButtonEnabled = ValueNotifier<bool>(false);
+
+  @override
+  void initState() {
+    super.initState();
+    numplacaC.addListener(_updateButtonState);
+    modeloC.addListener(_updateButtonState);
+    matriculaC.addListener(_updateButtonState);
+  }
+
+  void _updateButtonState() {
+    isButtonEnabled.value = numplacaC.text.isNotEmpty &&
+        modeloC.text.isNotEmpty &&
+        selectedYear != null &&
+        selectedColor != null &&
+        matriculaC.text.isNotEmpty;
+  }
 
   bool _validateFields() {
     if (numplacaC.text.isEmpty ||
@@ -60,36 +77,16 @@ class _RegisterCarState extends State<RegisterNewCar> {
     return true;
   }
 
-  Future<void> _register() async {
+  void _register(BuildContext context) {
     if (_validateFields()) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      final governmentId = prefs.getString('governmentId');
-
-      if (governmentId == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No se encontró el ID del usuario')),
-        );
-        return;
-      }
-
-      final success = await AddVehicleApi().addVehicle(
-        governmentId: governmentId,
-        licensePlate: numplacaC.text,
-        registrationDocument: matriculaC.text,
-        model: modeloC.text,
-        year: selectedYear!,
-        color: selectedColor!,
-      );
-
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registro exitoso')),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error al registrar')),
-        );
-      }
+      context.read<VehicleRegistrationBloc>().add(FetchGovernmentId(
+            licensePlate: numplacaC.text,
+            vehicleType: 'Car',
+            vehicleColor: selectedColor!,
+            model: modeloC.text,
+            year: selectedYear!,
+            matricula: matriculaC.text,
+          ));
     }
   }
 
@@ -103,20 +100,36 @@ class _RegisterCarState extends State<RegisterNewCar> {
           padding: EdgeInsets.symmetric(horizontal: 0.h),
           child: SingleChildScrollView(
             child: BlocProvider(
-              create: (_) => RegisterBloc(RegisterApi()),
-              child: BlocListener<RegisterBloc, RegisterState>(
+              create: (_) => VehicleRegistrationBloc(AddVehicleApi()),
+              child: BlocListener<VehicleRegistrationBloc,
+                  VehicleRegistrationState>(
                 listener: (context, state) {
-                  if (state is RegisterSuccess) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Registro exitoso')),
+                  if (state is VehicleRegistrationSuccess) {
+                    _showUniversalSuccessErrorDialog(
+                      context,
+                      'Registro exitoso',
+                      Icons.check_circle,
+                      Colors.green,
                     );
-                  } else if (state is RegisterFailure) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.error)),
+                    Future.delayed(const Duration(seconds: 2), () {
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (context) => const Welcome(),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
+                    });
+                  } else if (state is VehicleRegistrationFailure) {
+                    _showUniversalSuccessErrorDialog(
+                      context,
+                      state.error,
+                      Icons.warning,
+                      Colors.orange,
                     );
                   }
                 },
-                child: BlocBuilder<RegisterBloc, RegisterState>(
+                child: BlocBuilder<VehicleRegistrationBloc,
+                    VehicleRegistrationState>(
                   builder: (context, state) {
                     return Column(
                       children: [
@@ -160,6 +173,7 @@ class _RegisterCarState extends State<RegisterNewCar> {
                             setState(() {
                               selectedYear = value;
                             });
+                            _updateButtonState();
                           },
                           hintText: 'Seleccionar año',
                         ),
@@ -174,6 +188,7 @@ class _RegisterCarState extends State<RegisterNewCar> {
                             setState(() {
                               selectedColor = value;
                             });
+                            _updateButtonState();
                           },
                           hintText: 'Seleccionar color',
                         ),
@@ -189,18 +204,19 @@ class _RegisterCarState extends State<RegisterNewCar> {
                           ],
                         ),
                         SizedBox(height: 80.h),
-                        if (state is RegisterLoading)
+                        if (state is VehicleRegistrationLoading)
                           const CircularProgressIndicator()
                         else
-                          SizedBox(
-                            child: RegistroButtom(
-                              onPressed: () {
-                                if (_validateFields()) {
-                                  _register();
-                                }
-                              },
-                              text: 'Registrarse',
-                            ),
+                          ValueListenableBuilder<bool>(
+                            valueListenable: isButtonEnabled,
+                            builder: (context, isEnabled, child) {
+                              return RegistroButtom(
+                                onPressed:
+                                    isEnabled ? () => _register(context) : null,
+                                text: 'Registrarse',
+                                isEnabled: isEnabled,
+                              );
+                            },
                           ),
                       ],
                     );
@@ -241,4 +257,45 @@ class LicensePlateFormatter extends TextInputFormatter {
     }
     return oldValue;
   }
+}
+
+void _showUniversalSuccessErrorDialog(
+    BuildContext context, String message, IconData icon, Color iconColor) {
+  showDialog(
+    context: context,
+    barrierDismissible: false, // No permitir cerrar el diálogo tocando fuera
+    builder: (BuildContext context) {
+      // Cerrar el diálogo automáticamente después de 2 segundos
+      Future.delayed(const Duration(seconds: 2), () {
+        if (Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+        }
+      });
+
+      return PopScope(
+        onPopInvoked: (shouldPop) => false, // Deshabilitar botón de retroceso
+        child: AlertDialog(
+          title: const SizedBox.shrink(), // No mostrar título
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon, // Ícono dinámico
+                color: iconColor, // Color dinámico
+                size: 48.0,
+              ),
+              SizedBox(height: 16.h),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.h,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }

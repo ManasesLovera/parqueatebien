@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android_ciudadano/Data/Api/Add_User/user_register_api.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/NuevoUser/register_bloc.dart';
 import 'package:frontend_android_ciudadano/Data/Blocs/NuevoUser/register_state.dart';
-import 'package:frontend_android_ciudadano/UI/Views/User_Register_Vehicle/_00.1_car.dart';
+import 'package:frontend_android_ciudadano/UI/Views/User_Login_Register_User_With_Vehicle/_00.1_car.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_00_app_bar.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_01_custom_textfield_.dart';
 import 'package:frontend_android_ciudadano/UI/Widgets/NuevoRegistro/_01_titlle_textfield_.dart';
