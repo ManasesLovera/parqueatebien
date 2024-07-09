@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:frontend_android/APis/_02_report.dart';
 import 'package:frontend_android/Widgets/Reportes/_13_map.dart';
-import 'package:frontend_android/APis/add_licence.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -75,7 +75,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
       logger.i('Creating report with data: $reportData');
       logger.i('Images: ${images.length}');
 
-      var response = await ApiService.createReport(reportData, images)
+      var response = await ApiServiceReport.createReport(reportData, images)
           .timeout(const Duration(seconds: 30));
 
       logger.i('Response status: ${response.statusCode}');

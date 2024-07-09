@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:frontend_android/APis/location.dart';
+import 'package:frontend_android/APis/_03_location.dart';
 
 class MapWidget extends StatefulWidget {
   final double? lat;

@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:frontend_android/APis/status_update.dart';
+import 'package:frontend_android/APis/_04_status_update.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 var logger = Logger();
 
-class ApiService {
+class ApiServiceReport {
   static const String baseUrl = 'http://192.168.0.209:8089/api/reporte';
 
   static Future<String?> _getToken() async {

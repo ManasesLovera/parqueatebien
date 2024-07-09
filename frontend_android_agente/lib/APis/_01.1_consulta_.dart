@@ -20,13 +20,15 @@ class VehicleService {
         _logger.d('Vehicle details fetched successfully: $vehicleData');
         return vehicleData;
       } else if (response.statusCode == 404) {
+        _logger.w('Vehicle not found: $plate');
         throw Exception('Vehicle not found.');
       } else {
+        _logger.e('Server error with status code: ${response.statusCode}');
         throw Exception('Server error.');
       }
     } catch (e) {
       _logger.e('Failed to connect to the server: $e');
-      throw Exception('Failed to connect to the server: $e');
+      throw Exception('Failed to connect to the server');
     }
   }
 }

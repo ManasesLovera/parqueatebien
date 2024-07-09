@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:frontend_android/APis/_01.1_consulta_.dart';
 import 'package:frontend_android/Bloc/Consulta/bloc_consulta.dart';
 import 'package:frontend_android/Bloc/Consulta/state_consulta.dart';
-import 'package:frontend_android/Pages/_02_2_Consulta/_01_detalles_vehiculo_consult.dart';
+import 'package:frontend_android/Controllers/Consulta/controller_consulta.dart';
+import 'package:frontend_android/Handlers/Consulta/dialog_success_error.dart';
 import 'package:frontend_android/Pages/_01_Welcome/welcome.dart';
-import 'package:frontend_android/APis/consulta_.dart';
+import 'package:frontend_android/Pages/_02_2_Consulta/_01_detalles_vehiculo_consult.dart';
+import 'package:frontend_android/Widgets/Consulta/platescreen_widgets.dart';
 
 class EnterPlateNumberScreen extends StatefulWidget {
   const EnterPlateNumberScreen({super.key});
@@ -16,65 +19,18 @@ class EnterPlateNumberScreen extends StatefulWidget {
 }
 
 class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
-  final TextEditingController plateController = TextEditingController();
-  final ValueNotifier<bool> isButtonEnabled = ValueNotifier(false);
-  bool isLoading = false;
-
-  void _checkInput(String value) {
-    isButtonEnabled.value = value.length == 7;
-  }
-
-  Future<void> _searchVehicle() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    try {
-      final vehicleData =
-          await VehicleService().fetchVehicleDetails(plateController.text);
-      final double lat = double.parse(vehicleData['lat'].toString());
-      final double lon = double.parse(vehicleData['lon'].toString());
-
-      if (!mounted) return;
-
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => VehicleDetailsScreen(
-            vehicleData: vehicleData,
-            lat: lat,
-            lon: lon,
-          ),
-        ),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-          duration: const Duration(seconds: 3),
-          action: SnackBarAction(
-            label: 'OK',
-            onPressed: () {},
-          ),
-        ),
-      );
-    } finally {
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    }
-  }
+  final EnterPlateNumberController _controller = EnterPlateNumberController();
 
   @override
   void dispose() {
-    plateController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
       body: SafeArea(
         child: BlocProvider(
           create: (context) => VehicleBloc(VehicleService()),
@@ -91,16 +47,8 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
                   ),
                 );
               } else if (state is VehicleError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.message),
-                    duration: const Duration(seconds: 3),
-                    action: SnackBarAction(
-                      label: 'OK',
-                      onPressed: () {},
-                    ),
-                  ),
-                );
+                showUniversalSuccessErrorDialog(
+                    context, 'Vehículo no encontrado', false);
               }
             },
             child: WillPopScope(
@@ -152,7 +100,7 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
                       SizedBox(
                         height: 40.h,
                         child: TextFormField(
-                          controller: plateController,
+                          controller: _controller.plateController,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(
                                 vertical: 10.w, horizontal: 20.w),
@@ -174,34 +122,37 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
                             ),
                           ),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                                RegExp(r'^[A-Z0-9]{1,7}$')),
+                            UpperCaseTextInputFormatter(),
                             LengthLimitingTextInputFormatter(7),
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^[A-Z0-9]+$')),
+                            PlateNumberTextInputFormatter(),
                           ],
                           keyboardType: TextInputType.text,
-                          onChanged: _checkInput,
+                          onChanged: (value) => _controller.checkInput(value),
                         ),
                       ),
                       SizedBox(height: 270.h),
                       ValueListenableBuilder<bool>(
-                        valueListenable: isButtonEnabled,
+                        valueListenable: _controller.isButtonEnabled,
                         builder: (context, isEnabled, child) {
                           return SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: isEnabled && !isLoading
-                                  ? _searchVehicle
+                              onPressed: isEnabled && !_controller.isLoading
+                                  ? () => _controller.searchVehicle(context)
                                   : null,
                               style: ElevatedButton.styleFrom(
                                 padding: EdgeInsets.symmetric(vertical: 14.w),
-                                backgroundColor: isEnabled && !isLoading
-                                    ? const Color(0xFF010F56) // Azul oscuro
-                                    : Colors.grey,
+                                backgroundColor:
+                                    isEnabled && !_controller.isLoading
+                                        ? const Color(0xFF010F56) // Azul oscuro
+                                        : Colors.grey,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.r),
                                 ),
                               ),
-                              child: isLoading
+                              child: _controller.isLoading
                                   ? const CircularProgressIndicator(
                                       color: Colors.white)
                                   : Text(
