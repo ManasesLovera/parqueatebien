@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ErrorScreen extends StatelessWidget {
-  final String errorMessage;
-
-  const ErrorScreen({super.key, required this.errorMessage});
+class SuccessScreen extends StatelessWidget {
+  const SuccessScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+          backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 14.h),
@@ -18,25 +17,16 @@ class ErrorScreen extends StatelessWidget {
             children: [
               SizedBox(height: 20.h),
               Icon(
-                Icons.error_outline,
-                color: Colors.red,
+                Icons.check_circle_outline,
+                color: Colors.green,
                 size: 100.h,
               ),
               SizedBox(height: 20.h),
               Text(
-                'Error al crear reporte',
+                'Reporte creado exitosamente',
                 style: TextStyle(
-                  fontSize: 18.h,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 10.h),
-              Text(
-                errorMessage,
-                style: TextStyle(
-                  fontSize: 14.h,
                   color: Colors.black,
                 ),
                 textAlign: TextAlign.center,
@@ -46,7 +36,8 @@ class ErrorScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/report_or_consult', (route) => false);
                   },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 12.h),
@@ -56,10 +47,10 @@ class ErrorScreen extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'Reintentar',
+                    'Aceptar',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16.h,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_android/APis/_01.1_consulta_.dart';
-import 'package:frontend_android/Handlers/Consulta/dialog_success_error.dart';
+import 'package:frontend_android/Handlers/Consulta/dialog_success_error_consulta.dart';
 import 'package:frontend_android/Pages/_02_2_Consulta/_01_detalles_vehiculo_consult.dart';
 
 class EnterPlateNumberController {
   final TextEditingController plateController = TextEditingController();
   final ValueNotifier<bool> isButtonEnabled = ValueNotifier(false);
   bool isLoading = false;
+  bool plateFieldTouched = false; // Agrega esta línea
 
   void dispose() {
     plateController.dispose();
@@ -43,7 +44,7 @@ class EnterPlateNumberController {
       } else {
         errorMessage = 'vehículo no encontrado';
       }
-      showUniversalSuccessErrorDialog(context, errorMessage, false);
+      showUniversalSuccessErrorDialogConsulta(context, errorMessage, false);
     } finally {
       isLoading = false;
     }

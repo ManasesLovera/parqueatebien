@@ -206,14 +206,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.17"
-  flutter_polyline_points:
-    dependency: "direct main"
-    description:
-      name: flutter_polyline_points
-      sha256: "0e07862139cb65a88789cd6efbe284c0b6f1fcb5ed5ec87781759c48190d84b9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
   flutter_screenutil:
     dependency: "direct main"
     description:
@@ -288,14 +280,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.3"
-  go_router:
-    dependency: "direct main"
-    description:
-      name: go_router
-      sha256: cdae1b9c8bd7efadcef6112e81c903662ef2ce105cbd220a04bbb7c3425b5554
-      url: "https://pub.dev"
-    source: hosted
-    version: "14.2.0"
   google_maps:
     dependency: transitive
     description:
@@ -496,14 +480,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
-  logging:
-    dependency: transitive
-    description:
-      name: logging
-      sha256: "623a88c9594aa774443aa3eb2d41807a48486b5613e67599fb4c41c0ad47c340"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.0"
   matcher:
     dependency: transitive
     description:

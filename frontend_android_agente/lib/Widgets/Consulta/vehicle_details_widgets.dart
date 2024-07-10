@@ -97,7 +97,7 @@ Widget buildDetailRow(String title, String? value) {
         Text(
           title,
           style: TextStyle(
-            color: Colors.blue,
+              color: const Color(0xFF010F56),
             fontSize: 11.h,
             fontWeight: FontWeight.bold,
           ),

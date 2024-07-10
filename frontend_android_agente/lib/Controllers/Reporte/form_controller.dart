@@ -1,16 +1,17 @@
-import 'package:frontend_android/Handlers/Reportes/form_handlers.dart';
+import 'package:flutter/material.dart';
+import 'package:frontend_android/Handlers/Reportes/report_handler.dart';
 
-class FormController {
-  final FormHandlers handlers;
+class FormControllerReport {
+  final FormHandlersReport handlers;
 
-  FormController({
+  FormControllerReport({
     required this.handlers,
   });
 
-  void init() {
+  void init(BuildContext context) {
     handlers.plateController.addListener(handlers.validateForm);
     handlers.addressController.addListener(handlers.validateForm);
-    handlers.getLocation();
+    handlers.getLocation(context); // Pasa el contexto aquí
   }
 
   void dispose() {
