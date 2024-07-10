@@ -20,13 +20,12 @@ dependencies:
   shared_preferences: ^2.2.3
   google_maps_flutter: ^2.7.0
   geocoding: ^3.0.0
-  
-  
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
- 
+
 flutter:
   uses-material-design: true
 
@@ -34,7 +33,6 @@ flutter:
     - assets/splash/back.png
     - assets/splash/bottom.png
     - assets/splash/main.png
-    - assets/launcher_android_12+/main_splash.png
     - assets/launcher_android_-11/ic_icon.png
     - assets/whiteback/main_w.png
     - assets/icons/photo.svg
