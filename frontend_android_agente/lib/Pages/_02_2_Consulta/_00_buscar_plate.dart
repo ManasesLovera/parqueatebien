@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android/Controllers/Consulta/controller_consulta.dart';
+import 'package:frontend_android/Handlers/Consulta/dialog_success_error_consulta.dart';
 import 'package:frontend_android/Pages/_01_Welcome/welcome.dart';
 import 'package:frontend_android/Widgets/Consulta/plate_widget.dart';
 
@@ -18,6 +19,10 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  void _showErrorDialog(String message) {
+    showUniversalSuccessErrorDialogConsulta(context, message, false);
   }
 
   @override
@@ -49,7 +54,7 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
                   SizedBox(height: 65.h),
                   Center(
                     child: Text(
-                      'Introduzca el número de placa de su vehículo',
+                      'Introduzca el número de placa de su vehículo ',
                       style: TextStyle(
                         fontSize: 16.h,
                         fontWeight: FontWeight.bold,
@@ -70,19 +75,26 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 4.h),
-                  PlateWidgetConsulta(
-                    controller: _controller.plateController,
-                    touched: _controller.plateFieldTouched,
-                    focusNode: FocusNode(),
-                    onChanged: (value) {
-                      setState(() {
-                        _controller.plateFieldTouched = true;
-                      });
-                      _controller.checkInput(value);
-                    },
+                  SizedBox(
+                    child: PlateWidgetConsulta(
+                      controller: _controller.plateController,
+                      touched: _controller.plateFieldTouched,
+                      focusNode: FocusNode(),
+                      onChanged: (value) {
+                        setState(() {
+                          _controller.plateFieldTouched = true;
+                        });
+                        _controller.checkInput(value);
+                        // Habilitar el botón inmediatamente cuando el campo tenga al menos un carácter
+                        if (value.isNotEmpty) {
+                          _controller.isButtonEnabled.value = true;
+                        } else {
+                          _controller.isButtonEnabled.value = false;
+                        }
+                      },
+                    ),
                   ),
-                  SizedBox(height: 270.h),
+                  SizedBox(height: 250.h),
                   ValueListenableBuilder<bool>(
                     valueListenable: _controller.isButtonEnabled,
                     builder: (context, isEnabled, child) {
@@ -90,7 +102,20 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: isEnabled && !_controller.isLoading
-                              ? () => _controller.searchVehicle(context)
+                              ? () {
+                                  if (_controller
+                                      .plateController.text.isEmpty) {
+                                    _showErrorDialog(
+                                        'Por favor ingrese un número de placa');
+                                  } else if (!RegExp(r'^[A-Z][0-9]{6}$')
+                                      .hasMatch(
+                                          _controller.plateController.text)) {
+                                    _showErrorDialog(
+                                        'La placa debe empezar con una letra mayúscula seguida de 6 números');
+                                  } else {
+                                    _controller.searchVehicle(context);
+                                  }
+                                }
                               : null,
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(vertical: 14.w),
@@ -116,7 +141,6 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
                       );
                     },
                   ),
-                  SizedBox(height: 20.h),
                 ],
               ),
             ),

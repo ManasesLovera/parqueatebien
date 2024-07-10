@@ -10,6 +10,7 @@ class ReportInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 14.h),
@@ -28,10 +29,12 @@ class ReportInfoScreen extends StatelessWidget {
                   title: 'Fecha y hora de incautación por grúa:',
                   content: vehicleData['reportedDate'] ?? 'Desconocido',
                 ),
+                SizedBox(height: 7.h),
                 buildDetailItem(
                   title: 'Ubicación actual',
                   content: vehicleData['reference'] ?? 'Desconocido',
                 ),
+                SizedBox(height: 7.h),
                 buildDetailItem(
                   title: 'Fecha y hora de llegada al centro',
                   content: vehicleData['arrivalAtParkinglot'] ?? 'Desconocido',

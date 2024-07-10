@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 
-void showUniversalSuccessErrorDialog(
+void showUniversalSuccessErrorDialogEstatus(
     BuildContext context, String message, bool isSuccess) {
   showDialog(
     context: context,
+    barrierDismissible:
+        false, // Ensure the dialog is not dismissible by tapping outside
     builder: (BuildContext context) {
       Future.delayed(const Duration(seconds: 2), () {
-        Navigator.of(context).pop(true);
+        if (context.mounted) {
+          Navigator.of(context).pop(true);
+        }
       });
 
       return Dialog(

@@ -7,8 +7,6 @@ import 'package:frontend_android/Widgets/Map_Global/map_global.dart';
 import 'package:frontend_android/Widgets/Reportes/report_widgets.dart';
 import 'package:frontend_android/routes/app_routes.dart.dart';
 
-
-
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
 
@@ -187,7 +185,7 @@ class ReportScreenState extends State<ReportScreen> {
                       padding:
                           EdgeInsets.symmetric(horizontal: 14.h, vertical: 0.w),
                     ),
-                    SizedBox(height: 12.h),
+                    SizedBox(height: 16.h),
                     SizedBox(
                       child: NextButton(
                         formHandlers: _formHandlers,
