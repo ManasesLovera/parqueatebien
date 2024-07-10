@@ -444,7 +444,7 @@ class NextButton extends StatelessWidget {
             _formHandlers.validateOnSubmit(context);
           },
           style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.symmetric(vertical: 14.h),
+            padding: EdgeInsets.symmetric(vertical: 8.h),
             backgroundColor: _formHandlers.isFormValid
                 ? const Color(0xFF010F56)
                 : Colors.grey[400],

@@ -32,7 +32,7 @@ class PlateWidgetConsulta extends StatelessWidget {
               decoration: InputDecoration(
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: 14.h, vertical: 0.w),
-                hintText: 'Ingresar Dígitos de la placa',
+                hintText: 'Ingresar Dígitos de la placa A123456',
                 hintStyle: TextStyle(color: Colors.grey, fontSize: 10.h),
                 filled: true,
                 fillColor: Colors.white,
@@ -55,18 +55,7 @@ class PlateWidgetConsulta extends StatelessWidget {
               onChanged: onChanged,
             ),
           ),
-          if (touched &&
-              controller.text.isNotEmpty &&
-              !RegExp(r'^[A-Z][0-9]{6}$').hasMatch(controller.text))
-            Text(
-              'La placa debe empezar con una letra mayúscula seguida de 6 números',
-              style: TextStyle(color: Colors.red, fontSize: 10.h),
-            ),
-          if (touched && controller.text.isEmpty)
-            Text(
-              'Por favor ingrese un número de placa',
-              style: TextStyle(color: Colors.red, fontSize: 10.h),
-            ),
+          // Eliminar mensajes de error específicos
         ],
       ),
     );

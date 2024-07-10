@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android/Pages/_02_2_Consulta/_02_report_info.dart';
 
+const Color lightBlueColor = Color(0xFF009DD4); // Azul Claro
+const Color darkBlueColor = Color(0xFF010F56); // Azul Oscuro
+const Color greyTextColor = Color(0xFF494A4D); // Gris (Texto)
+
 Widget buildResultHeader(
     BuildContext context, Map<String, dynamic> vehicleData) {
   return Stack(
@@ -14,7 +18,7 @@ Widget buildResultHeader(
           style: TextStyle(
             fontSize: 16.h,
             fontWeight: FontWeight.bold,
-            color: Colors.blue,
+            color: lightBlueColor,
           ),
         ),
       ),
@@ -44,7 +48,7 @@ Widget buildVehicleTitle() {
       style: TextStyle(
         fontSize: 16.h,
         fontWeight: FontWeight.bold,
-        color: Colors.grey,
+        color: greyTextColor,
       ),
     ),
   );
@@ -64,7 +68,6 @@ Widget buildStatus(Map<String, dynamic> vehicleData) {
           vehicleData['status'] ?? 'Desconocido',
           style: TextStyle(
             fontSize: 12.h,
-            fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
         ),
@@ -88,37 +91,51 @@ Color getStatusColor(String status) {
   }
 }
 
-Widget buildDetailRow(String title, String? value) {
-  return Padding(
-    padding: EdgeInsets.only(bottom: 10.h),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
+class DetailRowWidget extends StatelessWidget {
+  final String title;
+  final String? value;
+  final bool showDivider;
+
+  const DetailRowWidget({
+    super.key,
+    required this.title,
+    this.value,
+    this.showDivider = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 10.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
               color: const Color(0xFF010F56),
-            fontSize: 11.h,
-            fontWeight: FontWeight.bold,
+              fontSize: 10.h,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        Text(
-          value ?? 'Desconocido',
-          style: TextStyle(
-            color: Colors.grey,
-            fontSize: 10.h,
-            fontWeight: FontWeight.bold,
+          Text(
+            value ?? 'Desconocido',
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 9.h,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        Divider(height: 10.h),
-      ],
-    ),
-  );
+          if (showDivider) Divider(height: 2.h),
+        ],
+      ),
+    );
+  }
 }
 
 Widget buildPhotoGallery(List<Map<String, String>> photos) {
   return SizedBox(
-    height: 65.h,
+    height: 50.h,
     child: ListView.builder(
       scrollDirection: Axis.horizontal,
       itemCount: photos.length,
@@ -129,7 +146,7 @@ Widget buildPhotoGallery(List<Map<String, String>> photos) {
             borderRadius: BorderRadius.circular(10.0),
             child: Image.memory(
               base64Decode(photos[index]['file']!),
-              height: 55.h,
+              height: 45.h,
               width: 70.h,
               fit: BoxFit.cover,
             ),

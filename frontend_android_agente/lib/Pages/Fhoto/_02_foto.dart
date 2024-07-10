@@ -48,6 +48,9 @@ class NewReportPhotoScreenState extends State<PhotoScreen> {
           _imageFileList.add(image);
         });
       }
+    } else {
+      showUniversalSuccessErrorDialogPhotos(
+          context, 'No se permiten más de 5 fotos', false);
     }
   }
 
@@ -68,9 +71,8 @@ class NewReportPhotoScreenState extends State<PhotoScreen> {
         ),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Debe agregar al menos 3 fotos')),
-      );
+      showUniversalSuccessErrorDialogPhotos(
+          context, 'Debe agregar al menos 3 fotos', false);
     }
   }
 
@@ -158,6 +160,8 @@ class NewReportPhotoScreenState extends State<PhotoScreen> {
                                       onTap: () {
                                         setState(() {
                                           _imageFileList.removeAt(index);
+                                          showUniversalSuccessErrorDialogPhotos(
+                                              context, 'Foto eliminada', true);
                                         });
                                       },
                                       child: SvgPicture.asset(
@@ -276,4 +280,46 @@ class FotoButton extends StatelessWidget {
       ),
     );
   }
+}
+
+
+void showUniversalSuccessErrorDialogPhotos(
+    BuildContext context, String message, bool isSuccess) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.of(context).pop(true);
+      });
+
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                isSuccess ? Icons.check_circle : Icons.error,
+                color: isSuccess ? Colors.green : Colors.red,
+                size: 80,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }
