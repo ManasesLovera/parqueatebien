@@ -107,7 +107,7 @@ class MapWidgetState extends State<MapWidget> {
     }
 
     if (_hasError) {
-      return const Center(child: Text('Failed to load location'));
+      return const Center(child: Text(''));
     }
 
     return Padding(
