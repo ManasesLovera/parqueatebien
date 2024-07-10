@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/Pages/_02_2_Consulta/_02_report_info.dart';
+import 'package:frontend_android/Pages/_02_4_Reporte_De_Consulta/_02_report_info.dart';
 
 const Color lightBlueColor = Color(0xFF009DD4); // Azul Claro
 const Color darkBlueColor = Color(0xFF010F56); // Azul Oscuro

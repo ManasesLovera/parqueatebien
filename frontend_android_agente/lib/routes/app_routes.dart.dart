@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../Pages/Confirmation/_03_confirmation.dart';
-import '../Pages/Fhoto/_02_foto.dart';
-import '../Pages/OnError/_05_error.dart';
-import '../Pages/Success/_04_success.dart';
+import '../Pages/_02_1.2_Confirmation/_03_confirmation.dart';
+import '../Pages/_02_1.1_Fhoto/_02_foto.dart';
+import '../Pages/_02_1.4_OnError/_05_error.dart';
+import '../Pages/_02_1.3_Success/_04_success.dart';
 import '../Pages/_00.1_Forgot/_01_forgot_.dart';
 import '../Pages/_00_Login/_00_login.dart';
 import '../Pages/_01_Welcome/welcome.dart';

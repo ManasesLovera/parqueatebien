@@ -5,7 +5,7 @@ import 'package:frontend_android/Handlers/Reportes/report_handler.dart';
 import 'package:frontend_android/Pages/_01_Welcome/welcome.dart';
 import 'package:frontend_android/Widgets/Map_Global/map_global.dart';
 import 'package:frontend_android/Widgets/Reportes/report_widgets.dart';
-import 'package:frontend_android/routes/app_routes.dart.dart';
+import 'package:geolocator/geolocator.dart';
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
@@ -32,22 +32,8 @@ class ReportScreenState extends State<ReportScreen> {
     _formController = FormControllerReport(handlers: _formHandlers);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _formController.init(context); // Pass the context here
+      _formHandlers.getLocation(context); // Get location initially
     });
-  }
-
-  void submitReport() {
-    Navigator.pushNamed(
-      context,
-      AppRoutes.foto,
-      arguments: {
-        'plateNumber': 'ABC123',
-        'vehicleType': 'Car',
-        'color': 'Red',
-        'address': '123 Main St',
-        'latitude': '37.7749',
-        'longitude': '-122.4194',
-      },
-    );
   }
 
   @override
@@ -180,10 +166,25 @@ class ReportScreenState extends State<ReportScreen> {
                     SizedBox(height: 2.h),
                     const DownTextVehiculoText(),
                     SizedBox(height: 20.h),
-                    MapWidget(
-                      height: 125.h,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 14.h, vertical: 0.w),
+                    StreamBuilder<Position>(
+                      stream: _formHandlers.positionStream,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                                ConnectionState.active &&
+                            snapshot.hasData) {
+                          return MapWidget(
+                            height: 125.h,
+                            lat: snapshot.data!.latitude,
+                            lon: snapshot.data!.longitude,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 14.h, vertical: 0.w),
+                          );
+                        } else {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      },
                     ),
                     SizedBox(height: 16.h),
                     SizedBox(

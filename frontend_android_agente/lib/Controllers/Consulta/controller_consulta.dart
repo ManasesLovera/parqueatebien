@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_android/APis/_01.1_consulta_.dart';
 import 'package:frontend_android/Handlers/Consulta/dialog_success_error_consulta.dart';
-import 'package:frontend_android/Pages/_02_2_Consulta/_01_detalles_vehiculo_consult.dart';
+import 'package:frontend_android/Pages/_02_3_Detalle_De_Consulta/_01_detalles_vehiculo_consult.dart';
 
 class EnterPlateNumberController {
   final TextEditingController plateController = TextEditingController();
