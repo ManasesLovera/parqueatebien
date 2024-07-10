@@ -192,7 +192,7 @@ class ForgotPasswordText extends StatelessWidget {
         Navigator.of(context).pushNamed('/forgot');
       },
       child: Text(
-        '¿Olvidaste La Contraseña?',
+        '¿Olvidaste la contraseña?',
         style: TextStyle(
           color: Colors.white,
           fontSize: 12.h,

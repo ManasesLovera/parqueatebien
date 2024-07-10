@@ -26,7 +26,7 @@ class Welcome extends StatelessWidget {
         return false; // Prevents the screen from being removed automatically
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 12.h),

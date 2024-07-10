@@ -1,22 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android/Controllers/Reporte/form_controller.dart';
-import 'package:frontend_android/Handlers/Reportes/form_handlers.dart';
+import 'package:frontend_android/Handlers/Reportes/report_handler.dart';
 import 'package:frontend_android/Pages/_01_Welcome/welcome.dart';
-import 'package:frontend_android/Widgets/Reportes/_00_tittletext.dart';
-import 'package:frontend_android/Widgets/Reportes/_01_subtitulo.dart';
-import 'package:frontend_android/Widgets/Reportes/_03_placatext.dart';
-import 'package:frontend_android/Widgets/Reportes/_04_plate_widget.dart';
-import 'package:frontend_android/Widgets/Reportes/_05_tipovehiculotext.dart';
-import 'package:frontend_android/Widgets/Reportes/_06_vehicle_type_widget.dart';
-import 'package:frontend_android/Widgets/Reportes/_07_colortext.dart';
-import 'package:frontend_android/Widgets/Reportes/_08_color_widget.dart';
-import 'package:frontend_android/Widgets/Reportes/_08_referenciatext.dart';
-import 'package:frontend_android/Widgets/Reportes/_09_reference_widget.dart';
-import 'package:frontend_android/Widgets/Reportes/_10_referenciatextdown.dart';
-import 'package:frontend_android/Widgets/Reportes/_12_nextbuttom.dart';
-import 'package:frontend_android/Widgets/Reportes/_13_map.dart';
-import 'package:go_router/go_router.dart'; // Asegúrate de importar tu pantalla de ReportOrConsult
+import 'package:frontend_android/Widgets/Map_Global/map_global.dart';
+import 'package:frontend_android/Widgets/Reportes/report_widgets.dart';
+import 'package:frontend_android/routes/app_routes.dart.dart';
+
+
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
@@ -27,32 +18,38 @@ class ReportScreen extends StatefulWidget {
 
 class ReportScreenState extends State<ReportScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late FormController _formController;
-  late FormHandlers _formHandlers;
+  late FormControllerReport _formController;
+  late FormHandlersReport _formHandlers;
 
   @override
   void initState() {
     super.initState();
-    _formHandlers = FormHandlers(
+    _formHandlers = FormHandlersReport(
       formKey: _formKey,
       plateController: TextEditingController(),
       addressController: TextEditingController(),
       showSnackBar: _showSnackBar,
-      showDialog: _showDialog,
+      showDialog: (message) => _showDialog(context, message),
     );
-    _formController = FormController(handlers: _formHandlers);
-    _formController.init();
+    _formController = FormControllerReport(handlers: _formHandlers);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _formController.init(context); // Pass the context here
+    });
   }
 
   void submitReport() {
-    context.go('/foto', extra: {
-      'plateNumber': 'ABC123',
-      'vehicleType': 'Car',
-      'color': 'Red',
-      'address': '123 Main St',
-      'latitude': '37.7749',
-      'longitude': '-122.4194',
-    });
+    Navigator.pushNamed(
+      context,
+      AppRoutes.foto,
+      arguments: {
+        'plateNumber': 'ABC123',
+        'vehicleType': 'Car',
+        'color': 'Red',
+        'address': '123 Main St',
+        'latitude': '37.7749',
+        'longitude': '-122.4194',
+      },
+    );
   }
 
   @override
@@ -66,7 +63,7 @@ class ReportScreenState extends State<ReportScreen> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  void _showDialog(String message) {
+  void _showDialog(BuildContext context, String message) {
     List<String> parts = message.split('|');
     String title = parts.length > 1 ? parts[0] : 'Error';
     String content = parts.length > 1 ? parts[1] : message;
@@ -93,20 +90,20 @@ class ReportScreenState extends State<ReportScreen> {
       _formHandlers.colorTouched = true;
       _formHandlers.addressFieldTouched = true;
     });
-    _formHandlers.validateForm();
+    _formHandlers.validateOnSubmit(context); // Pass the context here
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.of(context).pushAndRemoveUntil(
+        Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const Welcome()),
-          (Route<dynamic> route) => false,
         );
-        return false;
+        return true;
       },
       child: Scaffold(
+        backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 0.h),
@@ -118,12 +115,12 @@ class ReportScreenState extends State<ReportScreen> {
                     if (_formHandlers.latitude != null &&
                         _formHandlers.longitude != null)
                       SizedBox(height: 20.h),
-                    const TittleText(),
+                    const TitleText(),
                     SizedBox(height: 10.h),
-                    const DatosdelVehiculo(),
+                    const DatosDelVehiculo(),
                     SizedBox(height: 30.h),
                     const NumeroPlaca(),
-                    PlateWidget(
+                    PlateWidgetReport(
                       controller: _formHandlers.plateController,
                       touched: _formHandlers.plateFieldTouched,
                       focusNode: FocusNode(),
@@ -132,9 +129,11 @@ class ReportScreenState extends State<ReportScreen> {
                           _formHandlers.plateFieldTouched = false;
                         });
                       },
+                      validateField: (field) =>
+                          _formHandlers.validateField(context, field),
                     ),
-                    const SizedBox(height: 20),
-                    const TipodeVehiculo(),
+                    SizedBox(height: 20.h),
+                    const TipoDeVehiculo(),
                     VehicleTypeWidget(
                       selectedValue: _formHandlers.selectedVehicleType,
                       focusNode: FocusNode(),
@@ -147,9 +146,11 @@ class ReportScreenState extends State<ReportScreen> {
                       },
                       touched: _formHandlers.vehicleTypeTouched,
                       onValidate: _onValidate,
+                      validateField: (field) =>
+                          _formHandlers.validateField(context, field),
                     ),
-                    const SizedBox(height: 20),
-                    const ColorText(),
+                    SizedBox(height: 20.h),
+                    const ColorReporte(),
                     ColorWidget(
                       selectedValue: _formHandlers.selectedColor,
                       focusNode: FocusNode(),
@@ -162,8 +163,10 @@ class ReportScreenState extends State<ReportScreen> {
                       },
                       touched: _formHandlers.colorTouched,
                       onValidate: _onValidate,
+                      validateField: (field) =>
+                          _formHandlers.validateField(context, field),
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20.h),
                     const Referencia(),
                     AddressWidget(
                       controller: _formHandlers.addressController,
@@ -176,14 +179,20 @@ class ReportScreenState extends State<ReportScreen> {
                       },
                       onValidate: _onValidate,
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2.h),
                     const DownTextVehiculoText(),
-                    const SizedBox(height: 20),
-                    const MapWidget(),
-                    const SizedBox(height: 20),
-                    NextButton(
-                      formHandlers: _formHandlers,
-                      onValidate: _onValidate,
+                    SizedBox(height: 20.h),
+                    MapWidget(
+                      height: 125.h,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 14.h, vertical: 0.w),
+                    ),
+                    SizedBox(height: 12.h),
+                    SizedBox(
+                      child: NextButton(
+                        formHandlers: _formHandlers,
+                        onValidate: _onValidate,
+                      ),
                     ),
                   ],
                 ),

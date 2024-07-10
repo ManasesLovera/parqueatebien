@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:frontend_android/APis/location.dart';
+import 'package:frontend_android/APis/_03_location.dart';
 
 class MapWidget extends StatefulWidget {
   final double? lat;
   final double? lon;
+  final double height;
+  final BorderRadius? borderRadius;
+  final EdgeInsetsGeometry? padding;
 
-  const MapWidget({super.key, this.lat, this.lon});
+  const MapWidget({
+    super.key,
+    this.lat,
+    this.lon,
+    this.height = 140.0, // Valor por defecto del alto del widget
+    this.borderRadius,
+    this.padding,
+  });
 
   @override
   MapWidgetState createState() => MapWidgetState();
@@ -101,22 +110,25 @@ class MapWidgetState extends State<MapWidget> {
       return const Center(child: Text('Failed to load location'));
     }
 
-    return SizedBox(
-      height: 140.w,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(0.r),
-        child: GoogleMap(
-          onMapCreated: _onMapCreated,
-          initialCameraPosition: CameraPosition(
-            target: _currentPosition != null
-                ? LatLng(
-                    _currentPosition!.latitude, _currentPosition!.longitude)
-                : const LatLng(0, 0),
-            zoom: 13.0,
+    return Padding(
+      padding: widget.padding ?? EdgeInsets.zero,
+      child: SizedBox(
+        height: widget.height,
+        child: ClipRRect(
+          borderRadius: widget.borderRadius ?? BorderRadius.circular(0),
+          child: GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: CameraPosition(
+              target: _currentPosition != null
+                  ? LatLng(
+                      _currentPosition!.latitude, _currentPosition!.longitude)
+                  : const LatLng(0, 0),
+              zoom: 13.0,
+            ),
+            markers: _markers,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: true,
           ),
-          markers: _markers,
-          myLocationEnabled: true,
-          myLocationButtonEnabled: true,
         ),
       ),
     );

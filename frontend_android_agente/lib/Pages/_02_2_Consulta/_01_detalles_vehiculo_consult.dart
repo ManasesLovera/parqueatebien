@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/APis/status_update.dart';
-import 'package:frontend_android/Widgets/Reportes/_13_map.dart';
+import 'package:frontend_android/APis/_04_status_update.dart';
 import 'package:frontend_android/Widgets/Consulta/vehicle_details_widgets.dart';
+import 'package:frontend_android/Widgets/Map_Global/map_global.dart';
 
 class VehicleDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> vehicleData;
@@ -28,7 +28,8 @@ class VehicleDetailsScreen extends StatelessWidget {
         username: 'your_username',
       );
 
-      bool success = await ApiServiceUpdate.updateVehicleStatus(changeStatusDTO);
+      bool success =
+          await ApiServiceUpdate.updateVehicleStatus(changeStatusDTO);
       if (!context.mounted) return;
 
       if (success) {

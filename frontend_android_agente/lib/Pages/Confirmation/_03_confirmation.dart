@@ -1,11 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/Widgets/Reportes/_13_map.dart';
-import 'package:frontend_android/APis/add_licence.dart';
+import 'package:frontend_android/APis/_02_report.dart';
+import 'package:frontend_android/Widgets/Map_Global/map_global.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+const Color lightBlueColor = Color(0xFF009DD4); // Azul Claro
+const Color darkBlueColor = Color(0xFF010F56); // Azul Oscuro
+const Color greyTextColor = Color(0xFF494A4D); // Gris (Texto)
 
 class ConfirmationScreen extends StatefulWidget {
   final String plateNumber;
@@ -75,7 +79,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
       logger.i('Creating report with data: $reportData');
       logger.i('Images: ${images.length}');
 
-      var response = await ApiService.createReport(reportData, images)
+      var response = await ApiServiceReport.createReport(reportData, images)
           .timeout(const Duration(seconds: 30));
 
       logger.i('Response status: ${response.statusCode}');
@@ -138,7 +142,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -156,7 +160,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                         style: TextStyle(
                           fontSize: 20.h,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blue,
+                          color: lightBlueColor,
                         ),
                       ),
                     ),
@@ -170,7 +174,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                       style: TextStyle(
                         fontSize: 14.h,
                         fontWeight: FontWeight.bold,
-                        color: Colors.grey,
+                        color: greyTextColor,
                       ),
                     ),
                   ),
@@ -179,7 +183,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                 Text(
                   'Numero de placa',
                   style: TextStyle(
-                    color: Colors.blue,
+                    color: const Color(0xFF010F56),
                     fontSize: 11.h,
                     fontWeight: FontWeight.bold,
                   ),
@@ -196,7 +200,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                 Text(
                   'Tipo de vehiculo',
                   style: TextStyle(
-                    color: Colors.blue,
+                    color: const Color(0xFF010F56),
                     fontSize: 11.h,
                     fontWeight: FontWeight.bold,
                   ),
@@ -213,7 +217,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                 Text(
                   'Color',
                   style: TextStyle(
-                    color: Colors.blue,
+                    color: const Color(0xFF010F56),
                     fontSize: 11.h,
                     fontWeight: FontWeight.bold,
                   ),
@@ -230,7 +234,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                 Text(
                   'Referencia',
                   style: TextStyle(
-                    color: Colors.blue,
+                    color: const Color(0xFF010F56),
                     fontSize: 11.h,
                     fontWeight: FontWeight.bold,
                   ),
@@ -253,7 +257,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                     style: TextStyle(
                       fontSize: 11.h,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue,
+                      color: const Color(0xFF010F56),
                     ),
                   ),
                 SizedBox(height: 4.h),
@@ -278,7 +282,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                 ),
                 SizedBox(height: 2.h),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
+                  padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 4.h),
                   child: Column(
                     children: [
                       SizedBox(
@@ -287,7 +291,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                           onPressed: _createReport,
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(vertical: 8.h),
-                            backgroundColor: Colors.blueAccent,
+                            backgroundColor: const Color(0xFF010F56),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.r),
                             ),
@@ -312,7 +316,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(vertical: 8.h),
                             backgroundColor: Colors.white,
-                            side: const BorderSide(color: Colors.blue),
+                            side: const BorderSide(color: darkBlueColor),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.r),
                             ),
@@ -320,7 +324,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                           child: Text(
                             'Cancelar',
                             style: TextStyle(
-                              color: Colors.blue,
+                              color: darkBlueColor,
                               fontSize: 14.h,
                               fontWeight: FontWeight.bold,
                             ),

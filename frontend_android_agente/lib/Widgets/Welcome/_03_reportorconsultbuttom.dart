@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
+const Color lightBlueColor = Color(0xFF009DD4); // Azul Claro
+const Color darkBlueColor = Color(0xFF010F56); // Azul Oscuro
+const Color greyTextColor = Color(0xFF494A4D); // Gris (Texto)
+
 class ReportConsultButtom extends StatelessWidget {
   final String svgPath;
   final String title;
@@ -42,7 +46,7 @@ class ReportConsultButtom extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14.h,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+                        color: darkBlueColor,
                       ),
                     ),
                     Text(

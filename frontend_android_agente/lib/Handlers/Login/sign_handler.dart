@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:frontend_android/Controllers/Login/sigin_controller.dart';
-import 'package:frontend_android/Handlers/Login/__error_dialog.dart';
+import 'package:frontend_android/Handlers/Consulta/dialog_success_error_consulta.dart';
 
 Future<void> sign(
   BuildContext context,
@@ -22,6 +22,6 @@ Future<void> sign(
     }
   } catch (error) {
     if (!context.mounted) return;
-    errorDialog(context, error.toString());
+    showUniversalSuccessErrorDialogConsulta(context, error.toString(), false);
   }
 }
