@@ -325,9 +325,15 @@
     "password": string
 }
 ```
-4. PUT / -> `/api/citizen/updateStatus/{governmentId}`:
-    - Update status to true if false and to false if true
+4. PUT / -> `/api/citizen/updateStatus/`:
+    - Update status ("Nuevo", "Aprobado", "No aprobado")
     - 200 Ok, 404 NotFound
+```json
+{
+    "governmentId": string,
+    "status": string
+}
+```
 
 5. GET / -> `/api/citizenVehicle/{governmentId}`:
     - Returns a list of strings of all the vehicle a citizen has

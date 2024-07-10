@@ -20,9 +20,6 @@ public class CitizenDtoValidator : AbstractValidator<CitizenDto>
         RuleFor(x => x.Email)
             .NotEmpty().NotNull().WithMessage("Falta el correo");
 
-        RuleFor(x => x.Status)
-           .NotNull().WithMessage("Falta el estado");
-
         RuleFor(x => x.Password)
             .NotEmpty().NotEmpty().NotNull().WithMessage("Falta la contraseña");
 
