@@ -20,6 +20,13 @@ using backend.Validations;
 using System.Text.RegularExpressions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+builder.Logging.SetMinimumLevel(LogLevel.Debug);
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
@@ -33,9 +40,9 @@ builder.Services.AddCors(options =>
 });
 
 // Database connection EF
-//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite("Data Source=parqueatebien.db"));
+    options.UseSqlite(connectionString));
 
 //Token Generator
 builder.Services.AddScoped<TokenService>();
@@ -74,8 +81,17 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.Migrate();
-    ApplicationDbContext.Seed(db);
+    try
+    {
+        db.Database.Migrate();
+        ApplicationDbContext.Seed(db);
+    }
+    catch(Exception ex)
+    {
+        // Registrar el error
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Ocurrio un error aplicando las migraciones a la base de datos");
+    }
 }
 
 // Middleware para captura de errores
@@ -300,6 +316,7 @@ app.MapPut("/api/reporte/cancelar/{licensePlate}", async (ApplicationDbContext c
             return Results.Conflict(new { Message = "Already canceled" });
 
         report.Active = false;
+        report.Status = "Cancelado";
         await context.SaveChangesAsync();
         return Results.Ok();
     }
@@ -384,7 +401,12 @@ app.MapPost("/api/user/login", ([FromBody] UserLoginDto userDto, ApplicationDbCo
             var user = context.Users.FirstOrDefault(u => u.Username == userDto.Username
                                                     && u.Role == userDto.Role);
 
-            if (user == null || !BCrypt.Net.BCrypt.Verify(userDto.Password, user!.PasswordHash))
+            if( user == null)
+            {
+                return Results.NotFound("No se encontro el usuario.");
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(userDto.Password, user!.PasswordHash))
             {
                 return Results.Conflict(new { Message = "Usuario y/o contraseña incorrectos" });
             }
@@ -393,7 +415,7 @@ app.MapPost("/api/user/login", ([FromBody] UserLoginDto userDto, ApplicationDbCo
         }
         else
         {
-            return Results.BadRequest(new { Message = "Rol no existe." });
+            return Results.BadRequest(new { Message = "Rol no es valido." });
         }
     }
     catch(Exception ex)
@@ -553,7 +575,6 @@ app.MapPost("/api/citizen/register", async ([FromBody] CitizenDto citizenDto, Ap
             var validation = validatorCitizenVehicle.Validate(citizenVehicle);
             if (!validation.IsValid)
                 return Results.BadRequest(validation.Errors);
-            
         }
         var citizenExist = context.Citizens.FirstOrDefault(c => c.GovernmentId == citizenDto.GovernmentId);
         if (citizenExist != null)
@@ -561,6 +582,7 @@ app.MapPost("/api/citizen/register", async ([FromBody] CitizenDto citizenDto, Ap
         
         var citizen = _mapper.Map<Citizen>(citizenDto);
         citizen.PasswordHash = BCrypt.Net.BCrypt.HashPassword(citizenDto.Password);
+        citizen.Status = "Nuevo";
         foreach (var vehicle in citizen.Vehicles!)
         {
             context.Vehicles.Add(vehicle);
@@ -588,9 +610,13 @@ app.MapPost("/api/citizen/login", ([FromBody] CitizenLoginDto user, ApplicationD
         {
             return Results.Conflict(new { Message = "Cedula y/o contraseña incorrectos." });
         }
-        if (citizen.Status == false)
+        if ( new[] {"Nuevo"}.Contains(citizen.Status))
         {
             return Results.Conflict(new { Message = "Ciudadano aun no esta activo, espere a ser aceptado." });
+        }
+        else if (new[] { "No aprobado" }.Contains(citizen.Status))
+        {
+            return Results.Conflict(new { Message = "El ciudadano no fue aprobado, debes volver a registrarte." });
         }
         var token = tokenService.GenerateToken(user);
         return Results.Ok(token);
@@ -629,16 +655,20 @@ app.MapDelete("/api/citizen/{governmentId}", async (ApplicationDbContext context
 })
     .RequireAuthorization();
 
-app.MapPut("/api/citizen/updateStatus/{governmentId}", async (ApplicationDbContext context, [FromRoute] string governmentId) =>
+app.MapPut("/api/citizen/updateStatus/", async (ApplicationDbContext context, [FromBody] ChangeCitizenStatusDto changeCitizenStatusDto) =>
 {
     try
     {
-        var citizen = context.Citizens.FirstOrDefault(c => c.GovernmentId == governmentId);
+        if (!new[] { "Nuevo", "Aprobado", "No aprobado" }.Contains(changeCitizenStatusDto.Status))
+        {
+            return Results.BadRequest("Estatus no es valido.");
+        }
+        var citizen = context.Citizens.FirstOrDefault(c => c.GovernmentId == changeCitizenStatusDto.GovernmentId);
         if (citizen == null)
         {
             return Results.NotFound();
         }
-        citizen.Status = !citizen.Status;
+        citizen.Status = changeCitizenStatusDto.Status;
         await context.SaveChangesAsync();
         return Results.Ok();
     }

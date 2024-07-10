@@ -13,9 +13,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<Citizen> Citizens { get; set; }
     public DbSet<CitizenVehicle> Vehicles { get; set; }
     public DbSet<CraneCompany> CraneCompanies { get; set; }
-    public static void Seed (ApplicationDbContext context)
+    public static void Seed(ApplicationDbContext context)
     {
-        
         if (!context.CraneCompanies.Any())
         {
             context.CraneCompanies.AddRange(
