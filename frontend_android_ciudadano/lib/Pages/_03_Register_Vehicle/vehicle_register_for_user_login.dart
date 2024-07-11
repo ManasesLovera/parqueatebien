@@ -6,13 +6,16 @@ import 'package:frontend_android_ciudadano/Api/Add_Vehiculo/add_vechicle_api.dar
 import 'package:frontend_android_ciudadano/Blocs/VehiculoRegister/_00_registration_event.dart';
 import 'package:frontend_android_ciudadano/Blocs/VehiculoRegister/_01_registration_state.dart';
 import 'package:frontend_android_ciudadano/Blocs/VehiculoRegister/_02_registration_bloc.dart';
-import 'package:frontend_android_ciudadano/Pages/Welcome/_00_welcome.dart';
+import 'package:frontend_android_ciudadano/Pages/_01_Welcome/_00_welcome.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_00_app_bar.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_custom_textfield_.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_titlle_textfield_.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_02_custom_buttom_.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/color_dropdownselectitem.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/year_dropdownselectitem.dart';
+const Color lightBlueColor = Color(0xFF009DD4); // Azul Claro
+const Color darkBlueColor = Color(0xFF010F56); // Azul Oscuro
+const Color greyTextColor = Color(0xFF494A4D); // Gris (Texto)
 
 class RegisterNewCar extends StatefulWidget {
   const RegisterNewCar({super.key});
@@ -93,7 +96,7 @@ class _RegisterCarState extends State<RegisterNewCar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
       appBar: AppBarRegister(progress: progress),
       body: SafeArea(
         child: Padding(

@@ -5,7 +5,7 @@ import 'package:frontend_android_ciudadano/Api/ConsultPlates/consult_plates_api.
 import 'package:frontend_android_ciudadano/Blocs/VehiculoFetch/_00_vehicle_event.dart';
 import 'package:frontend_android_ciudadano/Blocs/VehiculoFetch/_01_vehicle_state.dart';
 import 'package:frontend_android_ciudadano/Blocs/VehiculoFetch/_02_vehicle_bloc.dart';
-import 'package:frontend_android_ciudadano/Pages/DatosVehiculoStatus/_02_detalles_info.dart';
+import 'package:frontend_android_ciudadano/Pages/_04_DatosVehiculoStatus/_02_detalles_info.dart';
 import 'package:frontend_android_ciudadano/Widgets/GlobalsWidgets/_00_logo_image.dart';
 import 'package:frontend_android_ciudadano/Widgets/Vehiculo/down_field.dart';
 import 'package:frontend_android_ciudadano/Widgets/Vehiculo/map_vehiculo.dart';

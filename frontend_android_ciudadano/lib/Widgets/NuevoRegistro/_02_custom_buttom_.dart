@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+const Color lightBlueColor = Color(0xFF009DD4); // Azul Claro
+const Color darkBlueColor = Color(0xFF010F56); // Azul Oscuro
+const Color greyTextColor = Color(0xFF494A4D); // Gris (Texto)
+
 class RegistroButtom extends StatelessWidget {
   final VoidCallback? onPressed;
   final String? text;
@@ -24,7 +28,7 @@ class RegistroButtom extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: isEnabled
-                  ? [Colors.grey[500]!, Colors.blue[500]!]
+                  ? [darkBlueColor, darkBlueColor]
                   : [Colors.grey[300]!, Colors.grey[400]!],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,

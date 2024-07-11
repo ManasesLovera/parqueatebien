@@ -5,8 +5,8 @@ import 'package:frontend_android_ciudadano/Api/ConsultPlates/consult_plates_api.
 import 'package:frontend_android_ciudadano/Blocs/VehiculoFetch/_00_vehicle_event.dart';
 import 'package:frontend_android_ciudadano/Blocs/VehiculoFetch/_01_vehicle_state.dart';
 import 'package:frontend_android_ciudadano/Blocs/VehiculoFetch/_02_vehicle_bloc.dart';
-import 'package:frontend_android_ciudadano/Pages/DatosVehiculoStatus/_01_vehiculo_data.dart';
-import 'package:frontend_android_ciudadano/Pages/Welcome/_00_welcome.dart';
+import 'package:frontend_android_ciudadano/Pages/_04_DatosVehiculoStatus/_01_vehiculo_data.dart';
+import 'package:frontend_android_ciudadano/Pages/_01_Welcome/_00_welcome.dart';
 
 
 Future<bool?> showVehicleDialog(BuildContext context, String governmentId) {
