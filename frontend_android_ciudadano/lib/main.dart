@@ -5,8 +5,11 @@ import 'package:frontend_android_ciudadano/Api/ConsultPlates/consult_plates_api.
 import 'package:frontend_android_ciudadano/Blocs/Login/Login_Bloc/_02_login_bloc.dart';
 import 'package:frontend_android_ciudadano/Blocs/VehiculoFetch/_00_vehicle_event.dart';
 import 'package:frontend_android_ciudadano/Blocs/VehiculoFetch/_02_vehicle_bloc.dart';
-import 'package:frontend_android_ciudadano/Pages/Login/_00_login.dart';
+import 'package:frontend_android_ciudadano/Pages/_00_Login/_00_login.dart';
 
+const Color lightBlueColor = Color(0xFF009DD4); // Azul Claro
+const Color darkBlueColor = Color(0xFF010F56); // Azul Oscuro
+const Color greyTextColor = Color(0xFF494A4D); // Gris (Texto)
 void main() => runApp(const M());
 
 class M extends StatelessWidget {

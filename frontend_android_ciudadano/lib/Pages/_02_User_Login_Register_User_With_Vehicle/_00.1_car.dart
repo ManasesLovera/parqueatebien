@@ -9,7 +9,7 @@ import 'package:frontend_android_ciudadano/Blocs/NuevoUser/register_event.dart';
 import 'package:frontend_android_ciudadano/Blocs/NuevoUser/register_state.dart';
 import 'package:frontend_android_ciudadano/Models/car_model.dart';
 import 'package:frontend_android_ciudadano/Models/user_model.dart';
-import 'package:frontend_android_ciudadano/Pages/Login/_00_login.dart';
+import 'package:frontend_android_ciudadano/Pages/_00_Login/_00_login.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_00_app_bar.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_custom_textfield_.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_titlle_textfield_.dart';
@@ -126,7 +126,7 @@ class _RegisterCarState extends State<RegisterCar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
         appBar: AppBarRegister(progress: progress),
         body: SafeArea(
             child: Padding(
@@ -144,7 +144,6 @@ class _RegisterCarState extends State<RegisterCar> {
                       Colors.green,
                     );
                     Future.delayed(const Duration(seconds: 2), () {
-                      // Navigate to login screen after showing the success dialog
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                           builder: (context) => const Login(),

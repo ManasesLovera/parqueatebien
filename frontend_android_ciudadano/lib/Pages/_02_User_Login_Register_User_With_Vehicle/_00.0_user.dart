@@ -5,11 +5,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android_ciudadano/Api/Add_User/user_register_api.dart';
 import 'package:frontend_android_ciudadano/Blocs/NuevoUser/register_bloc.dart';
 import 'package:frontend_android_ciudadano/Blocs/NuevoUser/register_state.dart';
-import 'package:frontend_android_ciudadano/Pages/User_Login_Register_User_With_Vehicle/_00.1_car.dart';
+import 'package:frontend_android_ciudadano/Pages/_02_User_Login_Register_User_With_Vehicle/_00.1_car.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_00_app_bar.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_custom_textfield_.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_titlle_textfield_.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_02_custom_buttom_.dart';
+
 
 class RegisterUser extends StatefulWidget {
   const RegisterUser({super.key});
@@ -58,7 +59,7 @@ class _RegisterUserState extends State<RegisterUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
         appBar: AppBarRegister(progress: progress),
         body: SafeArea(
             child: Padding(

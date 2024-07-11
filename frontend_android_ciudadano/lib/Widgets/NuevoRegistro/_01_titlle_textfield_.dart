@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+const Color lightBlueColor = Color(0xFF009DD4); // Azul Claro
+const Color darkBlueColor = Color(0xFF010F56); // Azul Oscuro
+const Color greyTextColor = Color(0xFF494A4D); // Gris (Texto)
+
 class CustomText extends StatelessWidget {
   final String text;
   final Color color;
@@ -11,7 +15,7 @@ class CustomText extends StatelessWidget {
   const CustomText({
     super.key,
     required this.text,
-    this.color = Colors.deepPurple,
+    this.color = darkBlueColor,
     this.fontSize = 11.0,
     this.fontWeight = FontWeight.normal,
     this.textAlign = TextAlign.left,

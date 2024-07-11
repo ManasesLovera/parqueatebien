@@ -5,8 +5,8 @@ import 'package:frontend_android_ciudadano/Api/ConsultPlates/consult_plates_api.
 import 'package:frontend_android_ciudadano/Blocs/VehiculoFetch/_00_vehicle_event.dart';
 import 'package:frontend_android_ciudadano/Blocs/VehiculoFetch/_01_vehicle_state.dart';
 import 'package:frontend_android_ciudadano/Blocs/VehiculoFetch/_02_vehicle_bloc.dart';
-import 'package:frontend_android_ciudadano/Pages/DatosVehiculoStatus/_00_consulta_.dart';
-import 'package:frontend_android_ciudadano/Pages/User_Login_Register_Vehicle/vehicle_register_for_user_login.dart';
+import 'package:frontend_android_ciudadano/Pages/_04_DatosVehiculoStatus/_00_consulta_.dart';
+import 'package:frontend_android_ciudadano/Pages/_03_Register_Vehicle/vehicle_register_for_user_login.dart';
 import 'package:frontend_android_ciudadano/Widgets/GlobalsWidgets/_00_logo_image.dart';
 import 'package:frontend_android_ciudadano/Widgets/Welcome/_01_welcometext.dart';
 import 'package:frontend_android_ciudadano/Widgets/Welcome/_02_subtituloreport.dart';

@@ -5,7 +5,7 @@ import 'package:frontend_android_ciudadano/Blocs/Login/ButtomLoginState/buttom_i
 import 'package:frontend_android_ciudadano/Blocs/Login/Login_Bloc/_00_login_event.dart';
 import 'package:frontend_android_ciudadano/Blocs/Login/Login_Bloc/_01_login_state.dart';
 import 'package:frontend_android_ciudadano/Blocs/Login/Login_Bloc/_02_login_bloc.dart';
-import 'package:frontend_android_ciudadano/Pages/Welcome/_00_welcome.dart';
+import 'package:frontend_android_ciudadano/Pages/_01_Welcome/_00_welcome.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_02_custom_buttom_.dart';
 
 class SignInBlocBuilder extends StatelessWidget {
@@ -47,7 +47,6 @@ class SignInBlocBuilder extends StatelessWidget {
                 },
               ),
             SizedBox(height: 4.h),
-            // Mensaje
             if (state is LoginFailure)
               Column(
                 children: [
