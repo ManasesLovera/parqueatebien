@@ -91,8 +91,9 @@ class LoginState extends State<Login> {
                       valueListenable: _isFilled,
                       builder: (context, isFilled, child) {
                         return SignInButton(
-                          onPressed:
-                              isFilled ? () => signHandler(context, _iD, _pass) : null,
+                          onPressed: isFilled
+                              ? () => signHandler(context, _iD, _pass)
+                              : null,
                           isFilled: isFilled,
                         );
                       },
