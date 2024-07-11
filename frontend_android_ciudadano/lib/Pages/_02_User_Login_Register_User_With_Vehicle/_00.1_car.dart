@@ -1,23 +1,20 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android_ciudadano/Api/Add_User/user_register_api.dart';
 import 'package:frontend_android_ciudadano/Blocs/NuevoUser/register_bloc.dart';
-import 'package:frontend_android_ciudadano/Blocs/NuevoUser/register_event.dart';
 import 'package:frontend_android_ciudadano/Blocs/NuevoUser/register_state.dart';
-import 'package:frontend_android_ciudadano/Models/car_model.dart';
-import 'package:frontend_android_ciudadano/Models/user_model.dart';
+import 'package:frontend_android_ciudadano/Controllers/User_Register_Vehicle/register_car_controller.dart';
+import 'package:frontend_android_ciudadano/Handlers/User_vehicle_Register/dialog_success_error_cart.dart';
 import 'package:frontend_android_ciudadano/Pages/_00_Login/_00_login.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_00_app_bar.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_custom_textfield_.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_titlle_textfield_.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_02_custom_buttom_.dart';
+import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/car_dropdownselectitem.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/color_dropdownselectitem.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/year_dropdownselectitem.dart';
-
-import 'package:logger/logger.dart';
 
 class RegisterCar extends StatefulWidget {
   final String governmentId;
@@ -40,96 +37,21 @@ class RegisterCar extends StatefulWidget {
 }
 
 class _RegisterCarState extends State<RegisterCar> {
-  final numplacaC = TextEditingController();
-  final modeloC = TextEditingController();
-  String? selectedYear;
-  String? selectedColor;
-  final matriculaC = TextEditingController();
-  final double progress = 170;
-  final List<String> colores = ['Rojo', 'Azul', 'Verde', 'Negro', 'Blanco'];
-  final List<String> years =
-      List<String>.generate(124, (i) => (DateTime.now().year - i).toString());
-  final Logger _logger = Logger();
-
-  final ValueNotifier<bool> isButtonEnabled = ValueNotifier<bool>(false);
+  final controller = RegisterCarController();
 
   @override
-  void initState() {
-    super.initState();
-    numplacaC.addListener(_updateButtonState);
-    modeloC.addListener(_updateButtonState);
-    matriculaC.addListener(_updateButtonState);
-  }
-
-  void _updateButtonState() {
-    isButtonEnabled.value = numplacaC.text.isNotEmpty &&
-        modeloC.text.isNotEmpty &&
-        selectedYear != null &&
-        selectedColor != null &&
-        matriculaC.text.isNotEmpty;
-  }
-
-  bool _validateFields() {
-    if (numplacaC.text.isEmpty ||
-        modeloC.text.isEmpty ||
-        selectedYear == null ||
-        selectedColor == null ||
-        matriculaC.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Todos los campos son obligatorios')),
-      );
-      return false;
-    }
-    if (!RegExp(r'^[A-Z]\d{6}$').hasMatch(numplacaC.text)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text(
-                'Número de placa debe iniciar con una letra seguida de 6 números')),
-      );
-      return false;
-    }
-    if (matriculaC.text.length != 9) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('La matrícula debe tener 9 caracteres')),
-      );
-      return false;
-    }
-    return true;
-  }
-
-  void _register(BuildContext context) {
-    if (_validateFields()) {
-      final vehicle = Vehicle(
-        governmentId: widget.governmentId,
-        licensePlate: numplacaC.text,
-        registrationDocument: matriculaC.text,
-        model: modeloC.text,
-        year: selectedYear!,
-        color: selectedColor!,
-      );
-
-      final user = User(
-        governmentId: widget.governmentId,
-        name: widget.name,
-        lastname: widget.lastname,
-        email: widget.email,
-        password: widget.password,
-        vehicles: [vehicle],
-      );
-
-      _logger.i('Request body: ${jsonEncode(user.toJson())}');
-
-      context.read<RegisterBloc>().add(RegisterSubmitted(user));
-    }
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
-        appBar: AppBarRegister(progress: progress),
-        body: SafeArea(
-            child: Padding(
+      backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
+      appBar: const AppBarRegister(progress: 170),
+      body: SafeArea(
+        child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 0.h),
           child: SingleChildScrollView(
             child: BlocProvider(
@@ -137,27 +59,20 @@ class _RegisterCarState extends State<RegisterCar> {
               child: BlocListener<RegisterBloc, RegisterState>(
                 listener: (context, state) {
                   if (state is RegisterSuccess) {
-                    _showUniversalSuccessErrorDialog(
-                      context,
-                      'Registro exitoso',
-                      Icons.check_circle,
-                      Colors.green,
-                    );
+                    showUniversalSuccessErrorDialogCar(
+                        context, 'Registro exitoso', true);
                     Future.delayed(const Duration(seconds: 2), () {
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
-                          builder: (context) => const Login(),
+                          builder: (context) =>
+                              const Login(), // Reemplazar con tu pantalla de login
                         ),
                         (Route<dynamic> route) => false,
                       );
                     });
                   } else if (state is RegisterFailure) {
-                    _showUniversalSuccessErrorDialog(
-                      context,
-                      state.error,
-                      Icons.warning,
-                      Colors.orange,
-                    );
+                    showUniversalSuccessErrorDialogCar(
+                        context, state.error, false);
                   }
                 },
                 child: BlocBuilder<RegisterBloc, RegisterState>(
@@ -181,7 +96,7 @@ class _RegisterCarState extends State<RegisterCar> {
                           text: 'Numero de placa',
                         ),
                         CustomTextField(
-                          controller: numplacaC,
+                          controller: controller.numplacaC,
                           hintText: 'Ingresar numero',
                           inputFormatters: [LicensePlateFormatter()],
                         ),
@@ -189,22 +104,29 @@ class _RegisterCarState extends State<RegisterCar> {
                         const CustomText(
                           text: 'Modelo',
                         ),
-                        CustomTextField(
-                          controller: modeloC,
-                          hintText: 'Ingresar modelo',
+                        CarDropdownSelectItem(
+                          items: controller.models,
+                          selectedItem: controller.selectedModel,
+                          onChanged: (value) {
+                            setState(() {
+                              controller.selectedModel = value;
+                              controller.updateButtonState();
+                            });
+                          },
+                          hintText: 'Seleccionar modelo',
                         ),
                         SizedBox(height: 16.h),
                         const CustomText(
                           text: 'Año',
                         ),
                         YearDropdownSelectItem(
-                          items: years,
-                          selectedItem: selectedYear,
+                          items: controller.years,
+                          selectedItem: controller.selectedYear,
                           onChanged: (value) {
                             setState(() {
-                              selectedYear = value;
+                              controller.selectedYear = value;
+                              controller.updateButtonState();
                             });
-                            _updateButtonState();
                           },
                           hintText: 'Seleccionar año',
                         ),
@@ -213,13 +135,13 @@ class _RegisterCarState extends State<RegisterCar> {
                           text: 'Color',
                         ),
                         ColorDropdown(
-                          items: colores,
-                          selectedItem: selectedColor,
+                          items: controller.colors,
+                          selectedItem: controller.selectedColor,
                           onChanged: (value) {
                             setState(() {
-                              selectedColor = value;
+                              controller.selectedColor = value;
+                              controller.updateButtonState();
                             });
-                            _updateButtonState();
                           },
                           hintText: 'Seleccionar color',
                         ),
@@ -228,7 +150,7 @@ class _RegisterCarState extends State<RegisterCar> {
                           text: 'Matricula',
                         ),
                         CustomTextField(
-                          controller: matriculaC,
+                          controller: controller.matriculaC,
                           hintText: 'Ingresar numero de matricula',
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(9),
@@ -239,11 +161,17 @@ class _RegisterCarState extends State<RegisterCar> {
                           const CircularProgressIndicator()
                         else
                           ValueListenableBuilder<bool>(
-                            valueListenable: isButtonEnabled,
+                            valueListenable: controller.isButtonEnabled,
                             builder: (context, isEnabled, child) {
                               return RegistroButtom(
-                                onPressed:
-                                    isEnabled ? () => _register(context) : null,
+                                onPressed: isEnabled
+                                    ? () => controller.register(context, widget)
+                                    : () {
+                                        showUniversalSuccessErrorDialogCar(
+                                            context,
+                                            'Todos los campos son obligatorios',
+                                            false);
+                                      },
                                 text: 'Registrarse',
                                 isEnabled: isEnabled,
                               );
@@ -256,11 +184,11 @@ class _RegisterCarState extends State<RegisterCar> {
               ),
             ),
           ),
-        )));
+        ),
+      ),
+    );
   }
 }
-
-class ColorDropdownSelectItem {}
 
 class LicensePlateFormatter extends TextInputFormatter {
   @override
@@ -288,45 +216,4 @@ class LicensePlateFormatter extends TextInputFormatter {
     }
     return oldValue;
   }
-}
-
-void _showUniversalSuccessErrorDialog(
-    BuildContext context, String message, IconData icon, Color iconColor) {
-  showDialog(
-    context: context,
-    barrierDismissible: false, // No permitir cerrar el diálogo tocando fuera
-    builder: (BuildContext context) {
-      // Cerrar el diálogo automáticamente después de 2 segundos
-      Future.delayed(const Duration(seconds: 2), () {
-        if (Navigator.of(context).canPop()) {
-          Navigator.of(context).pop();
-        }
-      });
-
-      return PopScope(
-        onPopInvoked: (shouldPop) => false, // Deshabilitar botón de retroceso
-        child: AlertDialog(
-          title: const SizedBox.shrink(), // No mostrar título
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                icon, // Ícono dinámico
-                color: iconColor, // Color dinámico
-                size: 48.0,
-              ),
-              SizedBox(height: 16.h),
-              Text(
-                message,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16.h,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    },
-  );
 }

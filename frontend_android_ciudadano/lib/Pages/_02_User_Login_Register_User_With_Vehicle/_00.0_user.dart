@@ -5,64 +5,37 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android_ciudadano/Api/Add_User/user_register_api.dart';
 import 'package:frontend_android_ciudadano/Blocs/NuevoUser/register_bloc.dart';
 import 'package:frontend_android_ciudadano/Blocs/NuevoUser/register_state.dart';
-import 'package:frontend_android_ciudadano/Pages/_02_User_Login_Register_User_With_Vehicle/_00.1_car.dart';
+import 'package:frontend_android_ciudadano/Controllers/User_Register_Vehicle/user_vehicle_register_controller.dart';
+import 'package:frontend_android_ciudadano/Handlers/Login/dialog_success_error_user.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_00_app_bar.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_custom_textfield_.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_titlle_textfield_.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_02_custom_buttom_.dart';
+import 'package:frontend_android_ciudadano/Pages/_02_User_Login_Register_User_With_Vehicle/_00.1_car.dart';
 
-
-class RegisterUser extends StatefulWidget {
-  const RegisterUser({super.key});
+class RegisterUserScreen extends StatefulWidget {
+  const RegisterUserScreen({super.key});
 
   @override
-  State<RegisterUser> createState() => _RegisterUserState();
+  State<RegisterUserScreen> createState() => _RegisterUserScreenState();
 }
 
-class _RegisterUserState extends State<RegisterUser> {
-  final cedulaC = TextEditingController();
-  //
-  bool obscureText = true;
-  //
-  final nombresC = TextEditingController();
-  final apellidosC = TextEditingController();
-  final correoC = TextEditingController();
-  final passC = TextEditingController();
-  final confirmPassC = TextEditingController();
-  final double progress = 50;
-  final RegExp emailRegex = RegExp(
-    r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
-  );
-
-  final ValueNotifier<bool> isButtonEnabled = ValueNotifier<bool>(false);
+class _RegisterUserScreenState extends State<RegisterUserScreen> {
+  final controller = RegisterUserController();
 
   @override
-  void initState() {
-    super.initState();
-    cedulaC.addListener(_updateButtonState);
-    nombresC.addListener(_updateButtonState);
-    apellidosC.addListener(_updateButtonState);
-    correoC.addListener(_updateButtonState);
-    passC.addListener(_updateButtonState);
-    confirmPassC.addListener(_updateButtonState);
-  }
-
-  void _updateButtonState() {
-    isButtonEnabled.value = cedulaC.text.isNotEmpty &&
-        nombresC.text.isNotEmpty &&
-        apellidosC.text.isNotEmpty &&
-        correoC.text.isNotEmpty &&
-        passC.text.isNotEmpty &&
-        confirmPassC.text.isNotEmpty;
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
-        appBar: AppBarRegister(progress: progress),
-        body: SafeArea(
-            child: Padding(
+      backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
+      appBar: AppBarRegister(progress: controller.progress),
+      body: SafeArea(
+        child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 0.h),
           child: SingleChildScrollView(
             child: BlocProvider(
@@ -70,13 +43,24 @@ class _RegisterUserState extends State<RegisterUser> {
               child: BlocListener<RegisterBloc, RegisterState>(
                 listener: (context, state) {
                   if (state is RegisterSuccess) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Registro exitoso')),
-                    );
+                    showUniversalSuccessErrorDialog(
+                        context, 'Registro exitoso', true);
+                    Future.delayed(const Duration(seconds: 2), () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => RegisterCar(
+                            governmentId: controller.cedulaC.text,
+                            name: controller.nombresC.text,
+                            lastname: controller.apellidosC.text,
+                            email: controller.correoC.text,
+                            password: controller.passC.text,
+                          ),
+                        ),
+                      );
+                    });
                   } else if (state is RegisterFailure) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.error)),
-                    );
+                    showUniversalSuccessErrorDialog(
+                        context, state.error, false);
                   }
                 },
                 child: BlocBuilder<RegisterBloc, RegisterState>(
@@ -100,7 +84,7 @@ class _RegisterUserState extends State<RegisterUser> {
                           text: 'Cedula',
                         ),
                         CustomTextField(
-                          controller: cedulaC,
+                          controller: controller.cedulaC,
                           hintText: 'Ingresar numero de cedula sin guiones',
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
@@ -112,7 +96,7 @@ class _RegisterUserState extends State<RegisterUser> {
                           text: 'Nombres',
                         ),
                         CustomTextField(
-                          controller: nombresC,
+                          controller: controller.nombresC,
                           hintText: 'Ingresar nombres',
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(
@@ -124,7 +108,7 @@ class _RegisterUserState extends State<RegisterUser> {
                           text: 'Apellidos',
                         ),
                         CustomTextField(
-                          controller: apellidosC,
+                          controller: controller.apellidosC,
                           hintText: 'Ingresar apellidos',
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(
@@ -136,7 +120,7 @@ class _RegisterUserState extends State<RegisterUser> {
                           text: 'Correo',
                         ),
                         CustomTextField(
-                          controller: correoC,
+                          controller: controller.correoC,
                           hintText: 'Ingresar correo',
                           keyboardType: TextInputType.emailAddress,
                         ),
@@ -145,18 +129,19 @@ class _RegisterUserState extends State<RegisterUser> {
                           text: 'Contraseña',
                         ),
                         CustomTextField(
-                          controller: passC,
+                          controller: controller.passC,
                           hintText: 'Contraseña',
-                          obscureText: obscureText,
+                          obscureText: controller.obscureText,
                           suffixIcon: IconButton(
                             icon: Icon(
-                              obscureText
+                              controller.obscureText
                                   ? Icons.visibility
                                   : Icons.visibility_off,
                             ),
                             onPressed: () {
                               setState(() {
-                                obscureText = !obscureText;
+                                controller.obscureText =
+                                    !controller.obscureText;
                               });
                             },
                           ),
@@ -166,18 +151,19 @@ class _RegisterUserState extends State<RegisterUser> {
                           text: 'Confirmar contraseña',
                         ),
                         CustomTextField(
-                          controller: confirmPassC,
+                          controller: controller.confirmPassC,
                           hintText: 'Confirmar contraseña',
-                          obscureText: obscureText,
+                          obscureText: controller.obscureText,
                           suffixIcon: IconButton(
                             icon: Icon(
-                              obscureText
+                              controller.obscureText
                                   ? Icons.visibility
                                   : Icons.visibility_off,
                             ),
                             onPressed: () {
                               setState(() {
-                                obscureText = !obscureText;
+                                controller.obscureText =
+                                    !controller.obscureText;
                               });
                             },
                           ),
@@ -187,20 +173,23 @@ class _RegisterUserState extends State<RegisterUser> {
                           const CircularProgressIndicator()
                         else
                           ValueListenableBuilder<bool>(
-                            valueListenable: isButtonEnabled,
+                            valueListenable: controller.isButtonEnabled,
                             builder: (context, value, child) {
                               return RegistroButtom(
                                 onPressed: value
                                     ? () {
-                                        if (_validateFields(context)) {
+                                        if (controller
+                                            .validateFields(context)) {
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
                                               builder: (context) => RegisterCar(
-                                                governmentId: cedulaC.text,
-                                                name: nombresC.text,
-                                                lastname: apellidosC.text,
-                                                email: correoC.text,
-                                                password: passC.text,
+                                                governmentId:
+                                                    controller.cedulaC.text,
+                                                name: controller.nombresC.text,
+                                                lastname:
+                                                    controller.apellidosC.text,
+                                                email: controller.correoC.text,
+                                                password: controller.passC.text,
                                               ),
                                             ),
                                           );
@@ -219,91 +208,7 @@ class _RegisterUserState extends State<RegisterUser> {
               ),
             ),
           ),
-        )));
-  }
-
-  bool _validateFields(BuildContext context) {
-    if (cedulaC.text.isEmpty ||
-        nombresC.text.isEmpty ||
-        apellidosC.text.isEmpty ||
-        correoC.text.isEmpty ||
-        passC.text.isEmpty ||
-        confirmPassC.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Todos los campos son obligatorios')),
-      );
-      return false;
-    }
-    if (!RegExp(r"^[a-zA-Z\s]+$").hasMatch(nombresC.text)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Nombres solo debe contener letras')),
-      );
-      return false;
-    }
-    if (!RegExp(r"^[a-zA-Z\s]+$").hasMatch(apellidosC.text)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Apellidos solo debe contener letras')),
-      );
-      return false;
-    }
-    if (!RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
-        .hasMatch(correoC.text)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Por favor, ingrese un correo válido')),
-      );
-      return false;
-    }
-    if (passC.text.length < 8) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('La contraseña debe tener al menos 8 caracteres')),
-      );
-      return false;
-    }
-
-    if (passC.text != confirmPassC.text) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Las contraseñas no coinciden')),
-      );
-      return false;
-    }
-    return true;
-  }
-
-  @override
-  void dispose() {
-    cedulaC.dispose();
-    nombresC.dispose();
-    apellidosC.dispose();
-    correoC.dispose();
-    passC.dispose();
-    confirmPassC.dispose();
-    super.dispose();
-  }
-}
-
-class CedulaFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    String text = newValue.text.replaceAll('-', ''); // Remove existing dashes
-    if (text.length > 11) {
-      return oldValue; // Limit to 11 characters
-    }
-
-    StringBuffer buffer = StringBuffer();
-    for (int i = 0; i < text.length; i++) {
-      if (i == 3 || i == 10) {
-        buffer.write('-');
-      }
-      buffer.write(text[i]);
-    }
-
-    return TextEditingValue(
-      text: buffer.toString(),
-      selection: newValue.selection.copyWith(
-        baseOffset: buffer.length,
-        extentOffset: buffer.length,
+        ),
       ),
     );
   }
