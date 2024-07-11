@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'dart:async';
-
 import 'package:frontend_android_ciudadano/Controllers/sigin_controller.dart';
 import 'package:frontend_android_ciudadano/Handlers/Login/dialog_success_error_consulta.dart';
 
