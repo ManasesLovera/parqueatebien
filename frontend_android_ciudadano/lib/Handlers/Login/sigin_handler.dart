@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:frontend_android_ciudadano/Controllers/Login/sigin_controller.dart';
+import 'dart:async';
 import 'package:frontend_android_ciudadano/Handlers/Login/dialog_success_error_user.dart';
+import 'package:frontend_android_ciudadano/Pages/_01_Welcome/_00_welcome.dart';
 
 Future<void> signHandler(
   BuildContext context,
@@ -12,10 +13,15 @@ Future<void> signHandler(
   final String password = passwordController.text;
 
   try {
-    final success = await signUserIncontroller(username, password);
+    final success = await signUserInController(username, password);
     if (success) {
       if (!context.mounted) return;
-      Navigator.pushReplacementNamed(context, '/welcome');
+      showUniversalSuccessErrorDialog(
+          context, 'Inicio de sesión exitoso', true);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Welcome()),
+      );
     }
   } catch (error) {
     if (!context.mounted) return;

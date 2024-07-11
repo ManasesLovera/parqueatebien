@@ -8,7 +8,8 @@ class CustomImageLogoLogin extends StatelessWidget {
   final String img;
   final double altura;
 
-  const CustomImageLogoLogin({super.key, required this.img, required this.altura});
+  const CustomImageLogoLogin(
+      {super.key, required this.img, required this.altura});
 
   @override
   Widget build(BuildContext context) {
@@ -310,4 +311,3 @@ class SignInButton extends StatelessWidget {
     );
   }
 }
-
