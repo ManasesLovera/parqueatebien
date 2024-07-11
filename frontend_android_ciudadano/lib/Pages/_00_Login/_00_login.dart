@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android_ciudadano/Blocs/Login/ButtomLoginState/buttom_is_or_not_enable.dart';
-import 'package:frontend_android_ciudadano/Blocs/Login/ButtomLoginState/sign_in_bloc_builder.dart';
-import 'package:frontend_android_ciudadano/Blocs/Login/Login_Bloc/_02_login_bloc.dart';
+import 'package:frontend_android_ciudadano/Handlers/Login/sign_handler.dart';
 import 'package:frontend_android_ciudadano/Pages/_02_User_Login_Register_User_With_Vehicle/_00.0_user.dart';
-import 'package:frontend_android_ciudadano/Widgets/GlobalsWidgets/_00_logo_image.dart';
-import 'package:frontend_android_ciudadano/Widgets/Login/_01_user_text_for_textfield_.dart';
-import 'package:frontend_android_ciudadano/Widgets/Login/_05_forgot_password_tex.dart';
-import 'package:frontend_android_ciudadano/Widgets/Login/_06_not_account_text.dart';
-import 'package:frontend_android_ciudadano/Widgets/Login/_09_custom_registrate_now.dart';
+import 'package:frontend_android_ciudadano/Widgets/Login/login_widgets.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_custom_textfield_.dart';
 
 class Login extends StatefulWidget {
@@ -21,11 +14,30 @@ class Login extends StatefulWidget {
 }
 
 class LoginState extends State<Login> {
-  final iD = TextEditingController();
-  final pass = TextEditingController();
-  //
+  final _iD = TextEditingController();
+  final _pass = TextEditingController();
   bool obscureText = true;
-  //
+  final ValueNotifier<bool> _isFilled = ValueNotifier(false);
+  @override
+  void initState() {
+    super.initState();
+    _iD.addListener(_updateButtonState);
+    _pass.addListener(_updateButtonState);
+  }
+
+  void _updateButtonState() {
+    _isFilled.value = _iD.text.isNotEmpty && _pass.text.isNotEmpty;
+  }
+
+  @override
+  void dispose() {
+    _iD.removeListener(_updateButtonState);
+    _pass.removeListener(_updateButtonState);
+    _iD.dispose();
+    _pass.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,93 +49,76 @@ class LoginState extends State<Login> {
             child: Column(
               children: [
                 SizedBox(height: 50.h),
-                const CustomImageLogo(
+                const CustomImageLogoLogin(
                     img: 'assets/splash/main.png', altura: 100),
                 SizedBox(height: 50.h),
                 const Usertext(
                   text: 'Cedula',
                 ),
-                BlocProvider(
-                  create: (_) => ButtonStateBloc(),
-                  child: Builder(
-                    builder: (context) {
-                      iD.addListener(() {
-                        context.read<ButtonStateBloc>().add(
-                              TextChanged(iD.text, pass.text),
-                            );
-                      });
-                      pass.addListener(() {
-                        context.read<ButtonStateBloc>().add(
-                              TextChanged(iD.text, pass.text),
-                            );
-                      });
-                      return Column(
-                        children: [
-                          CustomTextField(
-                            controller: iD,
-                            hintText: 'Ingresar cedula',
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                              CedulaFormatterCedula(),
-                            ],
-                          ),
-                          SizedBox(height: 20.h),
-                          const Usertext(
-                            text: 'Contraseña',
-                          ),
-                          CustomTextField(
-                            controller: pass,
-                            hintText: 'Ingresar la contraseña',
-                            obscureText: obscureText,
-                            //
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                obscureText
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  obscureText = !obscureText;
-                                });
-                              },
+                Column(
+                  children: [
+                    CustomTextField(
+                      controller: _iD,
+                      hintText: 'Ingresar cedula',
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        CedulaFormatterCedula(),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
+                    const Usertext(
+                      text: 'Contraseña',
+                    ),
+                    CustomTextField(
+                      controller: _pass,
+                      hintText: 'Ingresar la contraseña',
+                      obscureText: obscureText,
+                      //
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          obscureText ? Icons.visibility : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            obscureText = !obscureText;
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    ValueListenableBuilder<bool>(
+                      valueListenable: _isFilled,
+                      builder: (context, isFilled, child) {
+                        return SignInButton(
+                          onPressed:
+                              isFilled ? () => sign(context, _iD, _pass) : null,
+                          isFilled: isFilled,
+                        );
+                      },
+                    ),
+                    SizedBox(height: 15.h),
+                    const ForgotPasswordText(
+                      text: '¿Olvidaste tu Contraseña?',
+                    ),
+                    SizedBox(height: 80.h),
+                    const DontAccount(
+                      text: '¿No tienes una cuenta?',
+                    ),
+                    SizedBox(height: 8.h),
+                    SizedBox(
+                      child: RegisterNow(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const RegisterUser(),
                             ),
-                            //
-                          ),
-                          SizedBox(height: 16.h),
-                          BlocProvider(
-                            create: (_) => LoginBloc(),
-                            child: SignInBlocBuilder(
-                              iD: iD,
-                              pass: pass,
-                            ),
-                          ),
-                          SizedBox(height: 15.h),
-                          const ForgotPasswordText(
-                            text: '¿Olvidaste tu Contraseña?',
-                          ),
-                          SizedBox(height: 80.h),
-                          const DontAccount(
-                            text: '¿No tienes una cuenta?',
-                          ),
-                          SizedBox(height: 8.h),
-                          SizedBox(
-                            child: RegisterNow(
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const RegisterUser(),
-                                  ),
-                                );
-                              },
-                              text: 'Registrarse ahora',
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ),
+                          );
+                        },
+                        text: 'Registrarse ahora',
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
           ),

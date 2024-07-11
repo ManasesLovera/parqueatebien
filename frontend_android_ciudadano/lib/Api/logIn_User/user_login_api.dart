@@ -3,10 +3,10 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginSendData {
+class LoginApi {
   static final Logger _logger = Logger();
 
-  Future<dynamic> signIn(String username, String password) async {
+  static Future<dynamic> signIn(String username, String password) async {
     const url = 'http://192.168.0.209:8089/api/citizen/login';
     try {
       final response = await http
@@ -39,6 +39,9 @@ class LoginSendData {
       } else if (response.statusCode == 409) {
         _logger.e('Ciudadano aun no esta activo, espere a ser aceptado');
         return 409;
+      } else if (response.statusCode == 404) {
+        _logger.e('Ciudadano aun no esta activo, espere a ser aceptado');
+        return 404;
       } else {
         _logger.e('Error inesperado: ${response.statusCode}');
         return false;
