@@ -74,7 +74,6 @@ class LoginState extends State<Login> {
                       controller: _pass,
                       hintText: 'Ingresar la contraseña',
                       obscureText: obscureText,
-                      //
                       suffixIcon: IconButton(
                         icon: Icon(
                           obscureText ? Icons.visibility : Icons.visibility_off,
