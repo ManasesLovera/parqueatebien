@@ -678,6 +678,18 @@ app.MapPut("/api/citizen/updateStatus/", async (ApplicationDbContext context, [F
     }
 });
 
+app.MapGet("/api/citizen/vehicles", (ApplicationDbContext context) =>
+{
+    try
+    {
+        return Results.Ok(context.Vehicles.ToList());
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+});
+
 // Crane company
 
 app.MapGet("/api/craneCompanies/", (ApplicationDbContext context) =>
