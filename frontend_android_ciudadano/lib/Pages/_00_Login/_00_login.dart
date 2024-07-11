@@ -111,7 +111,7 @@ class LoginState extends State<Login> {
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => const RegisterUser(),
+                              builder: (context) => const RegisterUserScreen(),
                             ),
                           );
                         },
