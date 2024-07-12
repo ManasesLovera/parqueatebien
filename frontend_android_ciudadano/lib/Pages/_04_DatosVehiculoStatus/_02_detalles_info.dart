@@ -9,13 +9,13 @@ class ReportInfoScreen extends StatelessWidget {
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
-      case 'Reportado':
+      case 'reportado':
         return Colors.grey;
-      case 'Incautado por grua':
+      case 'incautado por grua':
         return Colors.orange;
-      case 'Retenido':
+      case 'retenido':
         return Colors.red;
-      case 'Liberado':
+      case 'riberado':
         return Colors.green;
       default:
         return Colors.grey;
