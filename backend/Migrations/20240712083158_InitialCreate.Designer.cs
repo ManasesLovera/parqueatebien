@@ -11,7 +11,7 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240711171841_InitialCreate")]
+    [Migration("20240712083158_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -84,7 +84,6 @@ namespace backend.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Year")

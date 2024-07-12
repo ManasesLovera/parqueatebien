@@ -106,7 +106,7 @@ namespace backend.Migrations
                     Model = table.Column<string>(type: "TEXT", nullable: false),
                     Year = table.Column<string>(type: "TEXT", nullable: false),
                     Color = table.Column<string>(type: "TEXT", nullable: false),
-                    Status = table.Column<string>(type: "TEXT", nullable: false),
+                    Status = table.Column<string>(type: "TEXT", nullable: true),
                     CitizenId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>

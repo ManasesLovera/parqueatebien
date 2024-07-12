@@ -572,12 +572,12 @@ app.MapPost("/api/citizen/register", async ([FromBody] CitizenDto citizenDto, Ap
         var citizen = _mapper.Map<Citizen>(citizenDto);
         citizen.PasswordHash = BCrypt.Net.BCrypt.HashPassword(citizenDto.Password);
         citizen.Status = "Nuevo";
+        context.Citizens.Add(citizen);
         foreach (var vehicle in citizen.Vehicles!)
         {
-            vehicle.Status = "Aprobado";
+            vehicle.Status = "Nuevo";
             context.Vehicles.Add(vehicle);
         }
-        context.Citizens.Add(citizen);
         await context.SaveChangesAsync();
         return Results.Ok(citizen);
     }
@@ -665,6 +665,13 @@ app.MapPut("/api/citizen/updateStatus/", async (ApplicationDbContext context, [F
             return Results.NotFound();
         
         citizen.Status = changeCitizenStatusDto.Status;
+
+        var vehicles = context.Vehicles.Where(v => v.GovernmentId == changeCitizenStatusDto.GovernmentId);
+
+        foreach(var vehicle in vehicles)
+        {
+            vehicle.Status = "Aprobado";
+        }
         
         await context.SaveChangesAsync();
         return Results.Ok();
