@@ -8,6 +8,8 @@ import 'package:frontend_android/Widgets/Map_Global/map_global.dart';
 const Color lightBlueColor = Color(0xFF009DD4); // Azul Claro
 const Color darkBlueColor = Color(0xFF010F56); // Azul Oscuro
 const Color greyTextColor = Color(0xFF494A4D); // Gris (Texto)
+const Color greytext = Color(0xFF494A4D); // Gris (Texto)
+
 
 class VehicleDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> vehicleData;
@@ -210,12 +212,12 @@ class DetailRowWidget extends StatelessWidget {
           Text(
             value ?? 'Desconocido',
             style: TextStyle(
-              color: Colors.grey,
-              fontSize: 9.h,
+              color: const Color(0xFF494A4D),
+              fontSize: 10.h,
               fontWeight: FontWeight.bold,
             ),
           ),
-          if (showDivider) Divider(height: 2.h),
+          if (showDivider) Divider(height: 6.h),
         ],
       ),
     );
