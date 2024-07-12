@@ -22,9 +22,6 @@ class M extends StatelessWidget {
       builder: (context, child) {
         return MultiBlocProvider(
           providers: [
-            // BlocProvider<LoginBloc>(
-            //   create: (context) => LoginBloc(),
-            // ),
             BlocProvider<VehicleBloc>(
               create: (context) => VehicleBloc(ConsultaPlaca())
                 ..add(const FetchLicencePlates(governmentId)),
