@@ -198,7 +198,7 @@ app.MapPost("/api/reporte", async (
         }
         var existingReports = await context.Reports
             .Where(r => r.LicensePlate == reportDto.LicensePlate &&
-                  ((r.Status != "Liberado" && r.Active) || !r.Active))
+                  (r.Status != "Liberado" && r.Active))
             .AnyAsync();
 
         if (existingReports)
@@ -574,6 +574,7 @@ app.MapPost("/api/citizen/register", async ([FromBody] CitizenDto citizenDto, Ap
         citizen.Status = "Nuevo";
         foreach (var vehicle in citizen.Vehicles!)
         {
+            vehicle.Status = "Aprobado";
             context.Vehicles.Add(vehicle);
         }
         context.Citizens.Add(citizen);
