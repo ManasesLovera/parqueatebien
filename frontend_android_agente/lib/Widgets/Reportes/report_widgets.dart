@@ -155,7 +155,7 @@ class TipoDeVehiculo extends StatelessWidget {
       child: Align(
         alignment: Alignment.centerLeft,
         child: Text(
-          'Tipo de vehículo',
+          'Marca',
           style: TextStyle(
             color: const Color(0xFF010F56),
             fontSize: 10.h,
@@ -212,7 +212,7 @@ class VehicleTypeWidget extends StatelessWidget {
           ),
           dropdownColor: const Color(0xFFFFFFFF),
           items:
-              <String>['Automóvil', 'Motor', 'Bicicleta'].map((String value) {
+              <String>['HONDA', 'TOYOTA', 'HYUNDAI','NISSAN'].map((String value) {
             return DropdownMenuItem<String>(
               value: value,
               child: Text(value),

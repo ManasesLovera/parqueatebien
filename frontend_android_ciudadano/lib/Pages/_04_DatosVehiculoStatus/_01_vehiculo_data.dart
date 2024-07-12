@@ -12,7 +12,6 @@ import 'package:frontend_android_ciudadano/Widgets/Vehiculo/map_vehiculo.dart';
 import 'package:frontend_android_ciudadano/Widgets/Vehiculo/photos_vehiculo.dart';
 import 'package:frontend_android_ciudadano/Widgets/Vehiculo/subtext.dart';
 import 'package:frontend_android_ciudadano/Widgets/Vehiculo/upfieldtext.dart';
-
 import 'package:geocoding/geocoding.dart';
 
 class CarDetails extends StatelessWidget {
@@ -100,7 +99,6 @@ class CarDetails extends StatelessWidget {
                                 details['status'] ?? 'Desconocido',
                                 style: TextStyle(
                                   fontSize: 12.h,
-                                  fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
                               ),
@@ -114,7 +112,7 @@ class CarDetails extends StatelessWidget {
                           detailKey: 'licensePlate',
                         ),
                         const Divider(),
-                        const Upfields(text: 'Tipo de vehículo'),
+                        const Upfields(text: 'Marca'),
                         SizedBox(height: 1.h),
                         Downfield(
                           details: details,

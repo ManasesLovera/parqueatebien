@@ -198,7 +198,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                 ),
                 const Divider(),
                 Text(
-                  'Tipo de vehiculo',
+                  'Marca',
                   style: TextStyle(
                     color: const Color(0xFF010F56),
                     fontSize: 11.h,

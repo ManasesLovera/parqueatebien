@@ -22,10 +22,10 @@ class VehicleDetailsScreen extends StatefulWidget {
   });
 
   @override
-  _VehicleDetailsScreenState createState() => _VehicleDetailsScreenState();
+  VehicleDetailsScreenState createState() => VehicleDetailsScreenState();
 }
 
-class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
+class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
   bool _isLoading = false;
 
   bool get _isButtonEnabled {
@@ -110,7 +110,7 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                   showDivider: true,
                 ),
                 DetailRowWidget(
-                  title: 'Tipo de vehículo',
+                  title: 'Marca',
                   value: widget.vehicleData['vehicleType'],
                   showDivider: true,
                 ),
