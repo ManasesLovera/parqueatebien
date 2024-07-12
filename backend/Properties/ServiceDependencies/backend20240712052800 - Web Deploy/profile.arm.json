@@ -21,7 +21,7 @@
     },
     "resourceName": {
       "type": "string",
-      "defaultValue": "parqueatebien",
+      "defaultValue": "backend20240712052800",
       "metadata": {
         "description": "Name of the main resource to be created by this template."
       }

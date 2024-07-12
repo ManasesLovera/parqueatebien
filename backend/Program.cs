@@ -18,6 +18,9 @@ using AutoMapper;
 using FluentValidation;
 using backend.Validations;
 using System.Text.RegularExpressions;
+//using FirebaseAdmin;
+//using Google.Apis.Auth.OAuth2;
+//using backend.NotificationService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +41,15 @@ builder.Services.AddCors(options =>
                   .AllowAnyHeader();
         });
 });
+
+// Firabase configuration
+//FirebaseApp.Create(new AppOptions()
+//{
+//    Credential = GoogleCredential.FromFile("path/to/your-service-account-file.json") // MISSING VERY IMPORTANT <- PATH TO SERVICE ACCOUNT FILE.json
+//});
+
+// Register Notification Service
+//builder.Services.AddSingleton<NotificationService>();
 
 // Database connection EF
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -112,6 +124,7 @@ app.UseCors();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+//app.UseRouting();
 
 // Endpoints for citizens
 
@@ -125,6 +138,7 @@ app.MapGet("/api/reportes", async (IMapper _mapper, ApplicationDbContext context
     try
     {
         var reportsQuery = context.Reports
+        .Where(r => r.Active)
         .Select(report => new
         {
             Report = report,
@@ -705,7 +719,7 @@ app.MapGet("/api/citizen/vehicle/{governmentId}", (ApplicationDbContext context,
         if (citizen == null)
             return Results.NotFound();
 
-        var licensePlates = context.Vehicles.Where(v => v.GovernmentId == citizen.GovernmentId).Select(v => v.LicensePlate).ToList();
+        var licensePlates = context.Vehicles.Where(v => v.GovernmentId == citizen.GovernmentId && v.Status == "Aprobado").Select(v => v.LicensePlate).ToList();
 
         return Results.Ok(licensePlates);
     }
@@ -786,8 +800,8 @@ app.MapDelete("/api/citizen/vehicles/delete/{licensePlate}", async (ApplicationD
     {
         return Results.Problem(ex.Message, statusCode: 500);
     }
-});
-
+})
+    .RequireAuthorization();
 
 // Crane company
 
