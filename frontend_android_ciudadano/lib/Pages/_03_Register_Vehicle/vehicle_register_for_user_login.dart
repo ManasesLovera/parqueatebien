@@ -120,10 +120,7 @@ class _RegisterNewCarState extends State<RegisterNewCarScreen> {
                         const CustomText(
                           text: 'Color',
                         ),
-                        SizedBox(height: 16.h),
-                        const CustomText(
-                          text: 'Color',
-                        ),
+                     
                         ColorDropdown(
                           items: controller.colors,
                           selectedItem: controller.selectedColor,
