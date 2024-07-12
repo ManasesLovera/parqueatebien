@@ -41,58 +41,82 @@ class WelcomeState extends State<Welcome> {
     Navigator.of(context).pushReplacementNamed('/login');
   }
 
-  Future<void> _confirmLogout(BuildContext context) async {
-    final shouldLogout = await showDialog<bool>(
+  Future<bool> _showLogoutConfirmation(BuildContext context) async {
+    final result = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Cerrar sesión'),
-        content:
-            const Text('¿Desea cerrar sesión y borrar los datos del usuario?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('No'),
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(true);
-              _logout(context);
-            },
-            child: const Text('Sí'),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.warning,
+                  color: Colors.orange,
+                  size: 80,
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Confirmación',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  '¿Estás seguro que quieres cerrar sesión?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black54,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextButton(
+                      child: const Text(
+                        'Cancelar',
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pop(false); // Close the dialog and return false
+                      },
+                    ),
+                    TextButton(
+                      child: const Text(
+                        'Salir',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pop(true); // Close the dialog and return true
+                        _logout(context); // Log out and navigate to login
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ],
-      ),
+        );
+      },
     );
 
-    if (shouldLogout == true && mounted) {
-      _logout(context);
-    }
+    return result == true;
   }
 
   Future<bool> _onWillPop() async {
-    final shouldLogout = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Cerrar sesión'),
-        content:
-            const Text('¿Desea cerrar sesión y borrar los datos del usuario?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('No'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(true);
-              _logout(context);
-            },
-            child: const Text('Sí'),
-          ),
-        ],
-      ),
-    );
-
-    return shouldLogout == true;
+    return await _showLogoutConfirmation(context);
   }
 
   @override
