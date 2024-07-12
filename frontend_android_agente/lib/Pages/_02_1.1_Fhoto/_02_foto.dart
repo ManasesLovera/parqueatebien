@@ -107,17 +107,30 @@ class NewReportPhotoScreenState extends State<PhotoScreen> {
                   child: Text(
                     'Fotos del vehículo',
                     style: TextStyle(
-                        fontSize: 14.h,
-                        fontWeight: FontWeight.bold,
-                        color: greyTextColor),
+                      fontSize: 14.h,
+                      fontWeight: FontWeight.bold,
+                      color: greyTextColor,
+                    ),
                   ),
                 ),
                 SizedBox(height: 14.h),
                 Center(
-                  child: FotoButton(
-                    onTap: _pickImages,
-                    iconPath: 'assets/icons/add.svg',
-                    title: 'Agregar foto',
+                  child: Column(
+                    children: [
+                      FotoButton(
+                        onTap: _pickImages,
+                        iconPath: 'assets/icons/add.svg',
+                        title: 'Agregar foto',
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        'Minimo 3 fotos. maximo 5 fotos',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12.h,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(height: 15.h),
@@ -165,9 +178,10 @@ class NewReportPhotoScreenState extends State<PhotoScreen> {
                                         });
                                       },
                                       child: SvgPicture.asset(
-                                          'assets/icons/editar.svg',
-                                          height: 24.h,
-                                          width: 24.w),
+                                        'assets/icons/editar.svg',
+                                        height: 24.h,
+                                        width: 24.w,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -201,10 +215,14 @@ class NewReportPhotoScreenState extends State<PhotoScreen> {
                   child: SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: _navigateToConfirmation,
+                      onPressed: _imageFileList.length >= 3
+                          ? _navigateToConfirmation
+                          : null,
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 14.h),
-                        backgroundColor: const Color(0xFF010F56),
+                        backgroundColor: _imageFileList.length >= 3
+                            ? const Color(0xFF010F56)
+                            : Colors.grey,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.h),
                         ),
@@ -281,7 +299,6 @@ class FotoButton extends StatelessWidget {
     );
   }
 }
-
 
 void showUniversalSuccessErrorDialogPhotos(
     BuildContext context, String message, bool isSuccess) {
