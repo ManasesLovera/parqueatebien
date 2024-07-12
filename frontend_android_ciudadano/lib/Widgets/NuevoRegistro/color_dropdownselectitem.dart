@@ -36,7 +36,7 @@ class ColorDropdown extends StatelessWidget {
                 hintText ?? '',
                 style: TextStyle(
                   color: Colors.grey,
-                  fontSize: 12.h,
+                  fontSize: 11.h,
                 ),
               ),
               isExpanded: true,
@@ -51,8 +51,8 @@ class ColorDropdown extends StatelessWidget {
                   child: Text(
                     color,
                     style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14.h,
+                      color: Colors.grey,
+                      fontSize: 12.h,
                     ),
                   ),
                 );
