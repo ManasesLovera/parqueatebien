@@ -10,7 +10,6 @@ import 'package:frontend_android_ciudadano/Widgets/GlobalsWidgets/_00_logo_image
 import 'package:frontend_android_ciudadano/Widgets/Vehiculo/down_field.dart';
 import 'package:frontend_android_ciudadano/Widgets/Vehiculo/map_vehiculo.dart';
 import 'package:frontend_android_ciudadano/Widgets/Vehiculo/photos_vehiculo.dart';
-import 'package:frontend_android_ciudadano/Widgets/Vehiculo/status_button_label.dart';
 import 'package:frontend_android_ciudadano/Widgets/Vehiculo/subtext.dart';
 import 'package:frontend_android_ciudadano/Widgets/Vehiculo/upfieldtext.dart';
 
@@ -20,6 +19,21 @@ class CarDetails extends StatelessWidget {
   final String licensePlate;
 
   const CarDetails({super.key, required this.licensePlate});
+
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'reportado':
+        return Colors.grey;
+      case 'incautado por grua':
+        return Colors.orange;
+      case 'retenido':
+        return Colors.red;
+      case 'riberado':
+        return Colors.green;
+      default:
+        return Colors.grey;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +88,23 @@ class CarDetails extends StatelessWidget {
                         Center(
                           child: SizedBox(
                             height: 22.h,
-                            child: SatusButtom(details: details),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 30.w, vertical: 2.h),
+                              decoration: BoxDecoration(
+                                color: _getStatusColor(
+                                    details['status'] ?? 'Desconocido'),
+                                borderRadius: BorderRadius.circular(20.r),
+                              ),
+                              child: Text(
+                                details['status'] ?? 'Desconocido',
+                                style: TextStyle(
+                                  fontSize: 12.h,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                         SizedBox(height: 20.h),

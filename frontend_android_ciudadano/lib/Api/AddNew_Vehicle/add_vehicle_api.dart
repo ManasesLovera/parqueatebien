@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AddVehicleApi {
+class AddNewVehicleApi {
   static final Logger _logger = Logger();
 
   Future<bool> addVehicle({
