@@ -306,6 +306,7 @@
     "password": string,
     "vehicles": [
         {
+            "governmentId": string,
             "licensePlate": string,
             "registrationDocument": string,
             "model": string,
