@@ -25,10 +25,10 @@ class NewRegisterCarController {
   }
 
   void updateButtonStateNew() {
-    isButtonEnabled.value = numplacaC.text.isNotEmpty &&
-        modelController.text.isNotEmpty &&
-        selectedYear != null &&
-        selectedColor != null &&
+    isButtonEnabled.value = numplacaC.text.isNotEmpty ||
+        modelController.text.isNotEmpty ||
+        selectedYear != null ||
+        selectedColor != null ||
         matriculaC.text.isNotEmpty;
   }
 
