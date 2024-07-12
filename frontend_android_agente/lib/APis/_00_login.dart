@@ -19,7 +19,7 @@ class LoginSendData {
             body: jsonEncode(<String, String>{
               "username": username,
               "password": password,
-              "role": role
+              "role": role,
             }),
           )
           .timeout(const Duration(seconds: 5));
@@ -38,26 +38,19 @@ class LoginSendData {
         ]);
 
         return true;
+      } else if (response.statusCode == 404) {
+        _logger.e('Usuario no encontrado');
+      } else if (response.statusCode == 409) {
+        _logger.e('Usuario y/o contraseña incorrectos');
+      } else if (response.statusCode == 400) {
+        _logger.e('Rol no es valido.');
       } else {
-        _handleError(response.statusCode);
-        return false;
+        _logger.e('Error inesperado: ${response.statusCode}');
       }
+      return false;
     } catch (e) {
       _logger.e('Error during login: $e');
       return false;
-    }
-  }
-
-  static void _handleError(int statusCode) {
-    switch (statusCode) {
-      case 401:
-        _logger.e('Unauthorized - Wrong Password');
-        break;
-      case 404:
-        _logger.e('Not Found');
-        break;
-      default:
-        _logger.e('Unexpected error: $statusCode');
     }
   }
 }
