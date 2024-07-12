@@ -14,7 +14,7 @@ class AddVehicleApi {
     required String year,
     required String color,
   }) async {
-    const url = 'http://192.168.0.209:8089/api/citizen/addVehicle';
+    const url = 'http://192.168.0.209:8089/api/citizen/vehicle';
 
     try {
       final token = await _getToken();
@@ -46,16 +46,18 @@ class AddVehicleApi {
 
       if (response.statusCode == 200) {
         return true;
-      } else if (response.statusCode == 400 &&
-          response.body.contains('Vehicle already exists')) {
-        _logger.e('El vehículo ya existe.');
+      } else if (response.statusCode == 400) {
+        _logger.e('Bad request: ${response.body}');
+        return false;
+      } else if (response.statusCode == 409) {
+        _logger.e('Conflict: ${jsonDecode(response.body)['Message']}');
         return false;
       } else {
-        _logger.e('Error inesperado: ${response.statusCode}');
+        _logger.e('Unexpected error: ${response.statusCode}');
         return false;
       }
     } catch (e) {
-      _logger.e('Error al agregar el vehículo: $e');
+      _logger.e('Error adding vehicle: $e');
       return false;
     }
   }

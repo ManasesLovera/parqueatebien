@@ -12,18 +12,10 @@ import 'package:logger/logger.dart';
 class RegisterCarController {
   final TextEditingController numplacaC = TextEditingController();
   final TextEditingController matriculaC = TextEditingController();
+  final TextEditingController modelController = TextEditingController();
   String? selectedYear;
   String? selectedColor;
-  String? selectedModel;
   final ValueNotifier<bool> isButtonEnabled = ValueNotifier<bool>(false);
-  final List<String> models = [
-    'Modelo A',
-    'Modelo B',
-    'Modelo C',
-    'Modelo D',
-    'Modelo E',
-    'Modelo F'
-  ];
   final List<String> colors = ['Rojo', 'Azul', 'Verde', 'Negro', 'Blanco'];
   final List<String> years =
       List<String>.generate(124, (i) => (DateTime.now().year - i).toString());
@@ -36,7 +28,7 @@ class RegisterCarController {
 
   void updateButtonState() {
     isButtonEnabled.value = numplacaC.text.isNotEmpty ||
-        selectedModel != null ||
+        modelController.text.isNotEmpty ||
         selectedYear != null ||
         selectedColor != null ||
         matriculaC.text.isNotEmpty;
@@ -55,7 +47,7 @@ class RegisterCarController {
           false);
       return false;
     }
-    if (selectedModel == null) {
+    if (modelController.text.isEmpty) {
       showUniversalSuccessErrorDialogCar(
           context, 'Campo requerido: Modelo', false);
       return false;
@@ -89,7 +81,7 @@ class RegisterCarController {
         governmentId: widget.governmentId,
         licensePlate: numplacaC.text,
         registrationDocument: matriculaC.text,
-        model: selectedModel!,
+        model: modelController.text,
         year: selectedYear!,
         color: selectedColor!,
       );

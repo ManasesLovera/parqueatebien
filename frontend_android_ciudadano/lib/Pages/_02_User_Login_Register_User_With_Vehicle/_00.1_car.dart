@@ -12,7 +12,6 @@ import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_00_app_bar.dar
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_custom_textfield_.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_titlle_textfield_.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_02_custom_buttom_.dart';
-import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/car_dropdownselectitem.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/color_dropdownselectitem.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/year_dropdownselectitem.dart';
 
@@ -104,17 +103,9 @@ class _RegisterCarState extends State<RegisterCar> {
                         const CustomText(
                           text: 'Modelo',
                         ),
-                        CarDropdownSelectItem(
-                          items: controller.models,
-                          selectedItem: controller.selectedModel,
-                          onChanged: (value) {
-                            setState(() {
-                              controller.selectedModel = value;
-                              controller.updateButtonState();
-                            });
-                          },
-                          hintText: 'Seleccionar modelo',
-                        ),
+                        CustomTextField(
+                            controller: controller.modelController,
+                            hintText: 'Ingresar modelo'),
                         SizedBox(height: 16.h),
                         const CustomText(
                           text: 'Año',
@@ -128,7 +119,7 @@ class _RegisterCarState extends State<RegisterCar> {
                               controller.updateButtonState();
                             });
                           },
-                          hintText: 'Seleccionar año',
+                          hintText: 'Seleccionar año', dropdownBackgroundColor: const Color(0xFFFFFFFF),
                         ),
                         SizedBox(height: 16.h),
                         const CustomText(
@@ -144,6 +135,7 @@ class _RegisterCarState extends State<RegisterCar> {
                             });
                           },
                           hintText: 'Seleccionar color',
+                          dropdownBackgroundColor: const Color(0xFFFFFFFF),
                         ),
                         SizedBox(height: 16.h),
                         const CustomText(
