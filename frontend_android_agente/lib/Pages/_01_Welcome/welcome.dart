@@ -16,29 +16,71 @@ class Welcome extends StatelessWidget {
       Navigator.of(context).pushReplacementNamed('/login');
     }
   }
-
-   Future<void> _showLogoutConfirmation(BuildContext context) async {
+Future<void> _showLogoutConfirmation(BuildContext context) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirmación'),
-          content: const Text('¿Estás seguro que quieres cerrar sesión?'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.warning,
+                  color: Colors.orange,
+                  size: 80,
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Confirmación',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  '¿Estás seguro que quieres cerrar sesión?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black54,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextButton(
+                      child: const Text(
+                        'Cancelar',
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close the dialog
+                      },
+                    ),
+                    TextButton(
+                      child: const Text(
+                        'Salir',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close the dialog
+                        _logout(context); // Log out and navigate to login
+                      },
+                    ),
+                  ],
+                ),
+              ],
             ),
-            TextButton(
-              child: const Text('Salir'),
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                _logout(context); // Log out and navigate to login
-              },
-            ),
-          ],
+          ),
         );
       },
     );
