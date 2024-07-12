@@ -1,0 +1,189 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:frontend_android_ciudadano/Api/ConsultPlates/consult_plates_api.dart';
+import 'package:frontend_android_ciudadano/Blocs/VehiculoFetch/_00_vehicle_event.dart';
+import 'package:frontend_android_ciudadano/Blocs/VehiculoFetch/_01_vehicle_state.dart';
+import 'package:frontend_android_ciudadano/Blocs/VehiculoFetch/_02_vehicle_bloc.dart';
+import 'package:frontend_android_ciudadano/Pages/_04_DatosVehiculoStatus/_00_consulta_.dart';
+import 'package:frontend_android_ciudadano/Pages/_03_Register_Vehicle/vehicle_register_for_user_login.dart';
+import 'package:frontend_android_ciudadano/Widgets/GlobalsWidgets/_00_logo_image.dart';
+import 'package:frontend_android_ciudadano/Widgets/Welcome/_01_welcometext.dart';
+import 'package:frontend_android_ciudadano/Widgets/Welcome/_02_subtituloreport.dart';
+import 'package:frontend_android_ciudadano/Widgets/Welcome/_04_report_buttom.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class Welcome extends StatefulWidget {
+  const Welcome({super.key});
+
+  @override
+  WelcomeState createState() => WelcomeState();
+}
+
+class WelcomeState extends State<Welcome> {
+  late Future<String?> _governmentIdFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _governmentIdFuture = _getGovernmentId();
+  }
+
+  Future<String?> _getGovernmentId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('governmentId');
+  }
+
+  void _logout(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    if (!mounted) return;
+    Navigator.of(context).pushReplacementNamed('/login');
+  }
+
+  Future<void> _confirmLogout(BuildContext context) async {
+    final shouldLogout = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Cerrar sesión'),
+        content:
+            const Text('¿Desea cerrar sesión y borrar los datos del usuario?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+              _logout(context);
+            },
+            child: const Text('Sí'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldLogout == true && mounted) {
+      _logout(context);
+    }
+  }
+
+  Future<bool> _onWillPop() async {
+    final shouldLogout = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Cerrar sesión'),
+        content:
+            const Text('¿Desea cerrar sesión y borrar los datos del usuario?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+              _logout(context);
+            },
+            child: const Text('Sí'),
+          ),
+        ],
+      ),
+    );
+
+    return shouldLogout == true;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.h),
+              child: Column(
+                children: [
+                  SizedBox(height: 30.h),
+                  const CustomImageLogo(
+                      img: 'assets/whiteback/main_w.png', altura: 60),
+                  SizedBox(height: 35.h),
+                  const WelcomeText(),
+                  SizedBox(height: 5.h),
+                  const SubtituloReport(sub: '¿Qué deseas realizar hoy?'),
+                  SizedBox(height: 18.h),
+                  FutureBuilder<String?>(
+                    future: _governmentIdFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasError || !snapshot.hasData) {
+                        return const Text('Error al obtener el ID del usuario');
+                      } else {
+                        final governmentId = snapshot.data!;
+                        return BlocProvider(
+                          create: (context) => VehicleBloc(ConsultaPlaca()),
+                          child: BlocBuilder<VehicleBloc, VehicleState>(
+                            builder: (context, state) {
+                              return Column(
+                                children: [
+                                  ReportConsultButtom(
+                                    svgPath: 'assets/icons/car.svg',
+                                    title: 'Consulta de vehículo',
+                                    subtitle:
+                                        'Consulta si tu vehículo ha sido incautado',
+                                    onTap: () async {
+                                      if (mounted) {
+                                        final result = await showVehicleDialog(
+                                            context, governmentId);
+                                        if (result == true && mounted) {
+                                          BlocProvider.of<VehicleBloc>(context)
+                                              .add(FetchLicencePlates(
+                                                  governmentId));
+                                        }
+                                      }
+                                    },
+                                  ),
+                                  ReportConsultButtom(
+                                    svgPath: 'assets/icons/create.svg',
+                                    title: 'Agregar otro vehículo',
+                                    subtitle:
+                                        'Si posees otro vehículo, añade los datos para futuras consultas',
+                                    onTap: () {
+                                      if (mounted) {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const RegisterNewCar(),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                  ReportConsultButtom(
+                                    svgPath: 'assets/icons/chat.svg',
+                                    title: 'Chat de soporte',
+                                    subtitle:
+                                        'Obtén asistencia inmediata a través de nuestro chat de soporte',
+                                    onTap: () {},
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

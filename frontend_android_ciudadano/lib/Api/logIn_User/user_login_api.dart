@@ -3,10 +3,10 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginSendData {
+class LoginApi {
   static final Logger _logger = Logger();
 
-  Future<dynamic> signIn(String username, String password) async {
+  static Future<dynamic> signIn(String username, String password) async {
     const url = 'http://192.168.0.209:8089/api/citizen/login';
     try {
       final response = await http
@@ -26,7 +26,7 @@ class LoginSendData {
       _logger.i('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
-        final token = response.body.replaceAll('"', '');
+        final token = response.body;
         final governmentId = username.replaceAll('-', '');
         _logger.i(
             'Inicio de sesión exitoso, Token: $token, Government ID: $governmentId');
@@ -36,16 +36,22 @@ class LoginSendData {
         await prefs.setString('token', token);
         await prefs.setString('governmentId', governmentId);
         return true;
-      } else if (response.statusCode == 409) {
-        _logger.e('Ciudadano aun no esta activo, espere a ser aceptado');
-        return 409;
       } else {
-        _logger.e('Error inesperado: ${response.statusCode}');
-        return false;
+        final responseBody = jsonDecode(response.body);
+        if (response.statusCode == 409) {
+          _logger.e(responseBody['message']);
+          return responseBody['message'];
+        } else if (response.statusCode == 404) {
+          _logger.e('El usuario no existe');
+          return 'El usuario no existe.';
+        } else {
+          _logger.e('Error inesperado: ${response.statusCode}');
+          return 'Error inesperado. Por favor, inténtelo de nuevo más tarde.';
+        }
       }
     } catch (e) {
       _logger.e('Error durante el inicio de sesión: $e');
-      return false;
+      return 'Se produjo un error durante el inicio de sesión. Por favor, inténtelo de nuevo más tarde.';
     }
   }
 }
