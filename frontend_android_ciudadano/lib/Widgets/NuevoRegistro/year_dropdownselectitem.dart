@@ -6,13 +6,13 @@ class YearDropdownSelectItem extends StatelessWidget {
   final String? selectedItem;
   final ValueChanged<String?> onChanged;
   final String? hintText;
-
+  final Color dropdownBackgroundColor;
   const YearDropdownSelectItem({
     required this.items,
     this.selectedItem,
     required this.onChanged,
     this.hintText,
-    super.key,
+    super.key, required this.dropdownBackgroundColor,
   });
 
   @override
@@ -43,6 +43,7 @@ class YearDropdownSelectItem extends StatelessWidget {
               icon: Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
               iconSize: 24.h,
               onChanged: onChanged,
+              dropdownColor: dropdownBackgroundColor,
               items: items.map((String year) {
                 return DropdownMenuItem<String>(
                   value: year,

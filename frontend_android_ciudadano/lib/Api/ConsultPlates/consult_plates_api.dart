@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ConsultaPlaca {
   final String apiUrlCitizenVehicles =
-      'http://192.168.0.209:8089/api/citizenVehicle/';
+      'http://192.168.0.209:8089/api/citizen/vehicle/';
   final String apiUrlDetails = 'http://192.168.0.209:8089/api/reporte/';
   final Logger _logger = Logger();
 
@@ -36,6 +36,9 @@ class ConsultaPlaca {
           List<String>.from(json.decode(response.body));
       _logger.i('Fetched licence plates: $licencePlates');
       return licencePlates;
+    } else if (response.statusCode == 404) {
+      _logger.w('Citizen not found for governmentId: $governmentId');
+      throw Exception('Citizen not found');
     } else {
       _logger.e(
           'Failed to load licence plates with status code ${response.statusCode}');

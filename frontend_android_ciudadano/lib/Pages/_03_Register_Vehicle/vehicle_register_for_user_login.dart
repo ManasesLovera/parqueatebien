@@ -13,6 +13,7 @@ import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_titlle_text
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_02_custom_buttom_.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/color_dropdownselectitem.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/year_dropdownselectitem.dart';
+
 const Color lightBlueColor = Color(0xFF009DD4); // Azul Claro
 const Color darkBlueColor = Color(0xFF010F56); // Azul Oscuro
 const Color greyTextColor = Color(0xFF494A4D); // Gris (Texto)
@@ -179,6 +180,7 @@ class _RegisterCarState extends State<RegisterNewCar> {
                             _updateButtonState();
                           },
                           hintText: 'Seleccionar año',
+                          dropdownBackgroundColor: const Color(0xFFFFFFFF),
                         ),
                         SizedBox(height: 16.h),
                         const CustomText(
@@ -194,6 +196,7 @@ class _RegisterCarState extends State<RegisterNewCar> {
                             _updateButtonState();
                           },
                           hintText: 'Seleccionar color',
+                          dropdownBackgroundColor: const Color(0xFFFFFFFF),
                         ),
                         SizedBox(height: 16.h),
                         const CustomText(

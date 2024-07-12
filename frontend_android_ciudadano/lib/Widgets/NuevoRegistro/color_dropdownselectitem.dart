@@ -6,13 +6,14 @@ class ColorDropdown extends StatelessWidget {
   final String? selectedItem;
   final ValueChanged<String?> onChanged;
   final String? hintText;
+  final Color dropdownBackgroundColor;
 
   const ColorDropdown({
     required this.items,
     this.selectedItem,
     required this.onChanged,
     this.hintText,
-    super.key,
+    super.key, required this.dropdownBackgroundColor,
   });
 
   @override
@@ -42,7 +43,9 @@ class ColorDropdown extends StatelessWidget {
               icon: Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
               iconSize: 24.h,
               onChanged: onChanged,
+              dropdownColor: dropdownBackgroundColor,
               items: items.map((String color) {
+               
                 return DropdownMenuItem<String>(
                   value: color,
                   child: Text(
