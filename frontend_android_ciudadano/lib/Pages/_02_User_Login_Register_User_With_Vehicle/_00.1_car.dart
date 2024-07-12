@@ -59,7 +59,7 @@ class _RegisterCarState extends State<RegisterCar> {
                 listener: (context, state) {
                   if (state is RegisterSuccess) {
                     showUniversalSuccessErrorDialogCar(
-                        context, 'Registro exitoso', true);
+                        context, 'Registro completa, espere a ser confirmado', true);
                     Future.delayed(const Duration(seconds: 2), () {
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
