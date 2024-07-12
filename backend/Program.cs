@@ -456,6 +456,32 @@ app.MapGet("api/user/{username}", ([FromRoute] string username, ApplicationDbCon
 })
     .RequireAuthorization();
 
+app.MapPut("/api/user", async (ApplicationDbContext context, [FromBody] UpdateUserDto updateUserDto) =>
+{
+    try
+    {
+        var user = context.Users.FirstOrDefault(u => u.EmployeeCode == updateUserDto.EmployeeCode);
+        if (user == null)
+            return Results.NotFound();
+
+        user.Username = updateUserDto.Username;
+        user.Status = updateUserDto.Status;
+        user.Role = updateUserDto.Role;
+        if (updateUserDto.Role == "Grua")
+        {
+            if (String.IsNullOrEmpty(updateUserDto.CraneCompany))
+                return Results.BadRequest("Si el rol es grua debe tener una empresa de grua");
+            user.CraneCompany = updateUserDto.CraneCompany;
+        }
+        await context.SaveChangesAsync();
+        return Results.Ok();
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+});
+
 app.MapPut("/api/user/changePassword", async ([FromBody] ChangePasswordDto CPDto, ApplicationDbContext context) =>
 {
     try
@@ -519,47 +545,6 @@ app.MapGet("/api/citizens", (ApplicationDbContext context, IMapper _mapper) =>
     }
 });
 
-app.MapGet("/api/citizenVehicle/{governmentId}", (ApplicationDbContext context, [FromRoute] string governmentId) =>
-{
-    try
-    {
-        var citizen = context.Citizens.FirstOrDefault(c => c.GovernmentId == governmentId);
-        
-        if (citizen == null)
-            return Results.NotFound();
-
-        var licensePlates = context.Vehicles.Where(v => v.GovernmentId == citizen.GovernmentId).Select(v => v.LicensePlate).ToList();
-
-        return Results.Ok(licensePlates);
-    }
-    catch (Exception ex)
-    {
-        return Results.Problem(ex.Message, statusCode: 500);
-    }
-});
-
-app.MapPost("/api/citizen/addVehicle", async (ApplicationDbContext context, [FromBody] CitizenVehicle vehicle, IValidator<CitizenVehicle> validator) =>
-{
-    try
-    {
-        var validationResult = validator.Validate(vehicle);
-        if (!validationResult.IsValid)
-            return Results.BadRequest(validationResult.Errors);
-
-        var v = context.Vehicles.FirstOrDefault(v => v.LicensePlate == vehicle.LicensePlate && v.GovernmentId == vehicle.GovernmentId);
-        if (v is not null)
-            return Results.Conflict(new { Message = "Esta placa ya existe para este ciudadano" });
-
-        context.Vehicles.Add(vehicle);
-        await context.SaveChangesAsync();
-        return Results.Ok();
-    }
-    catch (Exception ex)
-    {
-        return Results.Problem(ex.Message, statusCode: 500);
-    }
-});
-
 app.MapPost("/api/citizen/register", async ([FromBody] CitizenDto citizenDto, ApplicationDbContext context,
     IValidator<CitizenDto> validatorCitizen, IValidator<CitizenVehicle> validatorCitizenVehicle, IMapper _mapper) =>
 {
@@ -577,9 +562,13 @@ app.MapPost("/api/citizen/register", async ([FromBody] CitizenDto citizenDto, Ap
                 return Results.BadRequest(validation.Errors);
         }
         var citizenExist = context.Citizens.FirstOrDefault(c => c.GovernmentId == citizenDto.GovernmentId);
-        if (citizenExist != null)
+
+        if (citizenExist != null && citizenExist.Status != "No aprobado")
             return Results.Conflict(new { Message = "Este ciudadano ya existe" });
-        
+
+        if (citizenExist != null && citizenExist.Status == "No aprobado")
+            context.Citizens.Remove(citizenExist);
+
         var citizen = _mapper.Map<Citizen>(citizenDto);
         citizen.PasswordHash = BCrypt.Net.BCrypt.HashPassword(citizenDto.Password);
         citizen.Status = "Nuevo";
@@ -610,16 +599,23 @@ app.MapPost("/api/citizen/login", ([FromBody] CitizenLoginDto user, ApplicationD
         {
             return Results.Conflict(new { Message = "Cedula y/o contraseña incorrectos." });
         }
-        if ( new[] {"Nuevo"}.Contains(citizen.Status))
+        if (citizen.Status == "Nuevo")
         {
             return Results.Conflict(new { Message = "Ciudadano aun no esta activo, espere a ser aceptado." });
         }
-        else if (new[] { "No aprobado" }.Contains(citizen.Status))
+        else if (citizen.Status == "No aprobado")
         {
             return Results.Conflict(new { Message = "El ciudadano no fue aprobado, debes volver a registrarte." });
         }
-        var token = tokenService.GenerateToken(user);
-        return Results.Ok(token);
+        else if(citizen.Status == "Aprobado")
+        {
+            var token = tokenService.GenerateToken(user);
+            return Results.Ok(token);
+        }
+        else
+        {
+            return Results.Conflict("El estatus no es valido!");
+        }
     }
     catch (Exception ex)
     {
@@ -659,16 +655,16 @@ app.MapPut("/api/citizen/updateStatus/", async (ApplicationDbContext context, [F
 {
     try
     {
-        if (!new[] { "Nuevo", "Aprobado", "No aprobado" }.Contains(changeCitizenStatusDto.Status))
+        if (!new[] { "Aprobado", "No aprobado" }.Contains(changeCitizenStatusDto.Status))
         {
             return Results.BadRequest("Estatus no es valido.");
         }
         var citizen = context.Citizens.FirstOrDefault(c => c.GovernmentId == changeCitizenStatusDto.GovernmentId);
         if (citizen == null)
-        {
             return Results.NotFound();
-        }
+        
         citizen.Status = changeCitizenStatusDto.Status;
+        
         await context.SaveChangesAsync();
         return Results.Ok();
     }
@@ -677,6 +673,8 @@ app.MapPut("/api/citizen/updateStatus/", async (ApplicationDbContext context, [F
         return Results.Problem(ex.Message, statusCode: 500);
     }
 });
+
+// Citizen vehicles
 
 app.MapGet("/api/citizen/vehicles", (ApplicationDbContext context) =>
 {
@@ -689,6 +687,99 @@ app.MapGet("/api/citizen/vehicles", (ApplicationDbContext context) =>
         return Results.Problem(ex.Message, statusCode: 500);
     }
 });
+
+app.MapGet("/api/citizen/vehicle/{governmentId}", (ApplicationDbContext context, [FromRoute] string governmentId) =>
+{
+    try
+    {
+        var citizen = context.Citizens.FirstOrDefault(c => c.GovernmentId == governmentId);
+
+        if (citizen == null)
+            return Results.NotFound();
+
+        var licensePlates = context.Vehicles.Where(v => v.GovernmentId == citizen.GovernmentId).Select(v => v.LicensePlate).ToList();
+
+        return Results.Ok(licensePlates);
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+});
+
+app.MapPost("/api/citizen/vehicle", async (ApplicationDbContext context, [FromBody] CitizenVehicle citizenVehicle,
+    IValidator<CitizenVehicle> validator) =>
+{
+    try
+    {
+        var validationResult = validator.Validate(citizenVehicle);
+
+        if (!validationResult.IsValid)
+            return Results.BadRequest(validationResult.Errors);
+
+        var vehicle = context.Vehicles.FirstOrDefault(v => v.LicensePlate == citizenVehicle.LicensePlate || v.RegistrationDocument == citizenVehicle.RegistrationDocument);
+
+        if (vehicle != null)
+            return Results.Conflict(new { Message = "Ya existe un vehiculo con esta placa o matricula" });
+
+        var citizen = context.Citizens.FirstOrDefault(c => c.GovernmentId == citizenVehicle.GovernmentId);
+
+        if (citizen == null)
+            return Results.Conflict(new { Message = "No existe un ciudadano con esta cedula" });
+
+        citizenVehicle.Status = "Nuevo";
+        context.Vehicles.Add(citizenVehicle);
+        await context.SaveChangesAsync();
+        return Results.Ok();
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+});
+
+app.MapPut("/api/citizen/vehicles/changeStatus", async (ApplicationDbContext context, ChangeVehicleStatusDto CVSDto) =>
+{
+    try
+    {
+        var vehicle = context.Vehicles.FirstOrDefault(v => v.LicensePlate ==  CVSDto.LicensePlate);
+        if (vehicle == null)
+            return Results.NotFound();
+
+        if (!new[] { "Aprobado", "No aprobado" }.Contains(CVSDto.Status))
+            return Results.BadRequest("Estatus no es valido.");
+
+        vehicle.Status = CVSDto.Status;
+        await context.SaveChangesAsync();
+
+        return Results.Ok(new { Message = "Estatus actualizado con exito" });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+});
+
+app.MapDelete("/api/citizen/vehicles/delete/{licensePlate}", async (ApplicationDbContext context, [FromRoute] string licensePlate) =>
+{
+    try
+    {
+        var vehicle = context.Vehicles.FirstOrDefault(v => v.LicensePlate == licensePlate);
+        if (vehicle == null)
+            return Results.NotFound();
+
+        context.Vehicles.Remove(vehicle);
+        await context.SaveChangesAsync();
+
+        return Results.Ok(new { Message = "Se elimino el vehiculo" });
+
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+});
+
 
 // Crane company
 

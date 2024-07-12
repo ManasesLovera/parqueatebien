@@ -7,6 +7,10 @@ public class CitizenVehicleValidator : AbstractValidator<CitizenVehicle>
 {
     public CitizenVehicleValidator()
     {
+        RuleFor(x => x.GovernmentId)
+            .NotEmpty().NotNull().WithMessage("Falta la cedula del ciudadano")
+            .Matches(@"^[0-9]{11}$").WithMessage("El formato de la cedula es inválido. Debe tener 11 numeros.");
+
         RuleFor(x => x.LicensePlate)
             .NotEmpty().NotNull().WithMessage("Falta la placa del vehiculo")
             .Matches(@"^[A-Z]{1,2}[0-9]{6}$").WithMessage("El formato de la placa es inválido. Debe tener 1 a dos letras mayusculas y 6 numeros.");

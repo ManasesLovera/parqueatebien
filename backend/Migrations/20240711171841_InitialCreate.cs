@@ -16,11 +16,11 @@ namespace backend.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    GovernmentId = table.Column<string>(type: "TEXT", nullable: true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Lastname = table.Column<string>(type: "TEXT", nullable: true),
-                    Email = table.Column<string>(type: "TEXT", nullable: true),
-                    Status = table.Column<bool>(type: "INTEGER", nullable: false),
+                    GovernmentId = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Lastname = table.Column<string>(type: "TEXT", nullable: false),
+                    Email = table.Column<string>(type: "TEXT", nullable: false),
+                    Status = table.Column<string>(type: "TEXT", nullable: false),
                     PasswordHash = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -100,12 +100,13 @@ namespace backend.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    GovernmentId = table.Column<string>(type: "TEXT", nullable: true),
-                    LicensePlate = table.Column<string>(type: "TEXT", nullable: true),
-                    RegistrationDocument = table.Column<string>(type: "TEXT", nullable: true),
-                    Model = table.Column<string>(type: "TEXT", nullable: true),
-                    Year = table.Column<string>(type: "TEXT", nullable: true),
-                    Color = table.Column<string>(type: "TEXT", nullable: true),
+                    GovernmentId = table.Column<string>(type: "TEXT", nullable: false),
+                    LicensePlate = table.Column<string>(type: "TEXT", nullable: false),
+                    RegistrationDocument = table.Column<string>(type: "TEXT", nullable: false),
+                    Model = table.Column<string>(type: "TEXT", nullable: false),
+                    Year = table.Column<string>(type: "TEXT", nullable: false),
+                    Color = table.Column<string>(type: "TEXT", nullable: false),
+                    Status = table.Column<string>(type: "TEXT", nullable: false),
                     CitizenId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>

@@ -335,7 +335,9 @@
 }
 ```
 
-5. GET / -> `/api/citizenVehicle/{governmentId}`:
+### Vehiculos de ciudadanos
+
+5. GET / -> `/api/citizen/vehicles/{governmentId}`:
     - Returns a list of strings of all the vehicle a citizen has
     - 404 NotFound, 200 Ok
 ```json
@@ -343,6 +345,25 @@
     string
 ]
 ```
-6. POST / -> `/api/citizen/addVehicle`:
+6. POST / -> `/api/citizen/vehicle`:
     - Add a vehicle to a citizen
     - 400 BadRequest (Invalid data), 200 Ok
+```json
+{
+    "governmentId": string,
+    "licensePlate": string,
+    "registrationDocument": string,
+    "model": string,
+    "year": string,
+    "color": string
+}
+```
+7. PUT / -> `/api/citizen/vehicles/changeStatus`
+    - Change status to "Aprobado" or "No aprobado"
+    - 404 NotFound, 400 BadRequest, 200 Ok
+```json
+{
+    "licensePlate": string,
+    "status": string
+}
+```
