@@ -470,7 +470,7 @@ app.MapGet("api/user/{username}", ([FromRoute] string username, ApplicationDbCon
 })
     .RequireAuthorization();
 
-app.MapPut("/api/user", async (ApplicationDbContext context, [FromBody] UpdateUserDto updateUserDto) =>
+app.MapPut("/api/user", async (ApplicationDbContext context, [FromBody] UserUpdateDto updateUserDto) =>
 {
     try
     {
@@ -478,7 +478,6 @@ app.MapPut("/api/user", async (ApplicationDbContext context, [FromBody] UpdateUs
         if (user == null)
             return Results.NotFound();
 
-        user.Username = updateUserDto.Username;
         user.Status = updateUserDto.Status;
         user.Role = updateUserDto.Role;
         if (updateUserDto.Role == "Grua")
@@ -694,7 +693,10 @@ app.MapPut("/api/citizen/updateStatus/", async (ApplicationDbContext context, [F
     {
         return Results.Problem(ex.Message, statusCode: 500);
     }
-});
+})
+    .RequireAuthorization();
+
+
 
 // Citizen vehicles
 

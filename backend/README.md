@@ -226,6 +226,18 @@
     - Deletes user with username
     - 200 Ok, 404 NotFound
 
+7. PUT / -> `/api/user`:
+    - Updates user
+    - 200 Ok, 400 BadRequest
+```json
+{
+    "employeeCode": string,
+    "status": boolean,
+    "role": string, // "Admin", "Agente", "Grua" -> Si tiene grua debe tener empresa de grua, si no, no se debe mandar
+    "craneCompany": string
+}
+```
+
 ### Empresas de grua
 
 1. GET / -> `/api/craneCompanies/`:
