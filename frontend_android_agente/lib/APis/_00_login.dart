@@ -1,13 +1,13 @@
 import 'dart:convert';
+import 'package:frontend_android/Models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginSendData {
+class ClasLoginApi {
   static final Logger _logger = Logger();
 
-  static Future<bool> signIn(
-      String username, String password, String role) async {
+  static Future<bool> methodLoginApiFuture(UserModel usermodelobjet) async {
     const url = 'http://192.168.0.209:8089/api/user/login';
     try {
       final response = await http
@@ -16,11 +16,7 @@ class LoginSendData {
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
             },
-            body: jsonEncode(<String, String>{
-              "username": username,
-              "password": password,
-              "role": role,
-            }),
+            body: jsonEncode(usermodelobjet.toJson()),
           )
           .timeout(const Duration(seconds: 5));
       _logger.i('Response status: ${response.statusCode}');
@@ -33,7 +29,7 @@ class LoginSendData {
 
         final prefs = await SharedPreferences.getInstance();
         await Future.wait([
-          prefs.setString('loggedInUser', username),
+          prefs.setString('loggedInUser', usermodelobjet.username),
           prefs.setString('token', token)
         ]);
 
