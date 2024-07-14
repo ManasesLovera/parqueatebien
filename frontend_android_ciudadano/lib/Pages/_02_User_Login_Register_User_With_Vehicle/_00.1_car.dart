@@ -13,7 +13,7 @@ import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_custom_text
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_01_titlle_textfield_.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/_02_custom_buttom_.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/color_dropdownselectitem.dart';
-import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/year_dropdownselectitem.dart';
+import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/year_picker_select_item.dart';
 
 class RegisterCar extends StatefulWidget {
   final String governmentId;
@@ -59,7 +59,7 @@ class _RegisterCarState extends State<RegisterCar> {
                 listener: (context, state) {
                   if (state is RegisterSuccess) {
                     showUniversalSuccessErrorDialogCar(
-                        context, 'Registro exitoso', true);
+                        context, 'Registro completa, espere a ser confirmado', true);
                     Future.delayed(const Duration(seconds: 2), () {
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
@@ -110,16 +110,17 @@ class _RegisterCarState extends State<RegisterCar> {
                         const CustomText(
                           text: 'Año',
                         ),
-                        YearDropdownSelectItem(
-                          items: controller.years,
-                          selectedItem: controller.selectedYear,
+                        YearPickerSelectItem(
+                          initialYear: controller.selectedYear != null
+                              ? int.parse(controller.selectedYear!)
+                              : DateTime.now().year,
                           onChanged: (value) {
                             setState(() {
-                              controller.selectedYear = value;
+                              controller.selectedYear = value?.toString();
                               controller.updateButtonState();
                             });
                           },
-                          hintText: 'Seleccionar año', dropdownBackgroundColor: const Color(0xFFFFFFFF),
+                          dropdownBackgroundColor: const Color(0xFFFFFFFF),
                         ),
                         SizedBox(height: 16.h),
                         const CustomText(

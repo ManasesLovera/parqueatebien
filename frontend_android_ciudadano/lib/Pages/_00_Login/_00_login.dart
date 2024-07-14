@@ -30,6 +30,11 @@ class LoginState extends State<Login> {
     _isFilled.value = _iD.text.isNotEmpty && _pass.text.isNotEmpty;
   }
 
+  void clearFields() {
+    _iD.clear();
+    _pass.clear();
+  }
+
   @override
   void dispose() {
     _iD.removeListener(_updateButtonState);

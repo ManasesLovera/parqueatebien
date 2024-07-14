@@ -11,7 +11,7 @@ import 'package:frontend_android_ciudadano/Pages/_01_Welcome/_00_welcome.dart';
 import 'package:frontend_android_ciudadano/Pages/_02_User_Login_Register_User_With_Vehicle/_00.1_car.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/color_dropdownselectitem.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/user_register_widgets.dart';
-import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/year_dropdownselectitem.dart';
+import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/year_picker_select_item.dart';
 
 class RegisterNewCarScreen extends StatefulWidget {
   const RegisterNewCarScreen({super.key});
@@ -104,22 +104,23 @@ class _RegisterNewCarState extends State<RegisterNewCarScreen> {
                         const CustomText(
                           text: 'Año',
                         ),
-                        YearDropdownSelectItem(
-                          items: controller.years,
-                          selectedItem: controller.selectedYear,
+                     YearPickerSelectItem(
+                          initialYear: controller.selectedYear != null
+                              ? int.parse(controller.selectedYear!)
+                              : DateTime.now().year,
                           onChanged: (value) {
                             setState(() {
-                              controller.selectedYear = value;
+                              controller.selectedYear = value?.toString();
+                              controller.updateButtonStateNew();
                             });
-                            controller.updateButtonStateNew();
                           },
-                          hintText: 'Seleccionar año',
                           dropdownBackgroundColor: const Color(0xFFFFFFFF),
                         ),
                         SizedBox(height: 16.h),
                         const CustomText(
                           text: 'Color',
                         ),
+                     
                         ColorDropdown(
                           items: controller.colors,
                           selectedItem: controller.selectedColor,
