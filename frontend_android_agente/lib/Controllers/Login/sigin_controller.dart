@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:frontend_android/APis/_00_login.dart';
+import 'package:frontend_android/Models/user_model.dart';
 
-Future<bool> controllersignUserIn(
+Future<bool> methodControllerLoginFuture(
   String governmentID,
   String password,
   String role,
@@ -11,7 +12,9 @@ Future<bool> controllersignUserIn(
         'Por favor, ingrese tanto el nombre de usuario como la contraseña.');
   }
   try {
-    final success = await LoginSendData.signIn(governmentID, password, role);
+    final usermodel =
+        UserModel(username: governmentID, password: password, role: role);
+    final success = await ClasLoginApi.methodLoginApiFuture(usermodel);
     if (success) {
       return true;
     } else {
