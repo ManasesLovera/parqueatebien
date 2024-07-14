@@ -479,6 +479,10 @@ app.MapPut("/api/user", async (ApplicationDbContext context, [FromBody] UserUpda
             return Results.NotFound();
 
         user.Status = updateUserDto.Status;
+        if(! new[] { "Admin", "Agente", "Grua" }.Contains(updateUserDto.Role))
+        {
+            return Results.BadRequest("Rol no es valido");
+        }
         user.Role = updateUserDto.Role;
         if (updateUserDto.Role == "Grua")
         {
