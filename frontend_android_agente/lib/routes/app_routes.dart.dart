@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_android/Pages/_00_Login/_00_login.dart';
+import 'package:frontend_android/Pages/_00_Login/login_page.dart';
 import '../Pages/_02_1.2_Confirmation/_03_confirmation.dart';
 import '../Pages/_02_1.1_Fhoto/_02_foto.dart';
 import '../Pages/_02_1.4_OnError/_05_error.dart';
@@ -23,7 +23,7 @@ class AppRoutes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case login:
-        return MaterialPageRoute(builder: (_) => ClassPageLogin());
+        return MaterialPageRoute(builder: (_) => const ClassPageLogin());
       case forgot:
         return MaterialPageRoute(builder: (_) => const Forgot());
       case welcome:
@@ -67,7 +67,7 @@ class AppRoutes {
         return MaterialPageRoute(
             builder: (_) => const EnterPlateNumberScreen());
       default:
-        return MaterialPageRoute(builder: (_) => ClassPageLogin());
+        return MaterialPageRoute(builder: (_) => const ClassPageLogin());
     }
   }
 }
