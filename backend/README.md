@@ -347,6 +347,15 @@
     "status": string
 }
 ```
+5. PUT / -> `/api/citizen/updateNotificationToken`:
+    - Update notification token
+    - 400 BadRequest, 404 Citizen Not Found, 200 Ok (token updated)
+```json
+{
+    "governmentId": string,
+    "notificationToken": string
+}
+```
 
 ### Vehiculos de ciudadanos
 

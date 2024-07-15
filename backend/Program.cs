@@ -18,9 +18,8 @@ using AutoMapper;
 using FluentValidation;
 using backend.Validations;
 using System.Text.RegularExpressions;
-//using FirebaseAdmin;
-//using Google.Apis.Auth.OAuth2;
-//using backend.NotificationService;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,13 +42,15 @@ builder.Services.AddCors(options =>
 });
 
 // Firabase configuration
-//FirebaseApp.Create(new AppOptions()
-//{
-//    Credential = GoogleCredential.FromFile("path/to/your-service-account-file.json") // MISSING VERY IMPORTANT <- PATH TO SERVICE ACCOUNT FILE.json
-//});
+FirebaseApp.Create(new AppOptions()
+{
+    Credential = GoogleCredential.FromFile(/*Path.Combine(AppDomain.CurrentDomain.BaseDirectory,*/"parqueatebien-484af-firebase-adminsdk-zi7ox-f119c9e3f7.json")/*)*/// MISSING VERY IMPORTANT <- PATH TO SERVICE ACCOUNT FILE.json
+});
+
+// token: BHxgcdvTWWPgRmijvMQx-GC8w9cfP5wJHNXyJX1eq7u6_8Gb5PZSac4gS2F-qYIFkwquJVPscGFx0RdHVdmMWt0
 
 // Register Notification Service
-//builder.Services.AddSingleton<NotificationService>();
+builder.Services.AddSingleton<NotificationService>();
 
 // Database connection EF
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -124,7 +125,7 @@ app.UseCors();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-//app.UseRouting();
+app.UseRouting();
 
 // Endpoints for citizens
 
@@ -201,7 +202,8 @@ app.MapGet("/api/reporte/{licensePlate}", async (IMapper _mapper, ApplicationDbC
 
 app.MapPost("/api/reporte", async (
     IValidator<ReportDto> validator, IMapper _mapper,
-    ApplicationDbContext context, [FromBody] ReportDto reportDto) =>
+    ApplicationDbContext context, [FromBody] ReportDto reportDto,
+    NotificationService notificationService) =>
 {
     try
     {
@@ -232,7 +234,18 @@ app.MapPost("/api/reporte", async (
         }
         report.Photos = photos;
         context.Reports.Add(report);
+
+        var vehicle = await context.Vehicles.FirstOrDefaultAsync(v => v.LicensePlate == reportDto.LicensePlate);
+
+        if(vehicle != null)
+        {
+            var citizen = await context.Citizens.FirstOrDefaultAsync(c => c.GovernmentId == vehicle.GovernmentId);
+            if (citizen != null && !String.IsNullOrEmpty(citizen.NotificationToken))
+                await notificationService.SendNotificationAsync(citizen.NotificationToken,"Reporte del vehículo",$"Tu vehículo con placa {reportDto.LicensePlate} ha sido reportado.");
+        }
+
         await context.SaveChangesAsync();
+
         return Results.Created("/api/report/" + reportDto.LicensePlate,
             _mapper.Map<ReportResponseDto>(context.Reports.FirstOrDefault(r => r.LicensePlate == report.LicensePlate)));
     }
@@ -669,7 +682,9 @@ app.MapDelete("/api/citizen/{governmentId}", async (ApplicationDbContext context
 })
     .RequireAuthorization();
 
-app.MapPut("/api/citizen/updateStatus/", async (ApplicationDbContext context, [FromBody] ChangeCitizenStatusDto changeCitizenStatusDto) =>
+app.MapPut("/api/citizen/updateStatus/", async (ApplicationDbContext context, 
+        [FromBody] ChangeCitizenStatusDto changeCitizenStatusDto,
+        NotificationService notificationService) =>
 {
     try
     {
@@ -689,7 +704,16 @@ app.MapPut("/api/citizen/updateStatus/", async (ApplicationDbContext context, [F
         {
             vehicle.Status = "Aprobado";
         }
-        
+
+        if(citizen.Status == "Aprobado" && !String.IsNullOrEmpty(citizen.NotificationToken))
+        {
+            await notificationService.SendNotificationAsync(citizen.NotificationToken, "Estado de solicitud", "Tu estado ha sido actualizado a 'Aprobado'. Ya puedes iniciar sesión.");
+        }
+        else if (citizen.Status == "No aprobado" && !String.IsNullOrEmpty(citizen.NotificationToken))
+        {
+            await notificationService.SendNotificationAsync(citizen.NotificationToken, "Estado de solicitud", "Tu estado ha sido actualizado a 'No aprobado'. Por favor haz el registro de nuevo.");
+        }
+
         await context.SaveChangesAsync();
         return Results.Ok();
     }
@@ -700,7 +724,26 @@ app.MapPut("/api/citizen/updateStatus/", async (ApplicationDbContext context, [F
 })
     .RequireAuthorization();
 
+app.MapPut("/api/citizen/updateNotificationToken", async (ApplicationDbContext context, 
+        [FromBody] UpdateNotificationTokenDto updateNotificationTokenDto) =>
+{
+    try
+    {
+        var citizen = await context.Citizens.FirstOrDefaultAsync(c => c.GovernmentId == updateNotificationTokenDto.GovernmentId);
+        if (citizen == null)
+            return Results.NotFound("Ciudadano no encontrado.");
 
+        citizen.NotificationToken = updateNotificationTokenDto.NotificationToken;
+
+        await context.SaveChangesAsync();
+        return Results.Ok("Token de notificación actualizado correctamente.");
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: 500);
+    }
+})
+.RequireAuthorization();
 
 // Citizen vehicles
 

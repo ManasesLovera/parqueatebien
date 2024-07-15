@@ -21,4 +21,5 @@ public class Citizen : IUser
     public string? Status { get; set; }
     public string? PasswordHash { get; set; }
     public List<CitizenVehicle>? Vehicles { get; set; }
+    public string? NotificationToken { get; set; }
 }

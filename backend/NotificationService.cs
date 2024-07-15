@@ -1,6 +1,6 @@
 ﻿using FirebaseAdmin.Messaging;
 
-namespace backend.NotificationService;
+namespace backend;
 
 public class NotificationService
 {
