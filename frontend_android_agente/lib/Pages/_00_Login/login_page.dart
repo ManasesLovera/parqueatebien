@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/Bloc/Login/login_cubit.dart';
-import 'package:frontend_android/Handlers/Login/sign_handler.dart';
-import 'package:frontend_android/Widgets/Login/_01_passtextfield_login.dart';
-import 'package:frontend_android/Widgets/Login/_00_usertext_field_login.dart';
-import 'package:frontend_android/Widgets/Login/_02_buttom_login.dart';
-import 'package:frontend_android/Widgets/Login/general_widgets_login.dart';
-import 'package:frontend_android/Widgets/Login/login_texts.dart';
+import 'package:frontend_android/Bloc/Login/login_buttom_login_cubit.dart';
+import 'package:frontend_android/Handlers/Login/login_handler.dart';
+import 'package:frontend_android/Widgets/Login/login_buttom.dart';
+import 'package:frontend_android/Widgets/Login/login_general_widgets.dart';
+import 'package:frontend_android/Widgets/Login/login_text_and_textfields_components.dart';
 
 class ClassPageLogin extends StatelessWidget {
   const ClassPageLogin({super.key});
@@ -20,7 +18,7 @@ class ClassPageLogin extends StatelessWidget {
     return
         //
         BlocProvider(
-            create: (context) => LoginCubit(),
+            create: (context) => ClassLoginCubit(),
             //
             child: Scaffold(
               backgroundColor: const Color.fromARGB(255, 9, 157, 210),
@@ -33,14 +31,22 @@ class ClassPageLogin extends StatelessWidget {
                         SizedBox(height: 50.h),
                         const LoginWidgets(),
                         SizedBox(height: 50.h),
-                        const ClasLoginText(text: 'Cedula'),
-                        GovernmentIDTextField(
-                            controller: iD, passController: iD),
-                        SizedBox(height: 20.h),
-                        const ClasLoginText(text: 'Contraseña'),
-                        PasswordTextField(controller: pass, idController: pass),
-                        SizedBox(height: 16.h),
-                        BlocBuilder<LoginCubit, bool>(
+                        ClassUserPassTextAndTextfieldToo(
+                          label: 'Usuario',
+                          controller: iD,
+                          otherController: pass,
+                          hintText: 'Ingrese usuario',
+                        ),
+                        ClassUserPassTextAndTextfieldToo(
+                          label: 'Contraseña',
+                          controller: pass,
+                          otherController: iD,
+                          hintText: 'Ingresar la contraseña',
+                          obscureText: true,
+                          suffixIcon: const Icon(Icons.remove_red_eye),
+                          inputFormatters: const [],
+                        ),
+                        BlocBuilder<ClassLoginCubit, bool>(
                           builder: (context, isFilled) {
                             return ClasLoginButton(
                                 onPressed: isFilled
