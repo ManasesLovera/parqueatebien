@@ -122,10 +122,10 @@ app.Use(async (context, next) =>
 });
 
 app.UseCors();
+app.UseRouting();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseRouting();
 
 // Endpoints for citizens
 
@@ -573,7 +573,8 @@ app.MapGet("/api/citizens", (ApplicationDbContext context, IMapper _mapper) =>
     {
         return Results.Problem(ex.Message, statusCode: 500);
     }
-});
+})
+    .RequireAuthorization();
 
 app.MapPost("/api/citizen/register", async ([FromBody] CitizenDto citizenDto, ApplicationDbContext context,
     IValidator<CitizenDto> validatorCitizen, IValidator<CitizenVehicle> validatorCitizenVehicle, IMapper _mapper) =>
@@ -757,7 +758,8 @@ app.MapGet("/api/citizen/vehicles", (ApplicationDbContext context) =>
     {
         return Results.Problem(ex.Message, statusCode: 500);
     }
-});
+})
+    .RequireAuthorization();
 
 app.MapGet("/api/citizen/vehicle/{governmentId}", (ApplicationDbContext context, [FromRoute] string governmentId) =>
 {
@@ -776,7 +778,8 @@ app.MapGet("/api/citizen/vehicle/{governmentId}", (ApplicationDbContext context,
     {
         return Results.Problem(ex.Message, statusCode: 500);
     }
-});
+})
+    .RequireAuthorization();
 
 app.MapPost("/api/citizen/vehicle", async (ApplicationDbContext context, [FromBody] CitizenVehicle citizenVehicle,
     IValidator<CitizenVehicle> validator) =>
@@ -807,7 +810,8 @@ app.MapPost("/api/citizen/vehicle", async (ApplicationDbContext context, [FromBo
     {
         return Results.Problem(ex.Message, statusCode: 500);
     }
-});
+})
+    .RequireAuthorization();
 
 app.MapPut("/api/citizen/vehicles/changeStatus", async (ApplicationDbContext context, ChangeVehicleStatusDto CVSDto) =>
 {
@@ -829,7 +833,8 @@ app.MapPut("/api/citizen/vehicles/changeStatus", async (ApplicationDbContext con
     {
         return Results.Problem(ex.Message, statusCode: 500);
     }
-});
+})
+    .RequireAuthorization();
 
 app.MapDelete("/api/citizen/vehicles/delete/{licensePlate}", async (ApplicationDbContext context, [FromRoute] string licensePlate) =>
 {
