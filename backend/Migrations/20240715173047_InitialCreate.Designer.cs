@@ -11,7 +11,7 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240712083158_InitialCreate")]
+    [Migration("20240715173047_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -40,6 +40,9 @@ namespace backend.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NotificationToken")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PasswordHash")

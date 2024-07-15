@@ -21,7 +21,8 @@ namespace backend.Migrations
                     Lastname = table.Column<string>(type: "TEXT", nullable: false),
                     Email = table.Column<string>(type: "TEXT", nullable: false),
                     Status = table.Column<string>(type: "TEXT", nullable: false),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true)
+                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
+                    NotificationToken = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
