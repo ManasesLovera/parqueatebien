@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android_ciudadano/Api/AddNew_Vehicle/add_vehicle_api.dart';
+import 'package:frontend_android_ciudadano/Api/AddNew_Vehicle/add_new_vehicle.dart';
 import 'package:frontend_android_ciudadano/Blocs/Vehicle_New_Add/new_vehicle_registration_bloc.dart';
 import 'package:frontend_android_ciudadano/Blocs/Vehicle_New_Add/new_vehicle_registration_state.dart';
 import 'package:frontend_android_ciudadano/Controllers/Vehicle_User_Register/register_car_controller.dart';
@@ -47,7 +47,7 @@ class _RegisterNewCarState extends State<RegisterNewCarScreen> {
                   if (state is NewVehicleRegistrationSuccess) {
                    showUniversalSuccessErrorDialogCarNewNew(
                       context,
-                      'Vehiculo Registrado, Ya puede consultarlo.',
+                      'Vehiculo registrado, espere confirmacion para consulta',
                       true,
                     );
                     Future.delayed(const Duration(seconds: 2), () {

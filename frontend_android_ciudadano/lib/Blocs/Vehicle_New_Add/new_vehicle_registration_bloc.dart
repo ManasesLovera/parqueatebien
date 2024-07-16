@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend_android_ciudadano/Api/AddNew_Vehicle/add_vehicle_api.dart';
+import 'package:frontend_android_ciudadano/Api/AddNew_Vehicle/add_new_vehicle.dart';
 import 'package:logger/logger.dart';
 import 'new_vehicle_registration_event.dart';
 import 'new_vehicle_registration_state.dart';
@@ -14,7 +14,7 @@ class NewVehicleRegistrationBloc
     on<RegisterNewVehicle>((event, emit) async {
       emit(NewVehicleRegistrationLoading());
       try {
-        final success = await api.addVehicle(
+        final success = await api.addVehicleNew(
           governmentId: event.governmentId,
           licensePlate: event.licensePlate,
           registrationDocument: event.matricula,
