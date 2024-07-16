@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AddNewVehicleApi {
   static final Logger _logger = Logger();
 
-  Future<bool> addVehicle({
+  Future<bool> addVehicleNew({
     required String governmentId,
     required String licensePlate,
     required String registrationDocument,
@@ -44,7 +44,7 @@ class AddNewVehicleApi {
       _logger.i('Response status: ${response.statusCode}');
       _logger.i('Response body: ${response.body}');
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return true;
       } else if (response.statusCode == 400) {
         _logger.e('Bad request: ${response.body}');
@@ -64,6 +64,10 @@ class AddNewVehicleApi {
 
   Future<String?> _getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token');
+    String? token = prefs.getString('token');
+    if (token != null) {
+      token = token.replaceAll('"', ''); // Elimina comillas adicionales
+    }
+    return token;
   }
 }
