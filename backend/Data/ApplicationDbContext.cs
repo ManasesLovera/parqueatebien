@@ -17,14 +17,25 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Report>()
+            .HasIndex(r => r.LicensePlate)
+            .IsUnique();
+
         modelBuilder.Entity<Picture>()
             .HasOne(p => p.Report)
             .WithMany(r => r.Photos)
-            .HasForeignKey(p => p.LicensePlate);
+            .HasForeignKey(p => p.LicensePlate)
+            .HasPrincipalKey(r => r.LicensePlate);
+
+        modelBuilder.Entity<Citizen>()
+            .HasIndex(c => c.GovernmentId)
+            .IsUnique();
+
         modelBuilder.Entity<CitizenVehicle>()
             .HasOne(v => v.Citizen)
             .WithMany(c => c.Vehicles)
-            .HasForeignKey(v => v.GovernmentId);
+            .HasForeignKey(v => v.GovernmentId)
+            .HasPrincipalKey(c => c.GovernmentId);
     }
     public static void Seed(ApplicationDbContext context)
     {
