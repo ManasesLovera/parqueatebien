@@ -6,6 +6,7 @@ import 'package:frontend_android/Pages/_01_Welcome/welcome.dart';
 import 'package:frontend_android/Widgets/Map_Global/map_global.dart';
 import 'package:frontend_android/Widgets/Reportes/report_widgets.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
@@ -18,6 +19,7 @@ class ReportScreenState extends State<ReportScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late FormControllerReport _formController;
   late FormHandlersReport _formHandlers;
+  String? userRole;
 
   @override
   void initState() {
@@ -33,6 +35,14 @@ class ReportScreenState extends State<ReportScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _formController.init(context); // Pass the context here
       _formHandlers.getLocation(context); // Get location initially
+      _loadUserRole(); // Load user role on init
+    });
+  }
+
+  Future<void> _loadUserRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userRole = prefs.getString('role');
     });
   }
 
