@@ -2,23 +2,23 @@
 
 #### Dependencies/libraries
 
-`Microsoft.EntityFrameworkCore`
-`Microsoft.EntityFrameworkCore.Design`
-`Microsoft.EntityFrameworkCore.Sqlite`
-`Microsoft.EntityFrameworkCore.Tools`
-`"Microsoft.IdentityModel.Tokens`
-`Portable.BouncyCastle`
-`AutoMapper`
-`BCrypt.Net-Next`
-`FluentValidation`
-`Microsoft.AspNetCore.Authentication.JwtBearer`
-`Microsoft.IdentityModel.Tokens`
-`System.IdentityModel.Tokens.Jwt`
+`Microsoft.EntityFrameworkCore`<br>
+`Microsoft.EntityFrameworkCore.Design`<br>
+`Microsoft.EntityFrameworkCore.Sqlite`<br>
+`Microsoft.EntityFrameworkCore.Tools`<br>
+`"Microsoft.IdentityModel.Tokens`<br>
+`Portable.BouncyCastle`<br>
+`AutoMapper`<br>
+`BCrypt.Net-Next`<br>
+`FluentValidation`<br>
+`Microsoft.AspNetCore.Authentication.JwtBearer`<br>
+`Microsoft.IdentityModel.Tokens`<br>
+`System.IdentityModel.Tokens.Jwt`<br>
 `Swashbuckle.AspNetCore`
 
 ## API Documentation
 
-### Reportes
+### Reports
 
 1. GET / -> `/api/reportes`:
 	- Returns an array of Reports
@@ -151,7 +151,7 @@
 
 ### Usuario (Admin, Agente, Grua)
 
-#### Registrar usuario
+#### Register user
 1. POST / -> `/api/user/register`:
     - This will register the user with the data provided
     - 200 OK, 400 BadRequest (Invalid data), 409 Conflict (User (EmployeeCode or Username) exist, craneCompany doesnt exist)
@@ -225,7 +225,6 @@
     "username": string,
     "password": string // new password
 }
-
 ```
 6. DELETE / -> `/api/user/{username}`:
     - Deletes user with username
@@ -243,7 +242,7 @@
 }
 ```
 
-### Empresas de grua
+### Crane company
 
 1. GET / -> `/api/craneCompanies/`:
     - Get a list of all crane companies
@@ -285,7 +284,7 @@
     - Delete crane company by RNC
     - 200 Ok, 404 NotFound
 
-### Ciudadanos
+### Citizens
 
 1. GET / -> `/api/citizens`:
     - Get all citizens
@@ -385,7 +384,7 @@
     "color": string
 }
 ```
-7. PUT / -> `/api/citizen/vehicles/changeStatus`
+7. PUT / -> `/api/citizen/vehicles/changeStatus`:
     - Change status to "Aprobado" or "No aprobado"
     - 404 NotFound, 400 BadRequest, 200 Ok
 ```json
@@ -394,3 +393,8 @@
     "status": string
 }
 ```
+
+## Code Documentation
+
+### Data Directory:
+

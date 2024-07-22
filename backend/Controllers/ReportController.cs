@@ -8,25 +8,14 @@ using Microsoft.Extensions.Logging;
 
 namespace backend.Controllers
 {
-    [Route("[controller]")]
-    public class ReportController : Controller
+    [Route("api/report")]
+    [ApiController]
+    public class ReportController : ControllerBase
     {
-        private readonly ILogger<ReportController> _logger;
-
-        public ReportController(ILogger<ReportController> logger)
+        public ReportController()
         {
-            _logger = logger;
+            
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View("Error!");
-        }
     }
 }

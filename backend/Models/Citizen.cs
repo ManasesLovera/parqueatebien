@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using backend.Interfaces;
 
 namespace backend.Models;
 // Model for Citizen
