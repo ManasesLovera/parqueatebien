@@ -1,7 +1,7 @@
 ﻿using backend.DTOs;
 using FluentValidation;
 namespace backend.Validations;
-
+// Object validator for ReportDto
 public class ReportDtoValidator : AbstractValidator<ReportDto>
 {
     public ReportDtoValidator()

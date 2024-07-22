@@ -2,8 +2,8 @@
 using backend.DTOs;
 using backend.Models;
 
-namespace backend;
-
+namespace backend.Services;
+// Using AutoMapper library for mapping different objects, like from models to DTOs, etc...
 public class MappingConfig : Profile
 {
     public MappingConfig()

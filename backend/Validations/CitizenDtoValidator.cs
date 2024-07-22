@@ -2,7 +2,7 @@
 using FluentValidation;
 
 namespace backend.Validations;
-
+// Object validator for CitizenDto
 public class CitizenDtoValidator : AbstractValidator<CitizenDto>
 {
     public CitizenDtoValidator()

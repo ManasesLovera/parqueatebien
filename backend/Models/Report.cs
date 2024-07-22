@@ -1,4 +1,5 @@
 ﻿namespace backend.Models;
+
 public class Report
 {
     public int Id { get; set; }
@@ -20,5 +21,5 @@ public class Report
     public string? ReleasedBy { get; set; } = null;
     public string? Lat { get; set; }
     public string? Lon { get; set; }
-    public List<Picture>? Photos { get; set; }
+    public ICollection<Picture>? Photos { get; set; }
 }

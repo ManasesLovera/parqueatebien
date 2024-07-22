@@ -1,5 +1,6 @@
 using System.Text.Json;
 using backend.Models;
+using backend.Interfaces;
 using backend.DTOs;
 using Newtonsoft.Json;
 using System.Security.Claims;
@@ -13,7 +14,6 @@ using backend.Services;
 using backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using backend;
 using AutoMapper;
 using FluentValidation;
 using backend.Validations;
@@ -134,6 +134,7 @@ app.MapGet("/", () =>
     return Results.Ok("Nothing available here");
 });
 
+// Returns a list of all reports in the database
 app.MapGet("/api/reportes", async (IMapper _mapper, ApplicationDbContext context) =>
 {
     try
@@ -168,6 +169,7 @@ app.MapGet("/api/reportes", async (IMapper _mapper, ApplicationDbContext context
     .Produces<List<ReportResponseDto>>(200)
     .RequireAuthorization();
 
+// Returns a single report by licenseplate
 app.MapGet("/api/reporte/{licensePlate}", async (IMapper _mapper, ApplicationDbContext context,[FromRoute] string licensePlate) =>
 {
     try
@@ -200,6 +202,7 @@ app.MapGet("/api/reporte/{licensePlate}", async (IMapper _mapper, ApplicationDbC
     .WithName("GetReport")
     .Produces<ReportResponseDto>(200);
 
+// Add new report to the database, receives ReportDto
 app.MapPost("/api/reporte", async (
     IValidator<ReportDto> validator, IMapper _mapper,
     ApplicationDbContext context, [FromBody] ReportDto reportDto,
@@ -213,8 +216,7 @@ app.MapPost("/api/reporte", async (
             return Results.BadRequest(validationResult.Errors);
         }
         var existingReports = await context.Reports
-            .Where(r => r.LicensePlate == reportDto.LicensePlate &&
-                  (r.Status != "Liberado" && r.Active))
+            .Where(r => r.LicensePlate == reportDto.LicensePlate && r.Status != "Liberado" && r.Active)
             .AnyAsync();
 
         if (existingReports)
@@ -256,6 +258,7 @@ app.MapPost("/api/reporte", async (
 })
     .RequireAuthorization();
 
+// Delete last report from the database by license plate
 app.MapDelete("/api/reporte/{licensePlate}", async (ApplicationDbContext context, [FromRoute] string licensePlate) =>
 {
     try
@@ -282,6 +285,7 @@ app.MapDelete("/api/reporte/{licensePlate}", async (ApplicationDbContext context
 })
     .RequireAuthorization();
 
+// Update the status of the report, statuses could be "Incautado por grua", "Retenido", "Liberado"
 app.MapPut("/api/reporte/actualizarEstado", async (ApplicationDbContext context, [FromBody] ChangeStatusDTO changeStatusDTO, ClaimsPrincipal user) =>
 {
     try
@@ -331,6 +335,7 @@ app.MapPut("/api/reporte/actualizarEstado", async (ApplicationDbContext context,
 })
     .RequireAuthorization();
 
+// Cancel report
 app.MapPut("/api/reporte/cancelar/{licensePlate}", async (ApplicationDbContext context, [FromRoute] string licensePlate) =>
 {
     try
@@ -354,6 +359,7 @@ app.MapPut("/api/reporte/cancelar/{licensePlate}", async (ApplicationDbContext c
 })
     .RequireAuthorization();
 
+// Returns the amount of reports by status
 app.MapGet("/api/reportes/estadisticas", (ApplicationDbContext context) =>
 {
     int reportados = context.Reports.Where(r => r.Status == "Reportado").ToList().Count;
@@ -367,6 +373,7 @@ app.MapGet("/api/reportes/estadisticas", (ApplicationDbContext context) =>
 
 // USUARIOS
 
+// Register user
 app.MapPost("/api/user/register", async (IValidator<UserDto> validator, IMapper _mapper,
     UserDto userDto, ApplicationDbContext context) =>
 {
@@ -419,31 +426,24 @@ app.MapPost("/api/user/register", async (IValidator<UserDto> validator, IMapper 
     
 });
 
+// Login user
 app.MapPost("/api/user/login", ([FromBody] UserLoginDto userDto, ApplicationDbContext context, TokenService tokenService) =>
 {
     try
     {
-        if(userDto.Role == "Grua" || userDto.Role == "Admin" || userDto.Role == "Agente")
-        {
-            var user = context.Users.FirstOrDefault(u => u.Username == userDto.Username
-                                                    && u.Role == userDto.Role);
+        var user = context.Users.FirstOrDefault(u => u.Username == userDto.Username);
 
-            if( user == null)
-            {
-                return Results.NotFound("No se encontro el usuario.");
-            }
-
-            if (!BCrypt.Net.BCrypt.Verify(userDto.Password, user!.PasswordHash))
-            {
-                return Results.Conflict(new { Message = "Usuario y/o contraseña incorrectos" });
-            }
-            var token = tokenService.GenerateToken(user);
-            return Results.Ok(token);
-        }
-        else
+        if( user == null)
         {
-            return Results.BadRequest(new { Message = "Rol no es valido." });
+            return Results.NotFound("No se encontro el usuario.");
         }
+
+        if (!BCrypt.Net.BCrypt.Verify(userDto.Password, user!.PasswordHash))
+        {
+            return Results.Conflict(new { Message = "Usuario y/o contraseña incorrectos" });
+        }
+        var token = tokenService.GenerateToken(user);
+        return Results.Ok(new {Token=token, Role=user.Role});
     }
     catch(Exception ex)
     {
@@ -451,6 +451,7 @@ app.MapPost("/api/user/login", ([FromBody] UserLoginDto userDto, ApplicationDbCo
     }
 });
 
+// Get all users
 app.MapGet("/api/users", (IMapper _mapper, ApplicationDbContext context) => 
 { 
     try
@@ -465,6 +466,7 @@ app.MapGet("/api/users", (IMapper _mapper, ApplicationDbContext context) =>
 })
     .RequireAuthorization();
 
+// Get user by username
 app.MapGet("api/user/{username}", ([FromRoute] string username, ApplicationDbContext context) =>
 {
     try
@@ -483,6 +485,7 @@ app.MapGet("api/user/{username}", ([FromRoute] string username, ApplicationDbCon
 })
     .RequireAuthorization();
 
+// Updates user status and/or user role
 app.MapPut("/api/user", async (ApplicationDbContext context, [FromBody] UserUpdateDto updateUserDto) =>
 {
     try
@@ -512,6 +515,7 @@ app.MapPut("/api/user", async (ApplicationDbContext context, [FromBody] UserUpda
     }
 });
 
+// Updates user password
 app.MapPut("/api/user/changePassword", async ([FromBody] ChangePasswordDto CPDto, ApplicationDbContext context) =>
 {
     try
@@ -532,6 +536,7 @@ app.MapPut("/api/user/changePassword", async ([FromBody] ChangePasswordDto CPDto
 })
     .RequireAuthorization();
 
+// Deletes user by username
 app.MapDelete("/api/user/{username}", async ([FromRoute] string username, ApplicationDbContext context) =>
 {
     try
@@ -554,6 +559,7 @@ app.MapDelete("/api/user/{username}", async ([FromRoute] string username, Applic
 
 // CIUDADANOS
 
+// Get all citizens
 app.MapGet("/api/citizens", (ApplicationDbContext context, IMapper _mapper) =>
 {
     try
@@ -576,6 +582,7 @@ app.MapGet("/api/citizens", (ApplicationDbContext context, IMapper _mapper) =>
 })
     .RequireAuthorization();
 
+// Add new citizen to the database, receives CitizenDto
 app.MapPost("/api/citizen/register", async ([FromBody] CitizenDto citizenDto, ApplicationDbContext context,
     IValidator<CitizenDto> validatorCitizen, IValidator<CitizenVehicle> validatorCitizenVehicle, IMapper _mapper) =>
 {
@@ -618,6 +625,7 @@ app.MapPost("/api/citizen/register", async ([FromBody] CitizenDto citizenDto, Ap
     }
 });
 
+// Login citizen
 app.MapPost("/api/citizen/login", ([FromBody] CitizenLoginDto user, ApplicationDbContext context, TokenService tokenService) =>
 {
     try
@@ -655,6 +663,7 @@ app.MapPost("/api/citizen/login", ([FromBody] CitizenLoginDto user, ApplicationD
     }
 });
 
+// Deletes citizen by governmentId
 app.MapDelete("/api/citizen/{governmentId}", async (ApplicationDbContext context, [FromRoute] string governmentId) => 
 {
     try
@@ -683,6 +692,7 @@ app.MapDelete("/api/citizen/{governmentId}", async (ApplicationDbContext context
 })
     .RequireAuthorization();
 
+// Updates citizen status
 app.MapPut("/api/citizen/updateStatus/", async (ApplicationDbContext context, 
         [FromBody] ChangeCitizenStatusDto changeCitizenStatusDto,
         NotificationService notificationService) =>
@@ -725,6 +735,7 @@ app.MapPut("/api/citizen/updateStatus/", async (ApplicationDbContext context,
 })
     .RequireAuthorization();
 
+// Token service for citizen -> No needed anymore
 app.MapPut("/api/citizen/updateNotificationToken", async (ApplicationDbContext context, 
         [FromBody] UpdateNotificationTokenDto updateNotificationTokenDto) =>
 {
@@ -748,6 +759,7 @@ app.MapPut("/api/citizen/updateNotificationToken", async (ApplicationDbContext c
 
 // Citizen vehicles
 
+// Get all vehicles from citizens
 app.MapGet("/api/citizen/vehicles", (ApplicationDbContext context) =>
 {
     try
@@ -761,6 +773,7 @@ app.MapGet("/api/citizen/vehicles", (ApplicationDbContext context) =>
 })
     .RequireAuthorization();
 
+// Get single vehicle from citizens by governmentId
 app.MapGet("/api/citizen/vehicle/{governmentId}", (ApplicationDbContext context, [FromRoute] string governmentId) =>
 {
     try
@@ -781,6 +794,7 @@ app.MapGet("/api/citizen/vehicle/{governmentId}", (ApplicationDbContext context,
 })
     .RequireAuthorization();
 
+// Add vehicle
 app.MapPost("/api/citizen/vehicle", async (ApplicationDbContext context, [FromBody] CitizenVehicle citizenVehicle,
     IValidator<CitizenVehicle> validator) =>
 {
@@ -813,6 +827,7 @@ app.MapPost("/api/citizen/vehicle", async (ApplicationDbContext context, [FromBo
 })
     .RequireAuthorization();
 
+// Update vehicle status to: 'Aprobado' or 'No aprobado'
 app.MapPut("/api/citizen/vehicles/changeStatus", async (ApplicationDbContext context, ChangeVehicleStatusDto CVSDto) =>
 {
     try
@@ -836,6 +851,7 @@ app.MapPut("/api/citizen/vehicles/changeStatus", async (ApplicationDbContext con
 })
     .RequireAuthorization();
 
+// Deletes vehicle by licensePlate
 app.MapDelete("/api/citizen/vehicles/delete/{licensePlate}", async (ApplicationDbContext context, [FromRoute] string licensePlate) =>
 {
     try
@@ -859,6 +875,7 @@ app.MapDelete("/api/citizen/vehicles/delete/{licensePlate}", async (ApplicationD
 
 // Crane company
 
+// Get all crane companies
 app.MapGet("/api/craneCompanies/", (ApplicationDbContext context) =>
 {
     try
@@ -873,6 +890,7 @@ app.MapGet("/api/craneCompanies/", (ApplicationDbContext context) =>
 })
     .RequireAuthorization();
 
+// Get only company name from all crane companies
 app.MapGet("/api/craneCompaniesList/", (ApplicationDbContext context) =>
 {
     try
@@ -887,6 +905,7 @@ app.MapGet("/api/craneCompaniesList/", (ApplicationDbContext context) =>
 })
     .RequireAuthorization();
 
+// Get single crane company by RNC
 app.MapGet("/api/craneCompany/{rnc}", (ApplicationDbContext context, [FromRoute] string rnc) =>
 {
     try
@@ -903,6 +922,7 @@ app.MapGet("/api/craneCompany/{rnc}", (ApplicationDbContext context, [FromRoute]
 })
     .RequireAuthorization();
 
+// Add new crane company to the database
 app.MapPost("/api/craneCompany/", async ([FromBody] CraneCompany craneCompany, ApplicationDbContext context) =>
 {
     try
@@ -926,6 +946,8 @@ app.MapPost("/api/craneCompany/", async ([FromBody] CraneCompany craneCompany, A
 })
     .RequireAuthorization();
 
+// deletes crane company by RNC
+// UPDATE NEEDED -> deletes all crane users if matches the crane company name
 app.MapDelete("/api/craneCompany/{rnc}", async (ApplicationDbContext context, [FromRoute] string rnc) =>
 {
     try

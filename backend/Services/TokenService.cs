@@ -4,9 +4,11 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using backend.Models;
 using backend.DTOs;
+using backend.Interfaces;
 
 namespace backend.Services;
-
+// JWT Authentication Service
+// Configured to both Employees (Admin, Agente, Grua) and Citizens can be authenticated
 public class TokenService
 {
     private readonly IConfiguration _configuration;
@@ -14,6 +16,7 @@ public class TokenService
     {
         _configuration = configuration;
     }
+    // Token generator for Employees (Admin, Agente, Grua)
     public string GenerateToken(IEmployee user)
     {
         var claims = new[]
@@ -34,6 +37,7 @@ public class TokenService
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+    // Token generator for Citizens
     public string GenerateToken(CitizenLoginDto user)
     {
         var claims = new[]

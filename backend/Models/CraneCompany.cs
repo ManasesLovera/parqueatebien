@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace backend.Models;
-
+// Model for Crane company
 public class CraneCompany
 {
     [Key]

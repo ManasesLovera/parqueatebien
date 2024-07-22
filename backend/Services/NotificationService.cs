@@ -1,7 +1,8 @@
 ﻿using FirebaseAdmin.Messaging;
 
-namespace backend;
-
+namespace backend.Services;
+// Using Firebase FCM for notifications purposes
+// Not applied to the application
 public class NotificationService
 {
     public async Task SendNotificationAsync(string token, string title, string body)

@@ -1,7 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace backend.Models;
-
+﻿namespace backend.Interfaces;
+// Interface for both Employees and Citizens
 public interface IUser
 {
     public int Id { get; set; }

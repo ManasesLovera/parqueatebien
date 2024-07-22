@@ -1,4 +1,7 @@
-﻿namespace backend.Models;
+﻿using backend.Interfaces;
+
+namespace backend.Models;
+// User Model
 public record User : IEmployee
 {
     public int Id { get; set; }

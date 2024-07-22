@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Data;
+// Use of EntityFrameworkCore for all models/entities of the application
 public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
@@ -13,6 +14,18 @@ public class ApplicationDbContext : DbContext
     public DbSet<Citizen> Citizens { get; set; }
     public DbSet<CitizenVehicle> Vehicles { get; set; }
     public DbSet<CraneCompany> CraneCompanies { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Picture>()
+            .HasOne(p => p.Report)
+            .WithMany(r => r.Photos)
+            .HasForeignKey(p => p.LicensePlate);
+        modelBuilder.Entity<CitizenVehicle>()
+            .HasOne(v => v.Citizen)
+            .WithMany(c => c.Vehicles)
+            .HasForeignKey(v => v.GovernmentId);
+    }
     public static void Seed(ApplicationDbContext context)
     {
         if (!context.CraneCompanies.Any())

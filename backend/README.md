@@ -16,7 +16,7 @@
 `System.IdentityModel.Tokens.Jwt`
 `Swashbuckle.AspNetCore`
 
-## Endpoints
+## API Documentation
 
 ### Reportes
 
@@ -174,11 +174,16 @@
 ```json
 {
     "username": string,
-    "password": string,
-    "role": string
+    "password": string
 }
 ```
-`Then you will receive a string token you must add in the headers:Authorization`
+`If valid user, you will receive an object with a string token you must add in the headers:Authorization and the role of the user`
+```json
+{
+    "token": string,
+    "role": string // This could be "Admin", "Agente" or "Grua"
+}
+```
 
 3. GET / -> `/api/users`:
     - Get all users
@@ -331,7 +336,7 @@
 2. POST / -> `/api/citizen/login`:
     - Login citizen
     - 200 Ok(token), 409 Conflict({message})
-    - The message it returns will be: "Cedula y/o contraseña incorrectos." or "Ciudadano aun no esta activo, espere a ser aceptado."
+    - The message it returns will be: "Cedula y/o contraseï¿½a incorrectos." or "Ciudadano aun no esta activo, espere a ser aceptado."
 ```json
 {
     "governmentId": string,
