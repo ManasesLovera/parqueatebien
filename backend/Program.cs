@@ -34,7 +34,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         policy =>
         {
-            policy.WithOrigins("http://127.0.0.1:5501", "http://127.0.0.1:50775", "http://localhost:3000")
+            policy.WithOrigins("http://127.0.0.1:5501", "http://127.0.0.1:50775", "http://localhost:3000","http://192.168.100.10:8089")
                   .AllowAnyOrigin()
                   .AllowAnyMethod()
                   .AllowAnyHeader();
