@@ -50,7 +50,7 @@ class NewRegisterCarController {
     }
     if (modelController.text.isEmpty) {
       showUniversalSuccessErrorDialogCarNewNew(
-          context, 'Campo requerido: Modelo', false);
+          context, 'Campo requerido: Marca', false);
       return false;
     }
     if (selectedYear == null) {

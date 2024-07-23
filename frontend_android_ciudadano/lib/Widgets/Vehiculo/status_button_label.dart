@@ -17,7 +17,7 @@ class SatusButtom extends StatelessWidget {
         return Colors.red;
       case 'Liberado':
         return Colors.green;
-      case 'Incautado por grua':
+      case 'Incautado por Grúa':
         return Colors.orange;
       default:
         return Colors.grey;
