@@ -24,10 +24,10 @@ using Google.Apis.Auth.OAuth2;
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure logging
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
-builder.Logging.AddDebug();
-builder.Logging.SetMinimumLevel(LogLevel.Debug);
+// builder.Logging.ClearProviders();
+// builder.Logging.AddConsole();
+// builder.Logging.AddDebug();
+// builder.Logging.SetMinimumLevel(LogLevel.Debug);
 
 builder.Services.AddCors(options =>
 {
@@ -42,12 +42,22 @@ builder.Services.AddCors(options =>
 });
 
 // Firabase configuration
-FirebaseApp.Create(new AppOptions()
-{
-    Credential = GoogleCredential.FromFile(/*Path.Combine(AppDomain.CurrentDomain.BaseDirectory,*/"parqueatebien-484af-firebase-adminsdk-zi7ox-f119c9e3f7.json")/*)*/// MISSING VERY IMPORTANT <- PATH TO SERVICE ACCOUNT FILE.json
-});
+// FirebaseApp.Create(new AppOptions()
+// {
+//     Credential = GoogleCredential.FromFile(/*Path.Combine(AppDomain.CurrentDomain.BaseDirectory,*/"parqueatebien-484af-firebase-adminsdk-zi7ox-f119c9e3f7.json")/*)*/// MISSING VERY IMPORTANT <- PATH TO SERVICE ACCOUNT FILE.json
+// });
 
 // token: BHxgcdvTWWPgRmijvMQx-GC8w9cfP5wJHNXyJX1eq7u6_8Gb5PZSac4gS2F-qYIFkwquJVPscGFx0RdHVdmMWt0
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+//Prevent object cycles
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    // No necesitas ajustar MaxDepth porque los ciclos serán ignorados
+});
 
 // Register Notification Service
 builder.Services.AddSingleton<NotificationService>();
@@ -78,6 +88,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 // Authorization
 builder.Services.AddAuthorization();
+
+builder.Services.AddControllers();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingConfig));
@@ -120,6 +132,13 @@ app.Use(async (context, next) =>
         await context.Response.WriteAsJsonAsync(new { error = ex.Message });
     }
 });
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseCors();
 app.UseRouting();
