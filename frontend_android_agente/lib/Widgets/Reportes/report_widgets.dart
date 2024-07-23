@@ -17,7 +17,7 @@ class TitleText extends StatelessWidget {
       style: TextStyle(
         fontSize: 22.h,
         fontWeight: FontWeight.bold,
-        color: lightBlueColor,
+        color: const Color(0xFFF26522),
       ),
     );
   }
@@ -446,7 +446,7 @@ class NextButton extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             padding: EdgeInsets.symmetric(vertical: 8.h),
             backgroundColor: _formHandlers.isFormValid
-                ? const Color(0xFF010F56)
+                ? const Color(0xFFF26522)
                 : Colors.grey[400],
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.h),

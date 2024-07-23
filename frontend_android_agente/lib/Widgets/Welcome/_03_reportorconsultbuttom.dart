@@ -29,13 +29,17 @@ class ReportConsultButtom extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(8.h),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.blue, width: 2.h),
+            border: Border.all(color: const Color(0xFFF26522), width: 2.h),
             borderRadius: BorderRadius.circular(12.h),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SvgPicture.asset(svgPath, height: 35.h),
+              SvgPicture.asset(
+                svgPath,
+                height: 35.h,
+                color: const Color(0xFFF26522),
+              ),
               SizedBox(width: 8.h),
               Expanded(
                 child: Column(

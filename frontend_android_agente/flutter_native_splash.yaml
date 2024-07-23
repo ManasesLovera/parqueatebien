@@ -5,7 +5,7 @@ flutter_native_splash:
   ios: false
   background_image_android: "assets/splash/back.png"
   background_image_dark_android: "assets/splash/back.png"
-  image: "assets/splash/main.png"
+  image: "assets/splash/splash_main.png"
   branding: "assets/splash/bottom.png"
   branding_android: "assets/splash/bottom.png"
   branding_mode: bottom
@@ -14,11 +14,11 @@ flutter_native_splash:
     android: true
     web: false
     ios: false
-    image: "assets/launcher_android_12+/main_splash.png"
+    image: "assets/splash/splash_main.png"
     background_image_android: "assets/splash/back.png"
     background_image_dark_android: "assets/splash/back.png"
     branding: "assets/splash/bottom.png"
     branding_android: "assets/splash/bottom.png"
     branding_mode: bottom
-    color: "#099DD2"
+    color: "#010F56"
     fullscreen: true

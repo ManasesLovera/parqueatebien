@@ -16,7 +16,8 @@ class Welcome extends StatelessWidget {
       Navigator.of(context).pushReplacementNamed('/login');
     }
   }
-Future<void> _showLogoutConfirmation(BuildContext context) async {
+
+  Future<void> _showLogoutConfirmation(BuildContext context) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -29,7 +30,7 @@ Future<void> _showLogoutConfirmation(BuildContext context) async {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
+                const Icon(
                   Icons.warning,
                   color: Colors.orange,
                   size: 80,
@@ -94,7 +95,7 @@ Future<void> _showLogoutConfirmation(BuildContext context) async {
         return false; // Prevents the screen from being removed automatically
       },
       child: Scaffold(
-      backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
+        backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 12.h),

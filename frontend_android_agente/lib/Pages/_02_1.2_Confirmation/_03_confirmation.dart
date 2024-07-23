@@ -160,7 +160,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                         style: TextStyle(
                           fontSize: 20.h,
                           fontWeight: FontWeight.bold,
-                          color: lightBlueColor,
+                          color: const Color(0xFFF26522),
                         ),
                       ),
                     ),
@@ -291,7 +291,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                           onPressed: _createReport,
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(vertical: 8.h),
-                            backgroundColor: const Color(0xFF010F56),
+                            backgroundColor: const Color(0xFFF26522),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.r),
                             ),
@@ -316,7 +316,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(vertical: 8.h),
                             backgroundColor: Colors.white,
-                            side: const BorderSide(color: darkBlueColor),
+                            side: const BorderSide(color: Color(0xFFF26522)),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.r),
                             ),
@@ -324,7 +324,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                           child: Text(
                             'Cancelar',
                             style: TextStyle(
-                              color: darkBlueColor,
+                              color: const Color(0xFFF26522),
                               fontSize: 14.h,
                               fontWeight: FontWeight.bold,
                             ),

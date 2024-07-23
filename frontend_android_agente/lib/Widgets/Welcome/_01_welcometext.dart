@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-const Color lightBlueColor = Color(0xFF009DD4); // Azul Claro
-const Color darkBlueColor = Color(0xFF010F56); // Azul Oscuro
-const Color greyTextColor = Color(0xFF494A4D); // Gris (Texto)
+
 class WelcomeText extends StatelessWidget {
   const WelcomeText({super.key, required String role});
 
@@ -15,7 +13,7 @@ class WelcomeText extends StatelessWidget {
         child: Text(
           'Bienvenido',
           style: TextStyle(
-            color: lightBlueColor,
+            color: const Color(0xFFF26522),
             fontSize: 26.h,
           ),
         ),

@@ -98,7 +98,7 @@ class NewReportPhotoScreenState extends State<PhotoScreen> {
                     style: TextStyle(
                       fontSize: 19.h,
                       fontWeight: FontWeight.bold,
-                      color: lightBlueColor,
+                      color: const Color(0xFFF26522),
                     ),
                   ),
                 ),
@@ -221,7 +221,7 @@ class NewReportPhotoScreenState extends State<PhotoScreen> {
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 14.h),
                         backgroundColor: _imageFileList.length >= 3
-                            ? const Color(0xFF010F56)
+                            ? const Color(0xFFF26522)
                             : Colors.grey,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.h),
@@ -268,7 +268,7 @@ class FotoButton extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 14.h, vertical: 10.w),
         decoration: BoxDecoration(
-          border: Border.all(color: lightBlueColor, width: 1.3.h),
+          border: Border.all(color: const Color(0xFFF26522), width: 1.3.h),
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Center(
@@ -279,7 +279,7 @@ class FotoButton extends StatelessWidget {
                 iconPath,
                 height: 24.h,
                 colorFilter: const ColorFilter.mode(
-                  lightBlueColor,
+                   Color(0xFFF26522),
                   BlendMode.srcIn,
                 ),
               ),
