@@ -3,7 +3,6 @@ import 'package:frontend_android/Models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 class ClasLoginApi {
   static final Logger _logger = Logger();
 
@@ -23,15 +22,20 @@ class ClasLoginApi {
       _logger.i('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
-        final rawToken = response.body;
+        final responseData = jsonDecode(response.body);
+        final rawToken = responseData['token'];
+        final role = responseData['role'];
         final token = rawToken.replaceAll('"', '');
         _logger.i('Login successful');
 
         final prefs = await SharedPreferences.getInstance();
         await Future.wait([
           prefs.setString('loggedInUser', usermodelobjet.username),
-          prefs.setString('token', token)
+          prefs.setString('token', token),
+          prefs.setString('role', role),
         ]);
+
+        _logger.i('Role stored: $role');
 
         return true;
       } else if (response.statusCode == 404) {

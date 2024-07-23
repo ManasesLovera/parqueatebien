@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend_android_ciudadano/Api/Add_User/user_register_api.dart';
 import 'package:frontend_android_ciudadano/Blocs/NuevoUser/register_state.dart';
-
 import 'register_event.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {

@@ -40,9 +40,9 @@ class EnterPlateNumberController {
     } catch (e) {
       String errorMessage;
       if (e.toString().contains('Vehicle not found')) {
-        errorMessage = 'Placa no tiene reporte';
+        errorMessage = 'Incauto no encontrado';
       } else {
-        errorMessage = 'Placa no tiene reporte';
+        errorMessage = 'Incauto no encontrado';
       }
       showUniversalSuccessErrorDialogConsulta(context, errorMessage, false);
     } finally {

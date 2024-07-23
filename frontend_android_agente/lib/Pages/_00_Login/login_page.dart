@@ -14,7 +14,7 @@ class ClassPageLogin extends StatelessWidget {
   Widget build(BuildContext context) {
     final iD = TextEditingController();
     final pass = TextEditingController();
-    const String role = 'Agente';
+    const String role = '';
     return
         //
         BlocProvider(
