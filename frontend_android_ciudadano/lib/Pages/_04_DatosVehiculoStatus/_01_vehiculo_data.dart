@@ -27,7 +27,7 @@ class CarDetails extends StatelessWidget {
         return Colors.orange;
       case 'retenido':
         return Colors.red;
-      case 'riberado':
+      case 'liberado':
         return Colors.green;
       default:
         return Colors.grey;
