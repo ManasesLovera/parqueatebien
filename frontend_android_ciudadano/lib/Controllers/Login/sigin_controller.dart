@@ -1,23 +1,27 @@
 import 'package:frontend_android_ciudadano/Api/logIn_User/user_login_api.dart';
 import 'package:logger/logger.dart';
 
+// Controlador para manejar el inicio de sesión del usuario
 Future<bool> signUserInController(String username, String password) async {
   final Logger logger = Logger();
 
+  // Validación de campos vacíos
   if (username.isEmpty || password.isEmpty) {
     return Future.error(
         'Por favor, ingrese tanto el nombre de usuario como la contraseña.');
   }
 
-  // Cedula incompleta
+  // Validación de cédula incompleta
   String cedula = username.replaceAll('-', '');
   if (cedula.length != 11) {
     return Future.error('Cédula incompleta. Debe tener 11 dígitos.');
   }
 
   try {
+    // Llama a la API para iniciar sesión
     final result = await LoginApi.signIn(username, password);
     logger.i('Result: $result'); // Usamos Logger para depuración
+    // Manejo de resultados según la respuesta de la API
     if (result == true) {
       return true;
     } else if (result ==

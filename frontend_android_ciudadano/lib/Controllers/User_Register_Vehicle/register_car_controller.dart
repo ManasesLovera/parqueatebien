@@ -9,6 +9,7 @@ import 'package:frontend_android_ciudadano/Models/user_model.dart';
 import 'package:frontend_android_ciudadano/Pages/_02_User_Login_Register_User_With_Vehicle/_00.1_car.dart';
 import 'package:logger/logger.dart';
 
+// Controlador para manejar el registro de vehículos
 class RegisterCarController {
   final TextEditingController numplacaC = TextEditingController();
   final TextEditingController matriculaC = TextEditingController();
@@ -26,6 +27,7 @@ class RegisterCarController {
     matriculaC.addListener(updateButtonState);
   }
 
+  // Actualiza el estado del botón según los campos de entrada
   void updateButtonState() {
     isButtonEnabled.value = numplacaC.text.isNotEmpty ||
         modelController.text.isNotEmpty ||
@@ -34,6 +36,7 @@ class RegisterCarController {
         matriculaC.text.isNotEmpty;
   }
 
+  // Valida los campos del formulario
   bool validateFields(BuildContext context) {
     if (numplacaC.text.isEmpty) {
       showUniversalSuccessErrorDialogCar(
@@ -75,6 +78,7 @@ class RegisterCarController {
     return true;
   }
 
+  // Registra el vehículo si los campos son válidos
   void register(BuildContext context, RegisterCar widget) {
     if (validateFields(context)) {
       final vehicle = Vehicle(
@@ -101,6 +105,7 @@ class RegisterCarController {
     }
   }
 
+  // Libera los controladores de texto
   void dispose() {
     numplacaC.dispose();
     matriculaC.dispose();

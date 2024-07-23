@@ -1,9 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend_android_ciudadano/Api/Add_Vehiculo/add_vehicle_with_user.dart';
+import 'package:frontend_android_ciudadano/Api/Add_User/_01_add_vehicle_with_user.dart';
 import 'package:frontend_android_ciudadano/Blocs/VehiculoRegister/_00_registration_event.dart';
 import 'package:frontend_android_ciudadano/Blocs/VehiculoRegister/_01_registration_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// BLoC para manejar los eventos y estados relacionados con el registro de vehículos
 class VehicleRegistrationBloc
     extends Bloc<VehicleRegistrationEvent, VehicleRegistrationState> {
   final AddVehicleApi api;
@@ -23,7 +24,8 @@ class VehicleRegistrationBloc
         if (success) {
           emit(VehicleRegistrationSuccess());
         } else {
-          emit(const VehicleRegistrationFailure(error: 'Ya tiene un Vehiculo con esta placa'));
+          emit(const VehicleRegistrationFailure(
+              error: 'Ya tiene un Vehiculo con esta placa'));
         }
       } catch (error) {
         emit(VehicleRegistrationFailure(error: error.toString()));

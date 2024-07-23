@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend_android_ciudadano/Handlers/Login/dialog_success_error_user.dart';
 
+// Controlador para manejar el registro de usuario
 class RegisterUserController {
   final TextEditingController cedulaC = TextEditingController();
   final TextEditingController nombresC = TextEditingController();
@@ -23,7 +24,8 @@ class RegisterUserController {
     confirmPassC.addListener(_updateButtonState);
   }
 
- void _updateButtonState() {
+  // Actualiza el estado del botón según los campos de entrada
+  void _updateButtonState() {
     isButtonEnabled.value = cedulaC.text.isNotEmpty ||
         nombresC.text.isNotEmpty ||
         apellidosC.text.isNotEmpty ||
@@ -32,7 +34,8 @@ class RegisterUserController {
         confirmPassC.text.isNotEmpty;
   }
 
-bool validateFields(BuildContext context) {
+  // Valida los campos del formulario
+  bool validateFields(BuildContext context) {
     String formattedCedula = cedulaC.text.replaceAll('-', '');
 
     if (cedulaC.text.isEmpty) {
@@ -89,6 +92,7 @@ bool validateFields(BuildContext context) {
     return true;
   }
 
+  // Libera los controladores de texto
   void dispose() {
     cedulaC.dispose();
     nombresC.dispose();
@@ -99,6 +103,7 @@ bool validateFields(BuildContext context) {
   }
 }
 
+// Formateador de texto para la cédula
 class CedulaFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(

@@ -15,6 +15,7 @@ class Vehicle {
     required this.color,
   });
 
+  // Convierte el objeto Vehicle a un mapa JSON
   Map<String, dynamic> toJson() {
     return {
       'governmentId': governmentId.replaceAll('-', ''),

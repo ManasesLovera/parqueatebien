@@ -8,7 +8,6 @@ import 'package:frontend_android_ciudadano/Blocs/VehiculoFetch/_02_vehicle_bloc.
 import 'package:frontend_android_ciudadano/Pages/_04_DatosVehiculoStatus/_01_vehiculo_data.dart';
 import 'package:frontend_android_ciudadano/Pages/_01_Welcome/_00_welcome.dart';
 
-
 Future<bool?> showVehicleDialog(BuildContext context, String governmentId) {
   return showDialog<bool>(
     context: context,

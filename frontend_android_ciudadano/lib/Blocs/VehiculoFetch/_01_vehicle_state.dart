@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+// Clase abstracta para los estados relacionados con vehículos
 abstract class VehicleState extends Equatable {
   const VehicleState();
 
@@ -7,10 +8,13 @@ abstract class VehicleState extends Equatable {
   List<Object> get props => [];
 }
 
+// Estado inicial de los vehículos
 class VehicleInitial extends VehicleState {}
 
+// Estado de carga durante la obtención de datos de vehículos
 class VehicleLoading extends VehicleState {}
 
+// Estado de éxito después de cargar las placas de los vehículos
 class VehicleLoaded extends VehicleState {
   final List<String> licencePlates;
 
@@ -20,6 +24,7 @@ class VehicleLoaded extends VehicleState {
   List<Object> get props => [licencePlates];
 }
 
+// Estado de error durante la obtención de datos de vehículos
 class VehicleError extends VehicleState {
   final String error;
 
@@ -29,6 +34,7 @@ class VehicleError extends VehicleState {
   List<Object> get props => [error];
 }
 
+// Estado de éxito después de cargar los detalles de un vehículo
 class VehicleDetailsLoaded extends VehicleState {
   final Map<String, dynamic> vehicleDetails;
 
@@ -38,4 +44,5 @@ class VehicleDetailsLoaded extends VehicleState {
   List<Object> get props => [vehicleDetails];
 }
 
+// Estado cuando no se encuentra el vehículo
 class VehicleNotFound extends VehicleState {}

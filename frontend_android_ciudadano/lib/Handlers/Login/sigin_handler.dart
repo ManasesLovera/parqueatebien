@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:frontend_android_ciudadano/Handlers/Login/dialog_success_error_user.dart';
 import 'package:frontend_android_ciudadano/Pages/_01_Welcome/_00_welcome.dart';
 
+// Maneja el proceso de inicio de sesión
 Future<void> signHandler(
   BuildContext context,
   TextEditingController usernameController,

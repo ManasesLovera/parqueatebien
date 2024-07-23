@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android_ciudadano/Api/Add_User/user_register_api.dart';
+import 'package:frontend_android_ciudadano/Api/Add_User/_00_user_register_api.dart';
 import 'package:frontend_android_ciudadano/Blocs/NuevoUser/register_bloc.dart';
 import 'package:frontend_android_ciudadano/Blocs/NuevoUser/register_state.dart';
 import 'package:frontend_android_ciudadano/Controllers/User_Register_Vehicle/register_car_controller.dart';
@@ -48,28 +48,31 @@ class _RegisterCarState extends State<RegisterCar> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
-      appBar: const AppBarRegister(progress: 170),
+      appBar: const AppBarRegister(progress: 170), // Barra de progreso
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 0.h),
           child: SingleChildScrollView(
             child: BlocProvider(
-              create: (_) => RegisterBloc(RegisterApi()),
+              create: (_) => RegisterBloc(
+                  RegisterApi()), // Creación del Bloc para el registro
               child: BlocListener<RegisterBloc, RegisterState>(
                 listener: (context, state) {
                   if (state is RegisterSuccess) {
-                    showUniversalSuccessErrorDialogCar(
-                        context, 'Registro completa, espere a ser confirmado', true);
+                    // Mostrar diálogo de éxito
+                    showUniversalSuccessErrorDialogCar(context,
+                        'Registro completo, espere a ser confirmado', true);
                     Future.delayed(const Duration(seconds: 2), () {
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                           builder: (context) =>
-                              const Login(), // Reemplazar con tu pantalla de login
+                              const Login(), // Navegar a la pantalla de login
                         ),
                         (Route<dynamic> route) => false,
                       );
                     });
                   } else if (state is RegisterFailure) {
+                    // Mostrar diálogo de error
                     showUniversalSuccessErrorDialogCar(
                         context, state.error, false);
                   }
@@ -83,20 +86,20 @@ class _RegisterCarState extends State<RegisterCar> {
                           thickness: 3.w,
                           indent: 0.w,
                           endIndent: 0.w,
-                          color: Colors.grey,
+                          color: Colors.grey, // Línea divisoria
                         ),
                         SizedBox(height: 25.h),
                         Text(
                           'Datos del vehiculo',
-                          style: TextStyle(fontSize: 14.h),
+                          style: TextStyle(fontSize: 14.h), // Texto del título
                         ),
                         SizedBox(height: 15.h),
                         const CustomText(
-                          text: 'Numero de placa',
+                          text: 'Numero de placa', // Texto del campo de entrada
                         ),
                         CustomTextField(
                           controller: controller.numplacaC,
-                          hintText: 'Ingresar numero',
+                          hintText: 'Ingresar numero', // Campo de entrada
                           inputFormatters: [LicensePlateFormatter()],
                         ),
                         SizedBox(height: 16.h),
@@ -105,7 +108,8 @@ class _RegisterCarState extends State<RegisterCar> {
                         ),
                         CustomTextField(
                             controller: controller.modelController,
-                            hintText: 'Ingresar modelo'),
+                            hintText:
+                                'Ingresar modelo'), // Campo de entrada para el modelo
                         SizedBox(height: 16.h),
                         const CustomText(
                           text: 'Año',
@@ -113,7 +117,7 @@ class _RegisterCarState extends State<RegisterCar> {
                         YearPickerSelectItem(
                           initialYear: controller.selectedYear != null
                               ? int.parse(controller.selectedYear!)
-                              : DateTime.now().year,
+                              : DateTime.now().year, // Selección de año
                           onChanged: (value) {
                             setState(() {
                               controller.selectedYear = value?.toString();
@@ -135,7 +139,7 @@ class _RegisterCarState extends State<RegisterCar> {
                               controller.updateButtonState();
                             });
                           },
-                          hintText: 'Seleccionar color',
+                          hintText: 'Seleccionar color', // Selección de color
                           dropdownBackgroundColor: const Color(0xFFFFFFFF),
                         ),
                         SizedBox(height: 16.h),
@@ -144,14 +148,15 @@ class _RegisterCarState extends State<RegisterCar> {
                         ),
                         CustomTextField(
                           controller: controller.matriculaC,
-                          hintText: 'Ingresar numero de matricula',
+                          hintText:
+                              'Ingresar numero de matricula', // Campo de entrada para matrícula
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(9),
                           ],
                         ),
                         SizedBox(height: 80.h),
                         if (state is RegisterLoading)
-                          const CircularProgressIndicator()
+                          const CircularProgressIndicator() // Indicador de carga
                         else
                           ValueListenableBuilder<bool>(
                             valueListenable: controller.isButtonEnabled,
@@ -162,10 +167,10 @@ class _RegisterCarState extends State<RegisterCar> {
                                     : () {
                                         showUniversalSuccessErrorDialogCar(
                                             context,
-                                            'Todos los campos son obligatorios',
+                                            'Todos los campos son obligatorios', // Mensaje de error si faltan campos
                                             false);
                                       },
-                                text: 'Registrarse',
+                                text: 'Registrarse', // Texto del botón
                                 isEnabled: isEnabled,
                               );
                             },

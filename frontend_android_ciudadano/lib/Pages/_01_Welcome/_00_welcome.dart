@@ -30,13 +30,14 @@ class WelcomeState extends State<Welcome> {
     _governmentIdFuture = _getGovernmentId();
   }
 
+  // Obtiene el ID del usuario almacenado en SharedPreferences
   Future<String?> _getGovernmentId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('governmentId');
   }
 
+  // Cierra sesión del usuario
   void _logout(BuildContext context) async {
-    // Modificado
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
     if (!mounted) return;
@@ -49,6 +50,7 @@ class WelcomeState extends State<Welcome> {
     );
   }
 
+  // Muestra un diálogo de confirmación de cierre de sesión
   Future<bool> _showLogoutConfirmation(BuildContext context) async {
     final result = await showDialog<bool>(
       context: context,
@@ -97,7 +99,7 @@ class WelcomeState extends State<Welcome> {
                       ),
                       onPressed: () {
                         Navigator.of(context)
-                            .pop(false); // Close the dialog and return false
+                            .pop(false); // Cerrar el diálogo y devolver false
                       },
                     ),
                     TextButton(
@@ -107,8 +109,8 @@ class WelcomeState extends State<Welcome> {
                       ),
                       onPressed: () {
                         Navigator.of(context)
-                            .pop(true); // Close the dialog and return true
-                        _logout(context); // Log out and navigate to login
+                            .pop(true); // Cerrar el diálogo y devolver true
+                        _logout(context); // Cerrar sesión y navegar al login
                       },
                     ),
                   ],
@@ -123,6 +125,7 @@ class WelcomeState extends State<Welcome> {
     return result == true;
   }
 
+  // Maneja el evento de retroceso del dispositivo
   Future<bool> _onWillPop() async {
     return await _showLogoutConfirmation(context);
   }

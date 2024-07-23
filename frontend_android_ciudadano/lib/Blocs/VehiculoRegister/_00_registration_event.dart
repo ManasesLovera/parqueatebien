@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+// Clase abstracta para los eventos relacionados con el registro de vehículos
 abstract class VehicleRegistrationEvent extends Equatable {
   const VehicleRegistrationEvent();
 
@@ -7,8 +8,9 @@ abstract class VehicleRegistrationEvent extends Equatable {
   List<Object> get props => [];
 }
 
+// Evento para registrar un vehículo
 class RegisterVehicle extends VehicleRegistrationEvent {
-  final String governmentId; // Agregar este campo
+  final String governmentId;
   final String licensePlate;
   final String vehicleType;
   final String vehicleColor;
@@ -17,7 +19,7 @@ class RegisterVehicle extends VehicleRegistrationEvent {
   final String matricula;
 
   const RegisterVehicle({
-    required this.governmentId, // Agregar este campo
+    required this.governmentId,
     required this.licensePlate,
     required this.vehicleType,
     required this.vehicleColor,
@@ -34,10 +36,11 @@ class RegisterVehicle extends VehicleRegistrationEvent {
         vehicleColor,
         model,
         year,
-        matricula
+        matricula,
       ];
 }
 
+// Evento para obtener el ID del gobierno
 class FetchGovernmentId extends VehicleRegistrationEvent {
   final String licensePlate;
   final String vehicleType;
