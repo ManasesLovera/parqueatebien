@@ -18,7 +18,7 @@ Widget buildResultHeader(
           style: TextStyle(
             fontSize: 16.h,
             fontWeight: FontWeight.bold,
-            color: lightBlueColor,
+            color: const Color(0xFFF26522),
           ),
         ),
       ),

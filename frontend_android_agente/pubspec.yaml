@@ -33,11 +33,11 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/splash/back.png
-    - assets/splash/bottom.png
-    - assets/splash/main.png
-    - assets/launcher_android_12+/main_splash.png
-    - assets/launcher_android_-11/ic_icon.png
+    # - assets/splash/back.png
+    - assets/logo/logo.png
+    - assets/splash/splash_main.png
+    # - assets/launcher_android_12+/main_splash.png
+    # - assets/launcher_android_-11/ic_icon.png
     - assets/whiteback/main_w.png
     - assets/icons/photo.svg
     - assets/icons/add.svg

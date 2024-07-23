@@ -19,8 +19,8 @@ class ClasLoginButton extends StatelessWidget {
             gradient: LinearGradient(
               colors: isFilled
                   ? [
-                      const Color(0xFF010F56), // Color Azul Oscuro
-                      const Color(0xFF010F56),
+                      const Color(0xFFF26522), // Color Azul Oscuro
+                      const Color(0xFFF26522),
                     ]
                   : [
                       Colors.grey[100]!,

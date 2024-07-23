@@ -7,7 +7,7 @@ class Forgot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 9, 157, 210),
+      backgroundColor: const Color(0xFF010F56),
       body: SafeArea(
         child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 2.h),
@@ -17,7 +17,7 @@ class Forgot extends StatelessWidget {
                 children: [
                   SizedBox(height: 50.h),
                   Image.asset(
-                    'assets/splash/main.png',
+                    'assets/logo/logo.png',
                     height: 95.h,
                     //  width: double.infinity,
                   ),

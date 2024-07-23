@@ -7,7 +7,7 @@ class LoginWidgets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      'assets/splash/main.png',
+      'assets/logo/logo.png',
       height: 100.h,
     );
   }

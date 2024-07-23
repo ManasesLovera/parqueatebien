@@ -154,7 +154,7 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(vertical: 8.h),
                       backgroundColor:
-                          _isButtonEnabled ? darkBlueColor : Colors.grey,
+                          _isButtonEnabled ? const Color(0xFFF26522) : Colors.grey,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.r),
                       ),

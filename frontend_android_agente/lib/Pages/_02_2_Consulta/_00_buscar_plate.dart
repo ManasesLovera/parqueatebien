@@ -58,7 +58,7 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
                       style: TextStyle(
                         fontSize: 16.h,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+                        color:  const Color(0xFFF26522),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -120,7 +120,7 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(vertical: 14.w),
                             backgroundColor: isEnabled && !_controller.isLoading
-                                ? const Color(0xFF010F56) // Azul oscuro
+                                ? const Color(0xFFF26522) // Azul oscuro
                                 : Colors.grey,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.r),
