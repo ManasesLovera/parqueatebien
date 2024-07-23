@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace backend.Models;
 // Model for each vehicle a citizen has
@@ -17,5 +18,6 @@ public class CitizenVehicle
     public string? Color { get; set; }
     [AllowedValues("Nuevo","Aprobado","No aprobado")]
     public string? Status { get; set; }
+    [JsonIgnore]
     public Citizen? Citizen { get; set; }
 }

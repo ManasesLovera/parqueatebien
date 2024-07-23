@@ -7,6 +7,6 @@ namespace backend.Repositories
 {
     public class VehicleRepository
     {
-        
+
     }
 }

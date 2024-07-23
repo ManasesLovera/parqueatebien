@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using backend.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Models;
 // Model for Citizen
@@ -15,6 +17,7 @@ public class Citizen : IUser
     [AllowedValues("Nuevo", "Aprobado", "No aprobado")]
     public string? Status { get; set; }
     public string? PasswordHash { get; set; }
+    [JsonIgnore]
     public List<CitizenVehicle>? Vehicles { get; set; }
     public string? NotificationToken { get; set; }
 }
