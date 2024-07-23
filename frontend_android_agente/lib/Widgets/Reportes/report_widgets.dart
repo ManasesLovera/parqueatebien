@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend_android/Handlers/Reportes/report_handler.dart';
+
 const Color lightBlueColor = Color(0xFF009DD4); // Azul Claro
 const Color darkBlueColor = Color(0xFF010F56); // Azul Oscuro
 const Color greyTextColor = Color(0xFF494A4D); // Gris (Texto)
 
-// Title Text Widget
+// Título del reporte
 class TitleText extends StatelessWidget {
   const TitleText({super.key});
 
@@ -23,7 +24,7 @@ class TitleText extends StatelessWidget {
   }
 }
 
-// Datos del Vehiculo Text Widget
+// Datos del Vehículo
 class DatosDelVehiculo extends StatelessWidget {
   const DatosDelVehiculo({super.key});
 
@@ -40,7 +41,7 @@ class DatosDelVehiculo extends StatelessWidget {
   }
 }
 
-// Numero Placa Text Widget
+// Número de placa
 class NumeroPlaca extends StatelessWidget {
   const NumeroPlaca({super.key});
 
@@ -63,6 +64,7 @@ class NumeroPlaca extends StatelessWidget {
   }
 }
 
+// Widget para ingresar la placa del vehículo
 class PlateWidgetReport extends StatelessWidget {
   final TextEditingController controller;
   final bool touched;
@@ -144,7 +146,7 @@ class _PlateTextInputFormatter extends TextInputFormatter {
   }
 }
 
-// Tipo de Vehiculo Text Widget
+// Tipo de vehículo
 class TipoDeVehiculo extends StatelessWidget {
   const TipoDeVehiculo({super.key});
 
@@ -211,8 +213,8 @@ class VehicleTypeWidget extends StatelessWidget {
             ),
           ),
           dropdownColor: const Color(0xFFFFFFFF),
-          items:
-              <String>['HONDA', 'TOYOTA', 'HYUNDAI','NISSAN'].map((String value) {
+          items: <String>['HONDA', 'TOYOTA', 'HYUNDAI', 'NISSAN']
+              .map((String value) {
             return DropdownMenuItem<String>(
               value: value,
               child: Text(value),
@@ -225,7 +227,7 @@ class VehicleTypeWidget extends StatelessWidget {
   }
 }
 
-// Tipo de Vehiculo Text Widget
+// Color del vehículo
 class ColorReporte extends StatelessWidget {
   const ColorReporte({super.key});
 
@@ -306,7 +308,7 @@ class ColorWidget extends StatelessWidget {
   }
 }
 
-// Referencia Text Widget
+// Referencia (opcional)
 class Referencia extends StatelessWidget {
   const Referencia({super.key});
 
@@ -329,7 +331,7 @@ class Referencia extends StatelessWidget {
   }
 }
 
-// Address Widget
+// Widget para ingresar la referencia
 class AddressWidget extends StatefulWidget {
   final TextEditingController controller;
   final bool touched;
@@ -384,7 +386,7 @@ class _AddressWidgetState extends State<AddressWidget> {
   }
 }
 
-// Down Text Vehiculo Text Widget
+// Texto de referencia
 class DownTextVehiculoText extends StatelessWidget {
   const DownTextVehiculoText({super.key});
 
@@ -404,7 +406,7 @@ class DownTextVehiculoText extends StatelessWidget {
   }
 }
 
-// Siguiente Text Widget
+// Texto del botón siguiente
 class SiguienteText extends StatelessWidget {
   const SiguienteText({super.key});
 
@@ -421,6 +423,7 @@ class SiguienteText extends StatelessWidget {
   }
 }
 
+// Botón de siguiente
 class NextButton extends StatelessWidget {
   const NextButton({
     super.key,

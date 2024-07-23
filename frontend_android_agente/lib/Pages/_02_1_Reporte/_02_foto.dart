@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:frontend_android/Pages/_02_1.2_Confirmation/_03_confirmation.dart';
+import 'package:frontend_android/Pages/_02_1_Reporte/_03_confirmation.dart';
 
 const Color lightBlueColor = Color(0xFF009DD4); // Azul Claro
 const Color darkBlueColor = Color(0xFF010F56); // Azul Oscuro
@@ -32,28 +32,34 @@ class PhotoScreen extends StatefulWidget {
 }
 
 class NewReportPhotoScreenState extends State<PhotoScreen> {
-  final ImagePicker _picker = ImagePicker();
-  final List<XFile> _imageFileList = [];
+  final ImagePicker _picker =
+      ImagePicker(); // Instancia del selector de imágenes.
+  final List<XFile> _imageFileList =
+      []; // Lista de archivos de imágenes seleccionadas.
 
+  // Método para seleccionar imágenes usando la cámara.
   void _pickImages() async {
     if (_imageFileList.length < 5) {
       final XFile? image = await _picker.pickImage(
         source: ImageSource.camera,
-        imageQuality: 50,
-        preferredCameraDevice: CameraDevice.rear,
+        imageQuality: 50, // Calidad de la imagen.
+        preferredCameraDevice: CameraDevice.rear, // Cámara trasera.
       );
 
       if (image != null) {
         setState(() {
-          _imageFileList.add(image);
+          _imageFileList.add(image); // Añade la imagen a la lista.
         });
       }
     } else {
       showUniversalSuccessErrorDialogPhotos(
-          context, 'No se permiten más de 5 fotos', false);
+          context,
+          'No se permiten más de 5 fotos',
+          false); // Muestra un diálogo si se excede el límite de fotos.
     }
   }
 
+  // Método para navegar a la pantalla de confirmación.
   void _navigateToConfirmation() {
     if (_imageFileList.length >= 3) {
       Navigator.pushReplacement(
@@ -72,7 +78,9 @@ class NewReportPhotoScreenState extends State<PhotoScreen> {
       );
     } else {
       showUniversalSuccessErrorDialogPhotos(
-          context, 'Debe agregar al menos 3 fotos', false);
+          context,
+          'Debe agregar al menos 3 fotos',
+          false); // Muestra un diálogo si no se añaden suficientes fotos.
     }
   }
 
@@ -80,18 +88,18 @@ class NewReportPhotoScreenState extends State<PhotoScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(); // Navega hacia atrás.
         return true;
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
+        backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco.
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 14.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 10.h),
+                SizedBox(height: 10.h), // Espacio vertical.
                 Center(
                   child: Text(
                     'Nuevo reporte',
@@ -102,7 +110,7 @@ class NewReportPhotoScreenState extends State<PhotoScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 18.h),
+                SizedBox(height: 18.h), // Espacio vertical.
                 Center(
                   child: Text(
                     'Fotos del vehículo',
@@ -113,16 +121,17 @@ class NewReportPhotoScreenState extends State<PhotoScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 14.h),
+                SizedBox(height: 14.h), // Espacio vertical.
                 Center(
                   child: Column(
                     children: [
                       FotoButton(
-                        onTap: _pickImages,
-                        iconPath: 'assets/icons/add.svg',
-                        title: 'Agregar foto',
+                        onTap: _pickImages, // Acción al tocar el botón de foto.
+                        iconPath:
+                            'assets/icons/add.svg', // Ruta del icono del botón.
+                        title: 'Agregar foto', // Título del botón.
                       ),
-                      SizedBox(height: 8.h),
+                      SizedBox(height: 8.h), // Espacio vertical.
                       Text(
                         'Minimo 3 fotos. maximo 5 fotos',
                         style: TextStyle(
@@ -133,7 +142,7 @@ class NewReportPhotoScreenState extends State<PhotoScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: 15.h),
+                SizedBox(height: 15.h), // Espacio vertical.
                 Expanded(
                   child: _imageFileList.isNotEmpty
                       ? ListView.builder(
@@ -152,7 +161,7 @@ class NewReportPhotoScreenState extends State<PhotoScreen> {
                                       border: Border.all(
                                         color: const Color(0xFF010F56),
                                         width:
-                                            3.0, // Grosor del borde aumentado
+                                            3.0, // Grosor del borde aumentado.
                                       ),
                                       borderRadius: BorderRadius.circular(15.0),
                                     ),
@@ -172,9 +181,12 @@ class NewReportPhotoScreenState extends State<PhotoScreen> {
                                     child: GestureDetector(
                                       onTap: () {
                                         setState(() {
-                                          _imageFileList.removeAt(index);
+                                          _imageFileList.removeAt(
+                                              index); // Elimina la foto de la lista.
                                           showUniversalSuccessErrorDialogPhotos(
-                                              context, 'Foto eliminada', true);
+                                              context,
+                                              'Foto eliminada',
+                                              true); // Muestra un diálogo confirmando la eliminación.
                                         });
                                       },
                                       child: SvgPicture.asset(
@@ -209,20 +221,22 @@ class NewReportPhotoScreenState extends State<PhotoScreen> {
                           ),
                         ),
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 20.h), // Espacio vertical.
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 4.h),
                   child: SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: _imageFileList.length >= 3
-                          ? _navigateToConfirmation
+                          ? _navigateToConfirmation // Navega a la confirmación si hay al menos 3 fotos.
                           : null,
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 14.h),
                         backgroundColor: _imageFileList.length >= 3
-                            ? const Color(0xFFF26522)
-                            : Colors.grey,
+                            ? const Color(
+                                0xFFF26522) // Botón habilitado si hay al menos 3 fotos.
+                            : Colors
+                                .grey, // Botón deshabilitado si hay menos de 3 fotos.
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.h),
                         ),
@@ -238,7 +252,7 @@ class NewReportPhotoScreenState extends State<PhotoScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 20.h), // Espacio vertical.
               ],
             ),
           ),
@@ -248,6 +262,7 @@ class NewReportPhotoScreenState extends State<PhotoScreen> {
   }
 }
 
+// Botón personalizado para añadir fotos.
 class FotoButton extends StatelessWidget {
   final VoidCallback onTap;
   final String iconPath;
@@ -279,7 +294,7 @@ class FotoButton extends StatelessWidget {
                 iconPath,
                 height: 24.h,
                 colorFilter: const ColorFilter.mode(
-                   Color(0xFFF26522),
+                  Color(0xFFF26522),
                   BlendMode.srcIn,
                 ),
               ),
@@ -300,13 +315,15 @@ class FotoButton extends StatelessWidget {
   }
 }
 
+// Método para mostrar un diálogo de éxito o error al agregar/eliminar fotos.
 void showUniversalSuccessErrorDialogPhotos(
     BuildContext context, String message, bool isSuccess) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       Future.delayed(const Duration(seconds: 2), () {
-        Navigator.of(context).pop(true);
+        Navigator.of(context)
+            .pop(true); // Cierra el diálogo después de 2 segundos.
       });
 
       return Dialog(
@@ -319,13 +336,17 @@ void showUniversalSuccessErrorDialogPhotos(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-                isSuccess ? Icons.check_circle : Icons.error,
-                color: isSuccess ? Colors.green : Colors.red,
+                isSuccess
+                    ? Icons.check_circle
+                    : Icons.error, // Icono de éxito o error.
+                color: isSuccess
+                    ? Colors.green
+                    : Colors.red, // Color del icono basado en el resultado.
                 size: 80,
               ),
               const SizedBox(height: 20),
               Text(
-                message,
+                message, // Mensaje a mostrar.
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 18,

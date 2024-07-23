@@ -5,8 +5,11 @@ class ClasLoginButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isFilled;
 
-  const ClasLoginButton(
-      {super.key, required this.onPressed, required this.isFilled});
+  const ClasLoginButton({
+    super.key,
+    required this.onPressed,
+    required this.isFilled,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +22,7 @@ class ClasLoginButton extends StatelessWidget {
             gradient: LinearGradient(
               colors: isFilled
                   ? [
-                      const Color(0xFFF26522), // Color Azul Oscuro
+                      const Color(0xFFF26522), // Color para el botón habilitado
                       const Color(0xFFF26522),
                     ]
                   : [

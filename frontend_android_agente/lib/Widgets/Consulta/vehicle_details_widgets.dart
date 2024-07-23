@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:frontend_android/Pages/_02_4_Reporte_De_Consulta/_02_report_info.dart';
+import 'package:frontend_android/Pages/_02_2_Consulta/_02_report_info.dart';
 
 const Color lightBlueColor = Color(0xFF009DD4); // Azul Claro
 const Color darkBlueColor = Color(0xFF010F56); // Azul Oscuro
 const Color greyTextColor = Color(0xFF494A4D); // Gris (Texto)
 
+// Construye el encabezado del resultado de la consulta.
 Widget buildResultHeader(
     BuildContext context, Map<String, dynamic> vehicleData) {
   return Stack(
@@ -41,6 +42,7 @@ Widget buildResultHeader(
   );
 }
 
+// Construye el título de la sección de datos del vehículo.
 Widget buildVehicleTitle() {
   return Center(
     child: Text(
@@ -54,6 +56,7 @@ Widget buildVehicleTitle() {
   );
 }
 
+// Construye el estado del vehículo.
 Widget buildStatus(Map<String, dynamic> vehicleData) {
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
@@ -76,6 +79,7 @@ Widget buildStatus(Map<String, dynamic> vehicleData) {
   );
 }
 
+// Obtiene el color correspondiente al estatus del vehículo.
 Color getStatusColor(String status) {
   switch (status.toLowerCase()) {
     case 'reportado':
@@ -91,10 +95,11 @@ Color getStatusColor(String status) {
   }
 }
 
+// Widget personalizado para mostrar una fila de detalles.
 class DetailRowWidget extends StatelessWidget {
-  final String title;
-  final String? value;
-  final bool showDivider;
+  final String title; // Título de la fila de detalles.
+  final String? value; // Valor de la fila de detalles.
+  final bool showDivider; // Indica si se muestra el divisor.
 
   const DetailRowWidget({
     super.key,
@@ -106,33 +111,38 @@ class DetailRowWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 10.h),
+      padding: EdgeInsets.only(bottom: 10.h), // Alineación inferior.
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment:
+            CrossAxisAlignment.start, // Alineación a la izquierda.
         children: [
           Text(
             title,
             style: TextStyle(
               color: const Color(0xFF010F56),
-              fontSize: 10.h,
+              fontSize: 10.h, // Tamaño de fuente.
               fontWeight: FontWeight.bold,
             ),
           ),
           Text(
-            value ?? 'Desconocido',
+            value ??
+                'Desconocido', // Muestra "Desconocido" si el valor es nulo.
             style: TextStyle(
               color: Colors.grey,
-              fontSize: 9.h,
+              fontSize: 9.h, // Tamaño de fuente.
               fontWeight: FontWeight.bold,
             ),
           ),
-          if (showDivider) Divider(height: 2.h),
+          if (showDivider)
+            Divider(
+                height: 2.h), // Muestra el divisor si showDivider es verdadero.
         ],
       ),
     );
   }
 }
 
+// Construye la galería de fotos del vehículo.
 Widget buildPhotoGallery(List<Map<String, String>> photos) {
   return SizedBox(
     height: 50.h,

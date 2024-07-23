@@ -12,13 +12,13 @@ const Color darkBlueColor = Color(0xFF010F56); // Azul Oscuro
 const Color greyTextColor = Color(0xFF494A4D); // Gris (Texto)
 
 class ConfirmationScreen extends StatefulWidget {
-  final String plateNumber;
-  final String vehicleType;
-  final String color;
-  final String address;
-  final String? latitude;
-  final String? longitude;
-  final List<XFile> imageFileList;
+  final String plateNumber; // Número de placa del vehículo.
+  final String vehicleType; // Tipo de vehículo.
+  final String color; // Color del vehículo.
+  final String address; // Dirección de referencia.
+  final String? latitude; // Latitud de la ubicación del vehículo.
+  final String? longitude; // Longitud de la ubicación del vehículo.
+  final List<XFile> imageFileList; // Lista de imágenes del vehículo.
 
   const ConfirmationScreen({
     super.key,
@@ -35,13 +35,15 @@ class ConfirmationScreen extends StatefulWidget {
   ConfirmationScreenState createState() => ConfirmationScreenState();
 }
 
-var logger = Logger();
+var logger = Logger(); // Instancia de Logger para el registro de logs.
 
 class ConfirmationScreenState extends State<ConfirmationScreen> {
+  // Método para crear un reporte.
   Future<void> _createReport() async {
     try {
       if (widget.latitude == null || widget.longitude == null) {
-        throw Exception("Latitud y longitud son requeridas.");
+        throw Exception(
+            "Latitud y longitud son requeridas."); // Verifica si la latitud y longitud son nulas.
       }
 
       double? latitude = double.tryParse(widget.latitude!);
@@ -49,24 +51,27 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
 
       if (latitude == null || longitude == null) {
         throw Exception(
-            "Latitud y longitud deben ser números decimales válidos.");
+            "Latitud y longitud deben ser números decimales válidos."); // Verifica si la latitud y longitud son válidas.
       }
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? reportedBy = prefs.getString('loggedInUser');
 
       if (reportedBy == null) {
-        throw Exception("No se pudo obtener el usuario actual.");
+        throw Exception(
+            "No se pudo obtener el usuario actual."); // Verifica si el usuario actual es nulo.
       }
 
       Map<String, dynamic> reportData = {
         'licensePlate': widget.plateNumber,
         'registrationDocument':
-            '123456789', // Asegúrate de tener el valor correcto
+            '123456789', // Valor de ejemplo, asegúrate de tener el valor correcto.
         'vehicleType': widget.vehicleType,
         'vehicleColor': widget.color,
-        'model': 'Toyota', // Asegúrate de tener el valor correcto
-        'year': '2020', // Asegúrate de tener el valor correcto
+        'model':
+            'Toyota', // Valor de ejemplo, asegúrate de tener el valor correcto.
+        'year':
+            '2020', // Valor de ejemplo, asegúrate de tener el valor correcto.
         'reference': widget.address,
         'lat': widget.latitude,
         'lon': widget.longitude,
@@ -86,9 +91,11 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
       logger.i('Response body: ${response.body}');
       if (!mounted) return;
 
+      // Manejo de respuesta del servidor basado en el código de estado.
       switch (response.statusCode) {
         case 201:
-          Navigator.pushNamed(context, '/success');
+          Navigator.pushNamed(
+              context, '/success'); // Navega a la pantalla de éxito.
           break;
         case 400:
           Navigator.pushNamed(
@@ -134,15 +141,16 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
     } catch (e) {
       logger.e('Failed to create report: $e');
       if (!mounted) return;
-      Navigator.pushNamed(context, '/error',
-          arguments: {'errorMessage': e.toString()});
+      Navigator.pushNamed(context, '/error', arguments: {
+        'errorMessage': e.toString()
+      }); // Navega a la pantalla de error con el mensaje de excepción.
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
+      backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco.
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -150,7 +158,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 15.h),
+                SizedBox(height: 15.h), // Espacio vertical.
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.h),
                   child: SizedBox(
@@ -166,7 +174,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 15.h),
+                SizedBox(height: 15.h), // Espacio vertical.
                 SizedBox(
                   child: Center(
                     child: Text(
@@ -179,7 +187,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 30.h),
+                SizedBox(height: 30.h), // Espacio vertical.
                 Text(
                   'Numero de placa',
                   style: TextStyle(
@@ -247,9 +255,9 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 3.h),
-                const MapWidget(),
-                SizedBox(height: 5.h),
+                SizedBox(height: 3.h), // Espacio vertical.
+                const MapWidget(), // Mapa con la ubicación del vehículo.
+                SizedBox(height: 5.h), // Espacio vertical.
                 const Divider(),
                 if (widget.latitude != null && widget.longitude != null)
                   Text(
@@ -260,7 +268,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                       color: const Color(0xFF010F56),
                     ),
                   ),
-                SizedBox(height: 4.h),
+                SizedBox(height: 4.h), // Espacio vertical.
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -280,7 +288,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                     }).toList(),
                   ),
                 ),
-                SizedBox(height: 2.h),
+                SizedBox(height: 2.h), // Espacio vertical.
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 4.h),
                   child: Column(
@@ -288,7 +296,8 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: _createReport,
+                          onPressed:
+                              _createReport, // Método para crear el reporte.
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(vertical: 8.h),
                             backgroundColor: const Color(0xFFF26522),
@@ -306,12 +315,13 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 5.h),
+                      SizedBox(height: 5.h), // Espacio vertical.
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pop(context);
+                            Navigator.pop(
+                                context); // Regresa a la pantalla anterior.
                           },
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(vertical: 8.h),

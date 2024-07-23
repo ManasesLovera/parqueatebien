@@ -1,35 +1,44 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:frontend_android/APis/_03_location.dart';
+import 'package:frontend_android/Services/location.dart';
 import 'package:frontend_android/Handlers/Consulta/dialog_success_error_consulta.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
 
 class FormHandlersReport {
-  final GlobalKey<FormState> formKey;
-  final TextEditingController plateController;
-  final TextEditingController addressController;
-  final Function(String) showSnackBar;
-  final Function(String) showDialog;
+  final GlobalKey<FormState> formKey; // Clave global del formulario.
+  final TextEditingController
+      plateController; // Controlador de texto para la placa.
+  final TextEditingController
+      addressController; // Controlador de texto para la dirección.
+  final Function(String) showSnackBar; // Función para mostrar una snackbar.
+  final Function(String) showDialog; // Función para mostrar un diálogo.
 
-  String? selectedVehicleType;
-  String? selectedColor;
-  String? latitude;
-  String? longitude;
-  bool plateFieldTouched = false;
-  bool addressFieldTouched = false;
-  bool vehicleTypeTouched = false;
-  bool colorTouched = false;
-  bool isFormValid = false;
+  String? selectedVehicleType; // Tipo de vehículo seleccionado.
+  String? selectedColor; // Color seleccionado.
+  String? latitude; // Latitud obtenida.
+  String? longitude; // Longitud obtenida.
+  bool plateFieldTouched =
+      false; // Indica si el campo de la placa ha sido tocado.
+  bool addressFieldTouched =
+      false; // Indica si el campo de la dirección ha sido tocado.
+  bool vehicleTypeTouched =
+      false; // Indica si el tipo de vehículo ha sido tocado.
+  bool colorTouched = false; // Indica si el color ha sido tocado.
+  bool isFormValid = false; // Indica si el formulario es válido.
 
-  final Logger logger = Logger();
-  final LocationService _locationService = LocationService();
-  StreamSubscription<Position>? _positionStreamSubscription;
-  final StreamController<Position> _positionStreamController =
-      StreamController<Position>.broadcast();
+  final Logger logger = Logger(); // Instancia para el registro de logs.
+  final LocationService _locationService =
+      LocationService(); // Instancia del servicio de ubicación.
+  StreamSubscription<Position>?
+      _positionStreamSubscription; // Suscripción al stream de posición.
+  final StreamController<Position> _positionStreamController = StreamController<
+      Position>.broadcast(); // Controlador del stream de posición.
 
-  Stream<Position> get positionStream => _positionStreamController.stream;
+  Stream<Position> get positionStream =>
+      _positionStreamController.stream; // Stream de posición.
 
+  // Constructor que inicializa los manejadores del formulario.
   FormHandlersReport({
     required this.formKey,
     required this.plateController,
@@ -38,6 +47,7 @@ class FormHandlersReport {
     required this.showDialog,
   });
 
+  // Método para validar el formulario.
   void validateForm() {
     isFormValid = (formKey.currentState?.validate() ?? false) &&
         selectedVehicleType != null &&
@@ -45,6 +55,7 @@ class FormHandlersReport {
         plateController.text.isNotEmpty;
   }
 
+  // Método para validar un campo específico del formulario.
   void validateField(BuildContext context, String field) {
     switch (field) {
       case 'plate':
@@ -75,6 +86,7 @@ class FormHandlersReport {
     }
   }
 
+  // Método para obtener la ubicación actual del usuario.
   Future<void> getLocation(BuildContext context) async {
     bool serviceEnabled = await _locationService.isLocationServiceEnabled();
     if (!serviceEnabled) {
@@ -105,6 +117,7 @@ class FormHandlersReport {
     _startListeningToLocation();
   }
 
+  // Método para empezar a escuchar la posición del usuario.
   void _startListeningToLocation() {
     _positionStreamSubscription?.cancel();
     _positionStreamSubscription = Geolocator.getPositionStream(
@@ -116,11 +129,13 @@ class FormHandlersReport {
     });
   }
 
+  // Método para liberar los recursos del controlador.
   void dispose() {
     _positionStreamSubscription?.cancel();
     _positionStreamController.close();
   }
 
+  // Método para validar el formulario al enviar.
   void validateOnSubmit(BuildContext context) {
     plateFieldTouched = true;
     vehicleTypeTouched = true;
@@ -153,7 +168,7 @@ class FormHandlersReport {
       return;
     }
 
-    validateForm(); // Validate the entire form
+    validateForm(); // Valida todo el formulario.
 
     if (!isFormValid) {
       return;

@@ -1,47 +1,46 @@
-name: frontend_android
-description: "demo_orintek"
-publish_to: "none"
-version: 0.1.0
+name: frontend_android   # Nombre del proyecto
+description: "demo_orintek"  # Descripción del proyecto
+publish_to: "none"  # No se publica en el repositorio de paquetes de Dart
+version: 0.1.0  # Versión del proyecto
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.0.0 <4.0.0"  # Versión de SDK de Dart requerida
 
 dependencies:
   flutter:
-    sdk: flutter
-  flutter_native_splash: ^2.4.0
-  flutter_screenutil: ^5.9.1
-  geolocator: ^11.0.0
-  http: ^1.2.1
-  image_picker: ^1.0.7
-  permission_handler: ^11.3.1
-  logger: ^2.2.0
-  shared_preferences: ^2.2.3
-  flutter_svg: ^2.0.10+1
-  google_maps_flutter: ^2.7.0
-  flutter_bloc: ^8.1.6
-  equatable: ^2.0.5
-  flutter_launcher_icons: ^0.13.1
-  meta: ^1.12.0
+    sdk: flutter  # Dependencia principal de Flutter
+  flutter_native_splash: ^2.4.0  # Plugin para la pantalla de carga nativa
+  flutter_screenutil: ^5.9.1  # Plugin para adaptabilidad de pantallas
+  geolocator: ^11.0.0  # Plugin para obtener la ubicación geográfica
+  http: ^1.2.1  # Cliente HTTP para hacer solicitudes
+  image_picker: ^1.0.7  # Plugin para seleccionar imágenes
+  permission_handler: ^11.3.1  # Plugin para manejar permisos
+  logger: ^2.2.0  # Logger para registro de logs
+  shared_preferences: ^2.2.3  # Plugin para almacenamiento de datos simples
+  flutter_svg: ^2.0.10+1  # Plugin para renderizar SVGs
+  google_maps_flutter: ^2.7.0  # Plugin para integrar Google Maps
+  flutter_bloc: ^8.1.6  # Biblioteca para manejar estados usando BLoC
+  equatable: ^2.0.5  # Librería para comparar objetos
+  flutter_launcher_icons: ^0.13.1  # Plugin para íconos de lanzamiento
+  meta: ^1.12.0  # Metadatos para el análisis estático de Dart
 
 dev_dependencies:
-  flutter_lints: ^3.0.0
+  flutter_lints: ^3.0.0  # Linter para seguir las mejores prácticas de Flutter
   flutter_test:
-    sdk: flutter
+    sdk: flutter  # Dependencia para pruebas unitarias en Flutter
 
 flutter:
-  uses-material-design: true
+  uses-material-design: true  # Indica que el proyecto usará Material Design
 
   assets:
-    # - assets/splash/back.png
-    - assets/logo/logo.png
-    - assets/splash/splash_main.png
-    # - assets/launcher_android_12+/main_splash.png
-    # - assets/launcher_android_-11/ic_icon.png
-    - assets/whiteback/main_w.png
-    - assets/icons/photo.svg
-    - assets/icons/add.svg
-    - assets/icons/car.svg
-    - assets/icons/create.svg
-    - assets/icons/editar.svg
-    - assets/icons/error.svg
+    - assets/splash/splash_11.png  # Imagen de splash
+    - assets/splash/bottom.png  # Imagen de marca en la parte inferior
+    - assets/logo/logo.png  # Logo de la aplicación
+    - assets/splash/splash_main.png  # Imagen principal de splash para Android 12
+    - assets/whiteback/main_w.png  # Imagen de fondo blanco
+    - assets/icons/photo.svg  # Ícono de foto
+    - assets/icons/add.svg  # Ícono de agregar
+    - assets/icons/car.svg  # Ícono de coche
+    - assets/icons/create.svg  # Ícono de crear
+    - assets/icons/editar.svg  # Ícono de editar
+    - assets/icons/error.svg  # Ícono de error
