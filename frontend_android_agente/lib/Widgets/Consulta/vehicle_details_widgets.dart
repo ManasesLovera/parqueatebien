@@ -88,7 +88,7 @@ Color getStatusColor(String status) {
       return Colors.red;
     case 'liberado':
       return Colors.green;
-    case 'incautado por grua':
+    case 'incautado por Grúa':
       return Colors.orange;
     default:
       return Colors.grey;

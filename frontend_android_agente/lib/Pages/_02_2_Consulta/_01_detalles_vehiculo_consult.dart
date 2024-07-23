@@ -37,7 +37,7 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
 
       ChangeStatusDTO changeStatusDTO = ChangeStatusDTO(
         licensePlate: widget.vehicleData['licensePlate'],
-        newStatus: 'Incautado por grua',
+        newStatus: 'Incautado por Grúa',
         username:
             'your_username', // Debe reemplazarse con el nombre de usuario actual.
       );
@@ -60,7 +60,7 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
         setState(() {
           _isLoading = false;
           if (success) {
-            widget.vehicleData['status'] = 'Incautado por grua';
+            widget.vehicleData['status'] = 'Incautado por Grúa';
           }
         });
 
