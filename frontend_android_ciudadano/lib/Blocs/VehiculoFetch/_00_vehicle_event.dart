@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+// Clase abstracta para los eventos relacionados con vehículos
 abstract class VehicleEvent extends Equatable {
   const VehicleEvent();
 
@@ -7,6 +8,7 @@ abstract class VehicleEvent extends Equatable {
   List<Object> get props => [];
 }
 
+// Evento para obtener las placas de los vehículos
 class FetchLicencePlates extends VehicleEvent {
   final String governmentId;
 
@@ -16,6 +18,7 @@ class FetchLicencePlates extends VehicleEvent {
   List<Object> get props => [governmentId];
 }
 
+// Evento para seleccionar una placa de vehículo
 class SelectLicencePlate extends VehicleEvent {
   final String selectedPlate;
 
@@ -25,6 +28,7 @@ class SelectLicencePlate extends VehicleEvent {
   List<Object> get props => [selectedPlate];
 }
 
+// Evento para obtener los detalles de un vehículo por su placa
 class FetchVehicleDetails extends VehicleEvent {
   final String selectedPlate;
 

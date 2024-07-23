@@ -1,5 +1,10 @@
+# Configuración para los íconos de lanzamiento utilizando flutter_launcher_icons
 flutter_launcher_icons:
+  # Especifica el nombre del ícono de lanzamiento para Android
   android: "launcher_icon"
+  # Deshabilita los íconos de lanzamiento para iOS
   ios: false
+  # Ruta de la imagen para el ícono de lanzamiento
   image_path: "assets/launcher_android_-11/ic_icon.png"
+  # Especifica la versión mínima del SDK de Android
   min_sdk_android: 21

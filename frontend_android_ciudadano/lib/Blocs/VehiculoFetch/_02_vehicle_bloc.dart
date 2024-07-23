@@ -4,6 +4,7 @@ import 'package:frontend_android_ciudadano/Blocs/VehiculoFetch/_00_vehicle_event
 import 'package:frontend_android_ciudadano/Blocs/VehiculoFetch/_01_vehicle_state.dart';
 import 'package:logger/logger.dart';
 
+// BLoC para manejar los eventos y estados relacionados con vehículos
 class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
   final ConsultaPlaca placaconsult;
   final Logger _logger = Logger();

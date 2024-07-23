@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Muestra un diálogo de éxito o error para vehículos nuevos
 void showUniversalSuccessErrorDialogCarNew(
     BuildContext context, String message, bool isSuccess) {
   showDialog(

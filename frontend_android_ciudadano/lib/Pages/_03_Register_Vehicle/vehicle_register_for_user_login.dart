@@ -8,7 +8,6 @@ import 'package:frontend_android_ciudadano/Blocs/Vehicle_New_Add/new_vehicle_reg
 import 'package:frontend_android_ciudadano/Controllers/Vehicle_User_Register/register_car_controller.dart';
 import 'package:frontend_android_ciudadano/Handlers/User_vehicle_Register/dialog_success_error_car_new.dart';
 import 'package:frontend_android_ciudadano/Pages/_01_Welcome/_00_welcome.dart';
-import 'package:frontend_android_ciudadano/Pages/_02_User_Login_Register_User_With_Vehicle/_00.1_car.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/color_dropdownselectitem.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/user_register_widgets.dart';
 import 'package:frontend_android_ciudadano/Widgets/NuevoRegistro/year_picker_select_item.dart';
@@ -45,7 +44,7 @@ class _RegisterNewCarState extends State<RegisterNewCarScreen> {
                   NewVehicleRegistrationState>(
                 listener: (context, state) {
                   if (state is NewVehicleRegistrationSuccess) {
-                   showUniversalSuccessErrorDialogCarNewNew(
+                    showUniversalSuccessErrorDialogCarNewNew(
                       context,
                       'Vehiculo registrado, espere confirmacion para consulta',
                       true,
@@ -104,7 +103,7 @@ class _RegisterNewCarState extends State<RegisterNewCarScreen> {
                         const CustomText(
                           text: 'Año',
                         ),
-                     YearPickerSelectItem(
+                        YearPickerSelectItem(
                           initialYear: controller.selectedYear != null
                               ? int.parse(controller.selectedYear!)
                               : DateTime.now().year,
@@ -120,7 +119,6 @@ class _RegisterNewCarState extends State<RegisterNewCarScreen> {
                         const CustomText(
                           text: 'Color',
                         ),
-                     
                         ColorDropdown(
                           items: controller.colors,
                           selectedItem: controller.selectedColor,
@@ -176,5 +174,33 @@ class _RegisterNewCarState extends State<RegisterNewCarScreen> {
   void dispose() {
     controller.dispose();
     super.dispose();
+  }
+}
+
+class LicensePlateFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    final text = newValue.text.toUpperCase();
+
+    if (text.isEmpty) {
+      return newValue;
+    }
+    if (text.length == 1) {
+      if (RegExp(r'^[A-Z]$').hasMatch(text)) {
+        return newValue.copyWith(
+          text: text,
+          selection: newValue.selection,
+        );
+      }
+    } else if (text.length <= 7) {
+      if (RegExp(r'^[A-Z]\d{0,6}$').hasMatch(text)) {
+        return newValue.copyWith(
+          text: text,
+          selection: newValue.selection,
+        );
+      }
+    }
+    return oldValue;
   }
 }

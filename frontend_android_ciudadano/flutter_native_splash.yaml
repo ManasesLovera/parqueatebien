@@ -1,25 +1,47 @@
-# flutter_native_splash-production.yaml
+# Configuración de la pantalla de splash para Flutter Native Splash
 flutter_native_splash:
+  # Habilita la pantalla de splash para Android
   android: true
+  # Deshabilita la pantalla de splash para Web
   web: false
+  # Deshabilita la pantalla de splash para iOS
   ios: false
+  # Imagen de fondo para Android
   background_image_android: "assets/splash/back.png"
+  # Imagen de fondo en modo oscuro para Android
   background_image_dark_android: "assets/splash/back.png"
+  # Imagen principal para la pantalla de splash
   image: "assets/splash/main.png"
+  # Imagen de marca (branding) para la pantalla de splash
   branding: "assets/splash/bottom.png"
+  # Imagen de marca específica para Android
   branding_android: "assets/splash/bottom.png"
+  # Modo de ubicación de la imagen de marca (branding) en la parte inferior
   branding_mode: bottom
+  # Habilita la pantalla de splash en modo de pantalla completa
   fullscreen: true
 
+  # Configuración específica para Android 12
   android_12:
+    # Habilita la pantalla de splash para Android
     android: true
+    # Deshabilita la pantalla de splash para Web
     web: false
+    # Deshabilita la pantalla de splash para iOS
     ios: false
+    # Imagen principal para la pantalla de splash en Android 12
     image: "assets/launcher_android_12+/main_splash.png"
+    # Imagen de fondo para Android en Android 12
     background_image_android: "assets/splash/back.png"
+    # Imagen de fondo en modo oscuro para Android en Android 12
     background_image_dark_android: "assets/splash/back.png"
+    # Imagen de marca (branding) para la pantalla de splash en Android 12
     branding: "assets/splash/bottom.png"
+    # Imagen de marca específica para Android en Android 12
     branding_android: "assets/splash/bottom.png"
+    # Modo de ubicación de la imagen de marca (branding) en la parte inferior en Android 12
     branding_mode: bottom
+    # Color de fondo para la pantalla de splash en Android 12
     color: "#099DD2"
+    # Habilita la pantalla de splash en modo de pantalla completa en Android 12
     fullscreen: true

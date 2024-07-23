@@ -1,34 +1,58 @@
+# Nombre del proyecto
 name: frontend_android_ciudadano
+# Descripción del proyecto
 description: "ciudadano_parqueatebien"
+# Configuración de publicación del proyecto
 publish_to: "none"
+# Versión del proyecto
 version: 0.1.0
 
+# Configuración del entorno de SDK de Dart
 environment:
   sdk: ">=3.3.3 <4.0.0"
 
+# Dependencias del proyecto
 dependencies:
+  # Paquete para comparación de objetos
   equatable: ^2.0.5
+  # Dependencia principal de Flutter
   flutter:
     sdk: flutter
+  # Paquete para manejo de estados usando BLoC
   flutter_bloc: ^8.1.6
+  # Paquete para manejar íconos de lanzamiento
   flutter_launcher_icons: ^0.13.1
+  # Paquete para crear pantallas de splash nativas
   flutter_native_splash: ^2.4.0
+  # Paquete para adaptación de la interfaz en diferentes tamaños de pantalla
   flutter_screenutil: ^5.9.3
+  # Paquete para manejar SVG en Flutter
   flutter_svg: ^2.0.10+1
+  # Paquete para hacer peticiones HTTP
   http: ^1.2.1
+  # Paquete para manejo de logs
   logger: ^2.3.0
+  # Paquete para manejo de preferencias compartidas (almacenamiento local)
   shared_preferences: ^2.2.3
+  # Paquete para integrar Google Maps en Flutter
   google_maps_flutter: ^2.7.0
+  # Paquete para geocodificación (convertir direcciones en coordenadas y viceversa)
   geocoding: ^3.0.0
 
+# Dependencias de desarrollo del proyecto
 dev_dependencies:
+  # Paquete para pruebas unitarias en Flutter
   flutter_test:
     sdk: flutter
+  # Conjunto de reglas y estándares para linting en Flutter
   flutter_lints: ^3.0.0
 
+# Configuración de Flutter
 flutter:
+  # Uso del diseño de materiales
   uses-material-design: true
 
+  # Declaración de activos (imágenes y SVG) utilizados en el proyecto
   assets:
     - assets/splash/back.png
     - assets/splash/bottom.png

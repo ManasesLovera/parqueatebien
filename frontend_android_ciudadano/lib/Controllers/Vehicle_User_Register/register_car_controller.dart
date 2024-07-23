@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend_android_ciudadano/Blocs/Vehicle_New_Add/new_vehicle_registration_bloc.dart';
 import 'package:frontend_android_ciudadano/Blocs/Vehicle_New_Add/new_vehicle_registration_event.dart';
 
+// Controlador para manejar el registro de un nuevo vehículo
 class NewRegisterCarController {
   final ValueNotifier<bool> isButtonEnabled = ValueNotifier<bool>(false);
   final TextEditingController numplacaC = TextEditingController();
@@ -24,6 +25,7 @@ class NewRegisterCarController {
     matriculaC.addListener(updateButtonStateNew);
   }
 
+  // Actualiza el estado del botón según los campos de entrada
   void updateButtonStateNew() {
     isButtonEnabled.value = numplacaC.text.isNotEmpty &&
         modelController.text.isNotEmpty &&
@@ -32,6 +34,7 @@ class NewRegisterCarController {
         matriculaC.text.isNotEmpty;
   }
 
+  // Valida los campos del formulario
   bool validateFieldsNew(BuildContext context) {
     if (numplacaC.text.isEmpty) {
       showUniversalSuccessErrorDialogCarNewNew(
@@ -73,6 +76,7 @@ class NewRegisterCarController {
     return true;
   }
 
+  // Registra el vehículo si los campos son válidos
   void registerNew(BuildContext context) async {
     if (validateFieldsNew(context)) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -99,6 +103,7 @@ class NewRegisterCarController {
     }
   }
 
+  // Libera los controladores de texto
   void dispose() {
     numplacaC.dispose();
     matriculaC.dispose();

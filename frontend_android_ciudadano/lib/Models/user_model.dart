@@ -17,6 +17,7 @@ class User {
     required this.vehicles,
   });
 
+  // Convierte el objeto User a un mapa JSON
   Map<String, dynamic> toJson() {
     return {
       'governmentId': governmentId.replaceAll('-', ''),
