@@ -1,24 +1,15 @@
-# flutter_native_splash-production.yaml
 flutter_native_splash:
-  android: true
-  web: false
-  ios: false
-  background_image_android: "assets/splash/back.png"
-  background_image_dark_android: "assets/splash/back.png"
-  image: "assets/splash/splash_main.png"
-  branding: "assets/splash/bottom.png"
-  branding_android: "assets/splash/bottom.png"
-  branding_mode: bottom
-  fullscreen: true
-  android_12:
-    android: true
-    web: false
-    ios: false
-    image: "assets/splash/splash_main.png"
-    background_image_android: "assets/splash/back.png"
-    background_image_dark_android: "assets/splash/back.png"
-    branding: "assets/splash/bottom.png"
-    branding_android: "assets/splash/bottom.png"
-    branding_mode: bottom
-    color: "#010F56"
-    fullscreen: true
+  android: true # Habilita la pantalla de carga para Android
+  web: false # Deshabilita la pantalla de carga para la web
+  ios: false # Deshabilita la pantalla de carga para iOS
+  image: assets/splash/splash_11.png # Ruta a la imagen principal de la pantalla de carga
+  branding: assets/splash/bottom.png # Ruta a la imagen de marca
+  branding_mode: bottom # Posiciona la imagen de marca en la parte inferior
+  color: "#010F56" # Color de fondo de la pantalla de carga
+  fullscreen: true # Habilita el modo de pantalla completa para la pantalla de carga
+  android_12: # Configuración específica para Android 12
+    image: assets/splash/splash_main.png # Ruta a la imagen principal de la pantalla de carga para Android 12
+    branding: assets/splash/bottom.png # Ruta a la imagen de marca para Android 12
+    branding_mode: bottom # Posiciona la imagen de marca en la parte inferior para Android 12
+    color: "#010F56" # Color de fondo de la pantalla de carga para Android 12
+    fullscreen: true # Habilita el modo de pantalla completa para la pantalla de carga en Android 12

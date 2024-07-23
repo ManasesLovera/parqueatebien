@@ -4,7 +4,6 @@ import 'package:frontend_android/Controllers/Consulta/controller_consulta.dart';
 import 'package:frontend_android/Handlers/Consulta/dialog_success_error_consulta.dart';
 import 'package:frontend_android/Pages/_01_Welcome/welcome.dart';
 import 'package:frontend_android/Widgets/Consulta/plate_widget.dart';
-
 class EnterPlateNumberScreen extends StatefulWidget {
   const EnterPlateNumberScreen({super.key});
 
@@ -13,14 +12,16 @@ class EnterPlateNumberScreen extends StatefulWidget {
 }
 
 class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
-  final EnterPlateNumberController _controller = EnterPlateNumberController();
+  final EnterPlateNumberController _controller =
+      EnterPlateNumberController(); // Controlador de la pantalla.
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller.dispose(); // Libera los recursos del controlador.
     super.dispose();
   }
 
+  // Método para mostrar un diálogo de error.
   void _showErrorDialog(String message) {
     showUniversalSuccessErrorDialogConsulta(context, message, false);
   }
@@ -28,7 +29,7 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
+      backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco.
       body: SafeArea(
         child: WillPopScope(
           onWillPop: () async {
@@ -36,56 +37,61 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
               MaterialPageRoute(builder: (context) => const Welcome()),
               (Route<dynamic> route) => false,
             );
-            return false;
+            return false; // Previene que la pantalla sea removida automáticamente.
           },
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 14.w),
+            padding: EdgeInsets.symmetric(
+                horizontal: 14.w), // Alineación horizontal.
             child: Form(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment:
+                    CrossAxisAlignment.start, // Alineación izquierda.
                 children: [
-                  SizedBox(height: 30.h),
+                  SizedBox(height: 30.h), // Espacio vertical.
                   Center(
                     child: Image.asset(
                       'assets/whiteback/main_w.png',
-                      height: 50.h,
+                      height: 50.h, // Altura de la imagen.
                     ),
                   ),
-                  SizedBox(height: 65.h),
+                  SizedBox(height: 65.h), // Espacio vertical.
                   Center(
                     child: Text(
-                      'Introduzca el número de placa de su vehículo ',
+                      'Introduzca el número de placa de su vehículo',
                       style: TextStyle(
-                        fontSize: 16.h,
+                        fontSize: 16.h, // Tamaño de fuente.
                         fontWeight: FontWeight.bold,
-                        color:  const Color(0xFFF26522),
+                        color: const Color(0xFFF26522), // Color del texto.
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  SizedBox(height: 30.h),
+                  SizedBox(height: 30.h), // Espacio vertical.
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'Placa',
                       style: TextStyle(
-                        color: const Color(0xFF010F56),
-                        fontSize: 12.h,
+                        color: const Color(0xFF010F56), // Color del texto.
+                        fontSize: 12.h, // Tamaño de fuente.
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                   SizedBox(
                     child: PlateWidgetConsulta(
-                      controller: _controller.plateController,
-                      touched: _controller.plateFieldTouched,
+                      controller: _controller
+                          .plateController, // Controlador del campo de texto.
+                      touched: _controller
+                          .plateFieldTouched, // Indica si el campo fue tocado.
                       focusNode: FocusNode(),
                       onChanged: (value) {
                         setState(() {
                           _controller.plateFieldTouched = true;
                         });
-                        _controller.checkInput(value);
-                        // Habilitar el botón inmediatamente cuando el campo tenga al menos un carácter
+                        _controller.checkInput(
+                            value); // Verifica el formato de la entrada.
+                        // Habilita el botón inmediatamente cuando el campo tenga al menos un carácter.
                         if (value.isNotEmpty) {
                           _controller.isButtonEnabled.value = true;
                         } else {
@@ -94,9 +100,10 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
                       },
                     ),
                   ),
-                  SizedBox(height: 250.h),
+                  SizedBox(height: 250.h), // Espacio vertical.
                   ValueListenableBuilder<bool>(
-                    valueListenable: _controller.isButtonEnabled,
+                    valueListenable: _controller
+                        .isButtonEnabled, // Escucha cambios en el valor del botón.
                     builder: (context, isEnabled, child) {
                       return SizedBox(
                         width: double.infinity,
@@ -113,22 +120,24 @@ class EnterPlateNumberScreenState extends State<EnterPlateNumberScreen> {
                                     _showErrorDialog(
                                         'La placa debe empezar con una letra mayúscula seguida de 6 números');
                                   } else {
-                                    _controller.searchVehicle(context);
+                                    _controller.searchVehicle(
+                                        context); // Busca el vehículo.
                                   }
                                 }
                               : null,
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(vertical: 14.w),
                             backgroundColor: isEnabled && !_controller.isLoading
-                                ? const Color(0xFFF26522) // Azul oscuro
-                                : Colors.grey,
+                                ? const Color(
+                                    0xFFF26522) // Color del botón habilitado.
+                                : Colors.grey, // Color del botón deshabilitado.
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.r),
                             ),
                           ),
                           child: _controller.isLoading
                               ? const CircularProgressIndicator(
-                                  color: Colors.white)
+                                  color: Colors.white) // Indicador de carga.
                               : Text(
                                   'Consultar',
                                   style: TextStyle(

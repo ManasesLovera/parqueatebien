@@ -1,7 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Permisos necesarios para la aplicación -->
+    <!-- Permiso para acceder a la ubicación precisa del dispositivo -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- Permiso para acceder a la ubicación aproximada del dispositivo -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- Permiso para acceder a la ubicación en segundo plano -->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <!-- Permiso para acceso a Internet -->
     <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:label="Agente-ParqueateBien"
@@ -26,6 +31,7 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <!-- Meta-datos para la clave de la API de Google Maps -->
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAyvUbCqtP9uZRgb1k29tq2vQPuTc-C7lQ" />
     </application>

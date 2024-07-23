@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:frontend_android/APis/_03_location.dart';
+import 'package:frontend_android/Services/location.dart';
 
 class MapWidget extends StatefulWidget {
   final double? lat;
@@ -107,7 +107,7 @@ class MapWidgetState extends State<MapWidget> {
     }
 
     if (_hasError) {
-      return const Center(child: Text(''));
+      return const Center(child: Text('Error al obtener la ubicación'));
     }
 
     return Padding(

@@ -1,5 +1,5 @@
 flutter_launcher_icons:
-  android: "launcher_icon"
-  ios: false
-  image_path: "assets/launcher_android_-11/ic_icon.png"
-  min_sdk_android: 21
+  android: "launcher_icon"   # Configuración específica para Android: "launcher_icon" define el nombre del ícono lanzador.
+  ios: false                 # Deshabilita la configuración del ícono lanzador para iOS.
+  image_path: "assets/launcher_android_-11/ic_icon.png"  # Ruta a la imagen del ícono que se usará para el lanzador de la aplicación en Android.
+  min_sdk_android: 21        # Define la versión mínima del SDK de Android requerida para usar este ícono lanzador.

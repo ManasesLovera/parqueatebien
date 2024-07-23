@@ -5,16 +5,10 @@ import 'package:frontend_android/Handlers/Detalles_De_Vehiculo_Update_Status/dia
 import 'package:frontend_android/Widgets/Consulta/vehicle_details_widgets.dart';
 import 'package:frontend_android/Widgets/Map_Global/map_global.dart';
 
-const Color lightBlueColor = Color(0xFF009DD4); // Azul Claro
-const Color darkBlueColor = Color(0xFF010F56); // Azul Oscuro
-const Color greyTextColor = Color(0xFF494A4D); // Gris (Texto)
-const Color greytext = Color(0xFF494A4D); // Gris (Texto)
-
-
 class VehicleDetailsScreen extends StatefulWidget {
-  final Map<String, dynamic> vehicleData;
-  final double lat;
-  final double lon;
+  final Map<String, dynamic> vehicleData; // Datos del vehículo.
+  final double lat; // Latitud de la ubicación del vehículo.
+  final double lon; // Longitud de la ubicación del vehículo.
 
   const VehicleDetailsScreen({
     super.key,
@@ -28,29 +22,31 @@ class VehicleDetailsScreen extends StatefulWidget {
 }
 
 class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
-  bool _isLoading = false;
+  bool _isLoading = false; // Estado de carga.
 
   bool get _isButtonEnabled {
     return widget.vehicleData['status'].toString().toLowerCase() == 'reportado';
   }
 
+  // Método para actualizar el estatus del vehículo.
   Future<void> _updateStatus(BuildContext context) async {
     if (_isButtonEnabled) {
       setState(() {
-        _isLoading = true;
+        _isLoading = true; // Activa el estado de carga.
       });
 
       ChangeStatusDTO changeStatusDTO = ChangeStatusDTO(
         licensePlate: widget.vehicleData['licensePlate'],
         newStatus: 'Incautado por grua',
-        username: 'your_username',
+        username:
+            'your_username', // Debe reemplazarse con el nombre de usuario actual.
       );
 
       bool success =
           await ApiServiceUpdate.updateVehicleStatus(changeStatusDTO);
       if (!context.mounted) return;
 
-      // Mostrar el modal de éxito o error
+      // Muestra el modal de éxito o error.
       showUniversalSuccessErrorDialogEstatus(
         context,
         success
@@ -59,7 +55,7 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
         success,
       );
 
-      // Esperar a que el modal se cierre antes de proceder
+      // Espera a que el modal se cierre antes de proceder.
       Future.delayed(const Duration(seconds: 2), () {
         setState(() {
           _isLoading = false;
@@ -92,20 +88,26 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
+      backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco.
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 14.h),
+          padding:
+              EdgeInsets.symmetric(horizontal: 14.h), // Alineación horizontal.
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start, // Alineación a la izquierda.
               children: [
-                SizedBox(height: 20.h),
-                buildResultHeader(context, widget.vehicleData),
-                SizedBox(height: 20.h),
-                buildVehicleTitle(),
-                buildStatus(widget.vehicleData),
-                SizedBox(height: 20.h),
+                SizedBox(height: 20.h), // Espacio vertical.
+                buildResultHeader(
+                    context,
+                    widget
+                        .vehicleData), // Construye el encabezado del resultado.
+                SizedBox(height: 20.h), // Espacio vertical.
+                buildVehicleTitle(), // Construye el título del vehículo.
+                buildStatus(
+                    widget.vehicleData), // Construye el estado del vehículo.
+                SizedBox(height: 20.h), // Espacio vertical.
                 DetailRowWidget(
                   title: 'Numero de placa',
                   value: widget.vehicleData['licensePlate'],
@@ -132,9 +134,9 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                     lon: widget.lon,
                   ),
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 10.h), // Espacio vertical.
                 const Divider(height: 10),
-                SizedBox(height: 6.h),
+                SizedBox(height: 6.h), // Espacio vertical.
                 Text(
                   'Fotos del vehiculo',
                   style: TextStyle(
@@ -142,19 +144,21 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                     fontSize: 9.h,
                   ),
                 ),
-                SizedBox(height: 6.h),
-                buildPhotoGallery(photos),
-                SizedBox(height: 10.h),
+                SizedBox(height: 6.h), // Espacio vertical.
+                buildPhotoGallery(photos), // Construye la galería de fotos.
+                SizedBox(height: 10.h), // Espacio vertical.
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _isButtonEnabled && !_isLoading
-                        ? () => _updateStatus(context)
+                        ? () => _updateStatus(
+                            context) // Método para actualizar el estatus del vehículo.
                         : null,
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(vertical: 8.h),
-                      backgroundColor:
-                          _isButtonEnabled ? const Color(0xFFF26522) : Colors.grey,
+                      backgroundColor: _isButtonEnabled
+                          ? const Color(0xFFF26522)
+                          : Colors.grey,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.r),
                       ),
@@ -182,10 +186,11 @@ class VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
   }
 }
 
+// Widget personalizado para mostrar una fila de detalles.
 class DetailRowWidget extends StatelessWidget {
-  final String title;
-  final String? value;
-  final bool showDivider;
+  final String title; // Título de la fila de detalles.
+  final String? value; // Valor de la fila de detalles.
+  final bool showDivider; // Indica si se muestra el divisor.
 
   const DetailRowWidget({
     super.key,
@@ -197,27 +202,31 @@ class DetailRowWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 10.h),
+      padding: EdgeInsets.only(bottom: 10.h), // Alineación inferior.
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment:
+            CrossAxisAlignment.start, // Alineación a la izquierda.
         children: [
           Text(
             title,
             style: TextStyle(
               color: const Color(0xFF010F56),
-              fontSize: 10.h,
+              fontSize: 10.h, // Tamaño de fuente.
               fontWeight: FontWeight.bold,
             ),
           ),
           Text(
-            value ?? 'Desconocido',
+            value ??
+                'Desconocido', // Muestra "Desconocido" si el valor es nulo.
             style: TextStyle(
               color: const Color(0xFF494A4D),
-              fontSize: 10.h,
+              fontSize: 10.h, // Tamaño de fuente.
               fontWeight: FontWeight.bold,
             ),
           ),
-          if (showDivider) Divider(height: 6.h),
+          if (showDivider)
+            Divider(
+                height: 6.h), // Muestra el divisor si showDivider es verdadero.
         ],
       ),
     );

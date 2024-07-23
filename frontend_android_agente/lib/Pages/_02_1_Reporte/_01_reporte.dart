@@ -16,10 +16,11 @@ class ReportScreen extends StatefulWidget {
 }
 
 class ReportScreenState extends State<ReportScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late FormControllerReport _formController;
-  late FormHandlersReport _formHandlers;
-  String? userRole;
+  final GlobalKey<FormState> _formKey =
+      GlobalKey<FormState>(); // Clave global para el formulario.
+  late FormControllerReport _formController; // Controlador del formulario.
+  late FormHandlersReport _formHandlers; // Manejadores del formulario.
+  String? userRole; // Rol del usuario.
 
   @override
   void initState() {
@@ -33,12 +34,14 @@ class ReportScreenState extends State<ReportScreen> {
     );
     _formController = FormControllerReport(handlers: _formHandlers);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _formController.init(context); // Pass the context here
-      _formHandlers.getLocation(context); // Get location initially
-      _loadUserRole(); // Load user role on init
+      _formController
+          .init(context); // Inicializa el controlador del formulario.
+      _formHandlers.getLocation(context); // Obtiene la ubicación inicialmente.
+      _loadUserRole(); // Carga el rol del usuario al inicializar.
     });
   }
 
+  // Método para cargar el rol del usuario desde las preferencias compartidas.
   Future<void> _loadUserRole() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -48,15 +51,18 @@ class ReportScreenState extends State<ReportScreen> {
 
   @override
   void dispose() {
-    _formController.dispose();
+    _formController
+        .dispose(); // Libera los recursos del controlador del formulario.
     super.dispose();
   }
 
+  // Método para mostrar un SnackBar con un mensaje.
   void _showSnackBar(String message) {
     final snackBar = SnackBar(content: Text(message));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
+  // Método para mostrar un diálogo con un mensaje.
   void _showDialog(BuildContext context, String message) {
     List<String> parts = message.split('|');
     String title = parts.length > 1 ? parts[0] : 'Error';
@@ -77,6 +83,7 @@ class ReportScreenState extends State<ReportScreen> {
     );
   }
 
+  // Método para validar el formulario al enviarlo.
   void _onValidate() {
     setState(() {
       _formHandlers.plateFieldTouched = true;
@@ -84,7 +91,7 @@ class ReportScreenState extends State<ReportScreen> {
       _formHandlers.colorTouched = true;
       _formHandlers.addressFieldTouched = true;
     });
-    _formHandlers.validateOnSubmit(context); // Pass the context here
+    _formHandlers.validateOnSubmit(context); // Valida y envía el formulario.
   }
 
   @override
@@ -97,10 +104,11 @@ class ReportScreenState extends State<ReportScreen> {
         return true;
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco
+        backgroundColor: const Color(0xFFFFFFFF), // Fondo blanco.
         body: SafeArea(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 0.h),
+            padding:
+                EdgeInsets.symmetric(horizontal: 0.h), // Alineación horizontal.
             child: SingleChildScrollView(
               child: Form(
                 key: _formKey,
@@ -108,12 +116,12 @@ class ReportScreenState extends State<ReportScreen> {
                   children: [
                     if (_formHandlers.latitude != null &&
                         _formHandlers.longitude != null)
-                      SizedBox(height: 20.h),
-                    const TitleText(),
-                    SizedBox(height: 10.h),
-                    const DatosDelVehiculo(),
-                    SizedBox(height: 30.h),
-                    const NumeroPlaca(),
+                      SizedBox(height: 20.h), // Espacio vertical.
+                    const TitleText(), // Título del formulario.
+                    SizedBox(height: 10.h), // Espacio vertical.
+                    const DatosDelVehiculo(), // Sección de datos del vehículo.
+                    SizedBox(height: 30.h), // Espacio vertical.
+                    const NumeroPlaca(), // Título del campo de número de placa.
                     PlateWidgetReport(
                       controller: _formHandlers.plateController,
                       touched: _formHandlers.plateFieldTouched,
@@ -126,8 +134,8 @@ class ReportScreenState extends State<ReportScreen> {
                       validateField: (field) =>
                           _formHandlers.validateField(context, field),
                     ),
-                    SizedBox(height: 20.h),
-                    const TipoDeVehiculo(),
+                    SizedBox(height: 20.h), // Espacio vertical.
+                    const TipoDeVehiculo(), // Título del campo de tipo de vehículo.
                     VehicleTypeWidget(
                       selectedValue: _formHandlers.selectedVehicleType,
                       focusNode: FocusNode(),
@@ -143,8 +151,8 @@ class ReportScreenState extends State<ReportScreen> {
                       validateField: (field) =>
                           _formHandlers.validateField(context, field),
                     ),
-                    SizedBox(height: 20.h),
-                    const ColorReporte(),
+                    SizedBox(height: 20.h), // Espacio vertical.
+                    const ColorReporte(), // Título del campo de color.
                     ColorWidget(
                       selectedValue: _formHandlers.selectedColor,
                       focusNode: FocusNode(),
@@ -160,8 +168,8 @@ class ReportScreenState extends State<ReportScreen> {
                       validateField: (field) =>
                           _formHandlers.validateField(context, field),
                     ),
-                    SizedBox(height: 20.h),
-                    const Referencia(),
+                    SizedBox(height: 20.h), // Espacio vertical.
+                    const Referencia(), // Título del campo de referencia.
                     AddressWidget(
                       controller: _formHandlers.addressController,
                       touched: _formHandlers.addressFieldTouched,
@@ -173,9 +181,9 @@ class ReportScreenState extends State<ReportScreen> {
                       },
                       onValidate: _onValidate,
                     ),
-                    SizedBox(height: 2.h),
-                    const DownTextVehiculoText(),
-                    SizedBox(height: 20.h),
+                    SizedBox(height: 2.h), // Espacio vertical.
+                    const DownTextVehiculoText(), // Texto adicional.
+                    SizedBox(height: 20.h), // Espacio vertical.
                     StreamBuilder<Position>(
                       stream: _formHandlers.positionStream,
                       builder: (context, snapshot) {
@@ -191,12 +199,13 @@ class ReportScreenState extends State<ReportScreen> {
                           );
                         } else {
                           return const Center(
-                            child: CircularProgressIndicator(),
+                            child:
+                                CircularProgressIndicator(), // Indicador de carga.
                           );
                         }
                       },
                     ),
-                    SizedBox(height: 16.h),
+                    SizedBox(height: 16.h), // Espacio vertical.
                     SizedBox(
                       child: NextButton(
                         formHandlers: _formHandlers,
