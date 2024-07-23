@@ -35,7 +35,7 @@ Widget buildTitle() {
     child: Text(
       'Informacion del reporte',
       style: TextStyle(
-          fontSize: 16.h, fontWeight: FontWeight.bold, color: lightBlueColor),
+          fontSize: 16.h, fontWeight: FontWeight.bold, color:  const Color(0xFFF26522)),
     ),
   );
 }
