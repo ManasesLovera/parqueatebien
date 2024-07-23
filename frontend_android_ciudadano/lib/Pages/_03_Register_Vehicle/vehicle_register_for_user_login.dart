@@ -93,11 +93,11 @@ class _RegisterNewCarState extends State<RegisterNewCarScreen> {
                         ),
                         SizedBox(height: 16.h),
                         const CustomText(
-                          text: 'Modelo',
+                          text: 'Marca',
                         ),
                         CustomTextField(
                           controller: controller.modelController,
-                          hintText: 'Ingresar modelo',
+                          hintText: 'Ingresar Marca',
                         ),
                         SizedBox(height: 16.h),
                         const CustomText(

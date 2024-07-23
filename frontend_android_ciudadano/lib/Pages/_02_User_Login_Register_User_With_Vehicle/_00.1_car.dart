@@ -104,12 +104,12 @@ class _RegisterCarState extends State<RegisterCar> {
                         ),
                         SizedBox(height: 16.h),
                         const CustomText(
-                          text: 'Modelo',
+                          text: 'Marca',
                         ),
                         CustomTextField(
                             controller: controller.modelController,
                             hintText:
-                                'Ingresar modelo'), // Campo de entrada para el modelo
+                                'Ingresar Marca'), // Campo de entrada Marca
                         SizedBox(height: 16.h),
                         const CustomText(
                           text: 'Año',

@@ -23,7 +23,7 @@ class CarDetails extends StatelessWidget {
     switch (status.toLowerCase()) {
       case 'reportado':
         return Colors.grey;
-      case 'incautado por grua':
+      case 'incautado por Grúa':
         return Colors.orange;
       case 'retenido':
         return Colors.red;
